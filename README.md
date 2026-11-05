@@ -1,2 +1,15 @@
-# miora-coffee
-Miora Coffee digital menu — 93 items, original photos, TR/EN/RU, favorites, sharing and a local order list.
+# Miora Coffee
+
+[Open the menu](https://safal207.github.io/miora-coffee/) · [Русский](https://safal207.github.io/miora-coffee/?lang=ru) · [Türkçe](https://safal207.github.io/miora-coffee/?lang=tr) · [English](https://safal207.github.io/miora-coffee/?lang=en)
+
+Three-language, mobile-first digital menu concept, inspired by the existing Robys menu experience. The catalog retains all 93 products from Miora Coffee's AKINSOFT menu captured on 2026-11-05. The original 92 available photos and logo are local assets. Two unpriced dishes are visible but cannot be ordered; one dish has no source photo.
+
+The local order list supports quantity changes, a single optional companion item, dine in / takeaway, persistence across pages and tabs, a Turkish staff summary, a text QR and copying. It never submits an order or charges a payment. Favorites and view counts are device-local. Source ingredients remain in their original Turkish wording, with explicit language labels in translated interfaces. The original source lists are not treated as exhaustive allergen declarations. One suspicious calorie entry is marked for confirmation; no vitamin values are invented.
+
+## Develop and verify
+
+This is a buildless static app. Serve `dist/` using the supported Sites preview. `python scripts/build-data.py` reproducibly rebuilds the catalog from the raw capture. `npm test` verifies complete source parity, local assets, integer monetary totals, unpriced exclusions, quantity validation, atomic pairing and search/filter behavior. Browser QA is recorded in `docs/QA.md` when completed.
+
+GitHub Actions runs catalog reproducibility, JavaScript syntax and all ten integrity tests before deploying `dist/` to GitHub Pages. Pull requests run validation only. In repository Settings → Pages, select GitHub Actions as the source.
+
+Photos and branding belong to their respective owners and are used from the supplied source menu. The bundled QR implementation is by Kazuhiko Arase under its included MIT license (`dist/assets/qr-LICENSE.txt`).

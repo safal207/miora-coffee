@@ -1,0 +1,1230 @@
+{
+  "capturedAt": "2026-11-05T19:20:55.297Z",
+  "categories": [
+    {
+      "count": 21,
+      "id": "46776",
+      "name": "Sıcak Kahveler"
+    },
+    {
+      "count": 9,
+      "id": "46810",
+      "name": "Soğuk Kahveler"
+    },
+    {
+      "count": 8,
+      "id": "46814",
+      "name": "Sıcak İçecekler"
+    },
+    {
+      "count": 9,
+      "id": "46817",
+      "name": "Soğuk İçecekler"
+    },
+    {
+      "count": 24,
+      "id": "46818",
+      "name": "Tatlılar"
+    },
+    {
+      "count": 5,
+      "id": "47037",
+      "name": "Meşrubat"
+    },
+    {
+      "count": 2,
+      "id": "50454",
+      "name": "Smoothie & Fresh İçecek"
+    },
+    {
+      "count": 15,
+      "id": "46885",
+      "name": "Yiyecekler"
+    }
+  ],
+  "logo": "https://ekn1jmkybpa8.merlincdn.net/qrmenu-storage/0b69f26b-4c54-4226-9b09-9e0df17cf69f.jpeg",
+  "products": [
+    {
+      "allergens": [],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Sıcak Su",
+      "id": "428743",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/134a3adc-3c68-423d-bb52-85387513e693.jpeg",
+      "kcal": "5 kcal",
+      "name": "Americano",
+      "price": "150,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt",
+      "id": "428748",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/8d3dc1d3-324d-476a-96cd-234376bcdf3e.jpeg",
+      "kcal": "120 kcal",
+      "name": "Caffe Latte",
+      "price": "200,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "1-2 shot espresso, çikolata sosu/şurubu ve buharla ısıtılmış süt.",
+      "id": "428759",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/f6bd377d-5160-4c87-be91-ed623adec628.jpeg",
+      "kcal": "200 kcal",
+      "name": "Caffe Mocha",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso, Kremamsı Süt, Yoğun Süt Köpüğü",
+      "id": "428772",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/f95e1649-d90d-405e-a48d-b5da4d028c7c.jpeg",
+      "kcal": "100 kcal",
+      "name": "Cappuccino",
+      "price": "180,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt,Karamel Şurubu",
+      "id": "428777",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/a965d058-7f41-4566-82cf-0a3a43745574.jpeg",
+      "kcal": "150 kcal",
+      "name": "Caramel Cappuccino",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt,Karamel Şurubu",
+      "id": "428787",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/8d8465c6-1114-4d1d-9829-c4ef14a207aa.jpeg",
+      "kcal": "200 kcal",
+      "name": "Caramel Latte",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt",
+      "id": "428961",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/43df9bf7-7297-4f7d-8f5e-1ee7307c5b20.jpeg",
+      "kcal": "35 kcal",
+      "name": "Cortado",
+      "price": "150,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso",
+      "id": "428974",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/b5b2da3c-e4e5-4534-958e-b9252eee2bc1.jpeg",
+      "kcal": "5 kcal",
+      "name": "Espresso Single Shot",
+      "price": "75,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso",
+      "id": "428976",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/fffa9155-3f33-4eb9-9766-cdff1cb0ff91.jpeg",
+      "kcal": "11 kcal",
+      "name": "Espresso Double  Shot",
+      "price": "130,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46776",
+      "description": "%100 Arabica Kahve,Sıcak Su",
+      "id": "428977",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/0af338de-76dd-43c5-822f-55eb10cfdd9d.jpeg",
+      "kcal": "4 kcal",
+      "name": "Filtre Kahve",
+      "price": "170,00₺",
+      "time": "8 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt",
+      "id": "428979",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/c1778629-b8c6-4302-8ad7-30a625659489.jpeg",
+      "kcal": "120 kcal",
+      "name": "Flat White",
+      "price": "160,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt,Hazelnut(Fındık)Şurubu",
+      "id": "428981",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/b05a1082-b1de-4ecd-b92b-e5795b9f19f3.jpeg",
+      "kcal": "135 kcal",
+      "name": "Hazelnut Latte",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt,Lotus Sos",
+      "id": "428985",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/b01d9342-8c96-4ade-92b8-2f65bcb20b39.jpeg",
+      "kcal": "250 kcal",
+      "name": "Lotus Macchiato",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Kahve,Su,Süt",
+      "id": "429150",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/21b98e1c-680f-401a-8e8d-8a3b629c7514.jpeg",
+      "kcal": "60 kcal",
+      "name": "Sütlü Filtre Kahve",
+      "price": "200,00₺",
+      "time": "10 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt,Vanilya Şurubu",
+      "id": "429151",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/7b69c7a4-e0ce-4a33-b87e-25cfd7078a7c.jpeg",
+      "kcal": "180 kcal",
+      "name": "Vanilya Latte",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt,Beyaz Çikolata Sos",
+      "id": "429233",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/251ac266-9a3e-4bbf-a174-9e59638dce68.jpeg",
+      "kcal": "380 kcal",
+      "name": "White Chocolate Mocha",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt,Salted Karamel Sos",
+      "id": "429239",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/9dc79a08-8c05-44ac-8e5f-ea0eab083fa6.jpeg",
+      "kcal": "200 kcal",
+      "name": "Salted Caramel Latte",
+      "price": "230,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt,Vanilya Sos,Karamel Sos",
+      "id": "429243",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/db7b3a4c-2002-4487-8b81-b9065d5fa8fb.jpeg",
+      "kcal": "210 kcal",
+      "name": "Caramel Macchiato",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "%100 Arabica Espresso,Süt,Pumkin Sos,Tarçın",
+      "id": "429244",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/7b16533d-8597-408d-88fc-1b06fc31bb5b.jpeg",
+      "kcal": "300 kcal",
+      "name": "Pumpkin Spice Latte",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "Matcha tozu",
+      "id": "429301",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/fe0ff21b-cc23-49f2-b696-24664ec7bf0b.jpeg",
+      "kcal": "150 kcal",
+      "name": "Matcha Latte",
+      "price": "200,00₺",
+      "time": "8 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46776",
+      "description": "Matcha Tozu,Süt,Su,Aromalı Şurup",
+      "id": "429303",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/2a9ec521-cd67-4537-be99-f452fe2afaf4.jpeg",
+      "kcal": "170 kcal",
+      "name": "Aromalı Matcha Latte",
+      "price": "230,00₺",
+      "time": "8 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46810",
+      "description": "%100 Arabica Espresso,Su,Buz",
+      "id": "429252",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/1c4b741b-bc76-4d93-b490-02589acb2b9e.jpeg",
+      "kcal": "15 kcal",
+      "name": "İce Americano",
+      "price": "170,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46810",
+      "description": "%100 Arabica Espresso,Süt,Buz",
+      "id": "429264",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/2c28d61a-c238-4523-b965-2aea5649a4a7.jpeg",
+      "kcal": "350 kcal",
+      "name": "İce Latte",
+      "price": "210,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46810",
+      "description": "%100 Arabica Espresso,Süt,Buz,Çikolata Şurup/Sos",
+      "id": "429271",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/03230d42-1f96-4e54-8097-608ebf1a4bc3.jpeg",
+      "kcal": "285 kcal",
+      "name": "İce Mocha",
+      "price": "230,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46810",
+      "description": "%100 Arabica Espresso,Süt,Buz,Salted Karamel Sos",
+      "id": "429277",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/eae152a7-ccf1-4e73-8794-20b1a82a5056.jpeg",
+      "kcal": "280 kcal",
+      "name": "İce Salted Caramel Latte",
+      "price": "230,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46810",
+      "description": "%100 Arabica Espresso,Süt,Buz,Karamel Sos",
+      "id": "429282",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/a8927237-0861-43bf-b918-740902301728.jpeg",
+      "kcal": "280 kcal",
+      "name": "İce Caramel Latte",
+      "price": "230,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46810",
+      "description": "%100 Arabica Espresso,Süt,Buz,Fındık Şurubu",
+      "id": "429286",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/fdacf3ad-1c72-4864-bc62-0174e0d91495.jpeg",
+      "kcal": "240 kcal",
+      "name": "İce Hazelnut Latte",
+      "price": "230,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46810",
+      "description": "%100 Arabica Espresso,Süt,Buz,Vanilya Şurubu",
+      "id": "429287",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/1c77eb7c-ab20-4b27-9dca-a7f1a52f5661.jpeg",
+      "kcal": "230 kcal",
+      "name": "İce Vanilya Latte",
+      "price": "230,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46810",
+      "description": "%100 Arabica Espresso,Süt,Buz,Beyaz Çikolata Sos",
+      "id": "429293",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/ece0efd5-b3b9-42e2-a331-10f0d81aba14.jpeg",
+      "kcal": "390 kcal",
+      "name": "İce White Chocolate Mocha",
+      "price": "230,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46810",
+      "description": "12 Saat Demlenmiş %100 Arabica Kahve,Su",
+      "id": "429294",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/eee7f6a6-d2f0-459a-92b7-038801a1da03.jpeg",
+      "kcal": "5 kcal",
+      "name": "Cold Brew",
+      "price": "200,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46814",
+      "description": "",
+      "id": "429390",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/e3b96ea2-51ec-4e89-bb7b-d2e32a773df9.jpeg",
+      "kcal": null,
+      "name": "Çay",
+      "price": "50,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46814",
+      "description": "",
+      "id": "429391",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/3e248224-7840-4eaf-adad-6ef612e17351.jpeg",
+      "kcal": null,
+      "name": "Double çay",
+      "price": "100,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46814",
+      "description": "Sade-Orta-Şekerli",
+      "id": "429392",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/6fb5d4a8-9603-417a-9e0b-33325b51f010.jpeg",
+      "kcal": "7 kcal",
+      "name": "Türk Kahvesi",
+      "price": "100,00₺",
+      "time": "8 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46814",
+      "description": "Sade-Orta-Şekerli",
+      "id": "429393",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/3d887b23-cc13-4ccd-9cc1-1b97128a7687.jpeg",
+      "kcal": "14 kcal",
+      "name": "Double Türk Kahvesi",
+      "price": "180,00₺",
+      "time": "8 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46814",
+      "description": "",
+      "id": "429394",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/320a1e43-4a56-481f-a109-3a9b4f4c77b4.jpeg",
+      "kcal": null,
+      "name": "Bitki Çayı",
+      "price": "140,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46814",
+      "description": "Süt veya Su ile Servis Edilir.",
+      "id": "429400",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/bd387d02-cca9-4a8f-8287-f7585544f429.jpeg",
+      "kcal": "240 kcal",
+      "name": "Sıcak Çikolata",
+      "price": "225,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46814",
+      "description": "Salep,Süt",
+      "id": "429429",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/f88cb29b-fcdb-41fe-8b87-316292001b73.jpeg",
+      "kcal": "180 kcal",
+      "name": "Salep",
+      "price": "180,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46814",
+      "description": "Spiced Chai Sos,Süt",
+      "id": "429431",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/2b34a802-116b-42b2-b0a0-e82a0571b331.jpeg",
+      "kcal": "220 kcal",
+      "name": "Chai Tea Latte",
+      "price": "200,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46817",
+      "description": "Mixes Bery Püresi,Su,Buz",
+      "id": "429436",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/92179649-068f-48ae-a05c-afc9c1c5d46d.jpeg",
+      "kcal": "250 kcal",
+      "name": "Berry Lime",
+      "price": "200,00₺",
+      "time": "6 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46817",
+      "description": "Cool Lime Şurubu,Su,Buz",
+      "id": "429441",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/6ff7b0a1-3822-4088-a540-7c34ece7acb2.jpeg",
+      "kcal": "70 kcal",
+      "name": "Cool Lime",
+      "price": "200,00₺",
+      "time": "5 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46817",
+      "description": "Taze Sıkılmış Limon",
+      "id": "429442",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/ff2bde30-501f-4046-9beb-d7433af85a3d.jpeg",
+      "kcal": "75 kcal",
+      "name": "Limonata",
+      "price": "180,00₺",
+      "time": "8 Minute"
+    },
+    {
+      "allergens": [],
+      "cat": "46817",
+      "description": "Taze Sıkılmış Portakal Suyu",
+      "id": "429443",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/5c1fdd96-fce7-4246-966e-f1497e35595e.jpeg",
+      "kcal": "100 kcal",
+      "name": "Portakal Suyu",
+      "price": "180,00₺",
+      "time": "8 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46817",
+      "description": "Çikolata Sos,Süt,Buz",
+      "id": "429446",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/cc223394-5314-44bc-9a3c-fdb07443b322.jpeg",
+      "kcal": "350 kcal",
+      "name": "Çikolotalı Milkshake",
+      "price": "225,00₺",
+      "time": "7 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46817",
+      "description": "Mixed Bery Püresi,Süt,Buz",
+      "id": "429447",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/2b85da17-511e-4673-be44-f90fdd95da89.jpeg",
+      "kcal": "380 kcal",
+      "name": "Orman Meyveli Milkshake",
+      "price": "225,00₺",
+      "time": "7 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46817",
+      "description": "Spiced Chai Şurubu,Süt,Buz",
+      "id": "429448",
+      "image": null,
+      "kcal": "140 kcal",
+      "name": "İce Chai Tea Latte",
+      "price": "210,00₺",
+      "time": "7 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46817",
+      "description": "Matcha Tozu,Mixed Bery Püresi,Süt,Buz",
+      "id": "429449",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/2967c21c-72b4-4f59-8792-8e21899cb63a.jpeg",
+      "kcal": "250 kcal",
+      "name": "İce Forest Bery Matcha Latte",
+      "price": "230,00₺",
+      "time": "7 Minute"
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "46817",
+      "description": "Matcha Tozu,Süt,Buz",
+      "id": "429450",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/d812a88d-4090-43ec-aa3e-240a261acce0.jpeg",
+      "kcal": "150 kcal",
+      "name": "İce Matcha Latre",
+      "price": "220,00₺",
+      "time": "7 Minute"
+    },
+    {
+      "allergens": [
+        "Sesame seeds and sesame seed products"
+      ],
+      "cat": "46818",
+      "description": "Hurma Ezmesi,Hindistan Cevizi,Yulaf(Glutensiz)Badem,Tahin",
+      "id": "431293",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/32c9d3d7-ec00-4d3c-bb18-d428545ce695.jpeg",
+      "kcal": "120 kcal",
+      "name": "2'li Hurma Topu",
+      "price": "70,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Peynir,Şeker,Çikolata,Krema,Antep Fıstığı",
+      "id": "430222",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/43e76963-7f21-4def-8545-72aa6640d746.jpeg",
+      "kcal": "400 kcal",
+      "name": "Antep Fıstıklı San Sebastian",
+      "price": "290,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Peynir,Şeker,Çikolata,Krema",
+      "id": "430226",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/60c1941f-b633-44ca-abe0-3a1fafff131e.jpeg",
+      "kcal": "450 kcal",
+      "name": "San Sebastian",
+      "price": "250,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Bisküvi,Tereyağı,Labne,Krema,Beyaz Çikolata,Orman Meyveleri",
+      "id": "429826",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/3eac46f0-7e4c-453f-8aca-e34864794eb8.jpeg",
+      "kcal": "390 kcal",
+      "name": "Fransız Beyaz Çikolatalı Cheescake",
+      "price": "250,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "",
+      "id": "429828",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/bb8eecfb-4477-413d-b787-9af2e908345d.jpeg",
+      "kcal": "390 kcal",
+      "name": "Çikolatalı Cheescake",
+      "price": "250,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Bisküvi,Süt,Fındık,Krema,Labne,Hindistan Cevizi,Beyaz Çikolata",
+      "id": "429921",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/3d72965a-2c54-44f4-9321-ee80f7469368.jpeg",
+      "kcal": "400 kcal",
+      "name": "Hindistan Cevizli Cheescake",
+      "price": "210,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Bisküvi,Tereyağı,Labne,Krema,Çikolata,Meyve,Şeker,Frambuaz",
+      "id": "429808",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/0679530f-af1d-4d15-85a9-800a3b6f308c.jpeg",
+      "kcal": "260 kcal",
+      "name": "Frambuazlı Cheesecake",
+      "price": "230,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Oreo Bisküvi,Tereyağı,Labne,Krema,Çikolata,Şeker,",
+      "id": "429822",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/b47c3681-adc3-49e3-81ce-c510acae258f.jpeg",
+      "kcal": "350 kcal",
+      "name": "Oreolu Cheescake",
+      "price": "250,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Tereyağı,Peynir,Beyaz Çikolata,Krema,Şeker,Meyve",
+      "id": "431314",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/a57290b0-ad1d-4358-b826-ba8e11c2f443.jpeg",
+      "kcal": "130 kcal",
+      "name": "Mini Cheescake",
+      "price": "150,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Şeker,Yağ,Haşhaş,Peynir,Kahve",
+      "id": "430207",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/35d3fa96-3893-48ea-a6a6-05b9c9506f00.jpeg",
+      "kcal": "350 kcal",
+      "name": "Bromisu",
+      "price": "230,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products",
+        "Peanuts and peanut products",
+        "Sesame seeds and sesame seed products"
+      ],
+      "cat": "46818",
+      "description": "Kadayıf,Antep Fıstığı,Süt,Krema,Tahin,Çikolata",
+      "id": "429872",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/d261fd85-7f53-4c7d-be21-87bd33796909.jpeg",
+      "kcal": "750 kcal",
+      "name": "Dubai Cup",
+      "price": "200,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Bisküvi,Süt,Şeker,Meyve",
+      "id": "430198",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/311f4bcb-2e5d-40aa-aecd-5566b71a1d12.jpeg",
+      "kcal": "400 kcal",
+      "name": "Çilekli Magnolia",
+      "price": "200,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Süt,Şeker,Meyve,",
+      "id": "431299",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/4126bb0b-f0b0-4d79-bf5b-6b3344a1c94e.jpeg",
+      "kcal": null,
+      "name": "Bal Kabaklı Magnolia",
+      "price": "200,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Bisküvi,Süt,Şeker,Meyve",
+      "id": "430199",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/507691f1-49c7-4d87-b7fc-59d1aecf2760.jpeg",
+      "kcal": "400 kcal",
+      "name": "Muzlu Magnolia",
+      "price": "200,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Şeker,Çikolata",
+      "id": "430227",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/80f7b50a-0f2f-4cd2-9e12-6f545b75f075.jpeg",
+      "kcal": "150 kcal",
+      "name": "Browni Topu",
+      "price": "30,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Limon,Şeker,Peynir,Krema",
+      "id": "430214",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/2957725f-6968-40e4-ac6a-bd74fb0a815b.jpeg",
+      "kcal": "320 kcal",
+      "name": "Limonlu Tiramisu",
+      "price": "210,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Kakao,Çikolata,Şeker,Yağ",
+      "id": "431294",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/e18f33bc-567d-4747-80c5-926783f4351f.jpeg",
+      "kcal": null,
+      "name": "Çikolatalı Muffin",
+      "price": "100,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Tereyağı,Şeker,",
+      "id": "430203",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/51763927-ba70-41f2-ad66-ff9ba8023f80.jpeg",
+      "kcal": "200 kcal",
+      "name": "Ekler",
+      "price": "120,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Tereyağı,Şeker,Antep Fıstık",
+      "id": "431336",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/85dea48a-8aac-4afa-b3f5-cdcd1d02b1d7.jpeg",
+      "kcal": null,
+      "name": "Antep Fıstıklı Ekler",
+      "price": "120,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46818",
+      "description": "",
+      "id": "431302",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/db3e5532-0a80-43d3-a775-20d727884fe2.jpeg",
+      "kcal": "1 kcal/100g",
+      "name": "Magnum Browni (Büyük)",
+      "price": null,
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46818",
+      "description": "",
+      "id": "431304",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/78b24676-9084-45a6-864d-d08af7ad6fa8.jpeg",
+      "kcal": null,
+      "name": "Magnum Browni (Küçük)",
+      "price": "130,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Şeker,Yağ,Süt,Kakao,Nişasta,Kuruyemiş,Muz,Krem Şanti,Çikolata",
+      "id": "429834",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/eaa2e82f-7e84-4aeb-b002-3e16865de1f0.jpeg",
+      "kcal": "750 kcal",
+      "name": "Malaga Pasta",
+      "price": "200,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "",
+      "id": "429833",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/054bd6ad-33b3-4342-9021-8edb75bb78f8.jpeg",
+      "kcal": "89 kcal",
+      "name": "Meyveli Tart",
+      "price": "150,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46818",
+      "description": "Taze Çilek ve Muz ile Hazırlanan Sıcacık Pankekler ve Nutella ile Servis",
+      "id": "431333",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/3cd98a7f-e62f-4df0-9cde-7b3b7a2e9c77.jpeg",
+      "kcal": null,
+      "name": "Pankek Tabağı",
+      "price": null,
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "47037",
+      "description": "",
+      "id": "431453",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/5dc68d20-6705-48a9-96d5-5647ac4c1c54.jpeg",
+      "kcal": null,
+      "name": "Uludağ Premium Su",
+      "price": "45,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "47037",
+      "description": "",
+      "id": "431455",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/a01cf02d-1890-402b-90c9-9e0d78d5c8fb.jpeg",
+      "kcal": null,
+      "name": "Beypazarı Soda",
+      "price": "65,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "47037",
+      "description": "",
+      "id": "431456",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/3e1ed4b3-63b7-43a8-9e50-0ca50d147ded.jpeg",
+      "kcal": null,
+      "name": "Uludağ Premium Mineralli Su",
+      "price": "80,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Milk and dairy products"
+      ],
+      "cat": "47037",
+      "description": "",
+      "id": "431458",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/0d664186-93c9-492d-b8ca-2c43493f6300.jpeg",
+      "kcal": null,
+      "name": "Pınar Kido Süt",
+      "price": "40,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "47037",
+      "description": "",
+      "id": "431459",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/eb298d32-e6f1-47f8-ae37-e542104b7b2e.jpeg",
+      "kcal": null,
+      "name": "Pınar Meyve Suyu",
+      "price": "40,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "50454",
+      "description": "Ananas,Çarkıfelek,Mango,Lime,Buz",
+      "id": "460119",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/5b6de95e-94cc-4701-a58f-21d5d3c8333b.jpeg",
+      "kcal": "150 kcal/100g",
+      "name": "Fresh Tropic",
+      "price": "200,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "50454",
+      "description": "Böğürtlen,Lime,Nane,Buz",
+      "id": "460120",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/0be1a58b-b765-4fd0-88c7-d3430832c968.jpeg",
+      "kcal": "200 kcal/100g",
+      "name": "Berry Mojito",
+      "price": "200,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "%100 Tam Bugday Ekmeği ile Özelleştirilebilir İçerik.",
+      "id": "430236",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/5d87b3fe-869f-4dee-8a15-1806077cae60.jpeg",
+      "kcal": null,
+      "name": "Ekşi Maya Sandviç - Tam Buğday Ekmek",
+      "price": "350,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "Ekşi Maya Sandviç - Zeytinli Kekikli Ekmek ile Özelleştirilebilir İçerik",
+      "id": "430240",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/13c6fc66-a304-4900-bf49-9584cdce0def.jpeg",
+      "kcal": null,
+      "name": "Ekşi Maya Sandviç - Zeytinli Kekikli Ekmek",
+      "price": "350,00₺",
+      "time": null
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46885",
+      "description": "Altın renginde çıtır dış yüzeyi ve kat kat, tereyağlı yumuşacık dokusuyla klasik bir Fransız lezzeti. Her lokmada hafifliği ve zengin aromasıyla kahvenizin en zarif eşlikçisi.",
+      "id": "430350",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/00f8725f-d58a-47c7-81cc-0abde32cc2dc.jpeg",
+      "kcal": "230 kcal",
+      "name": "Tereyağlı Sade Kruvasan",
+      "price": "200,00₺",
+      "time": "10 Minute"
+    },
+    {
+      "allergens": [
+        "Cereals containing gluten",
+        "Eggs and egg products",
+        "Milk and dairy products"
+      ],
+      "cat": "46885",
+      "description": "Tereyağlı kruvasanın eşsiz dokusu, özenle seçilmiş taze ve kaliteli malzemelerle buluşuyor. Her ısırıkta çıtır katmanlar ve dolgun içeriğin dengeli uyumu… Klasik sandviç anlayışına zarif ve gurme bir dokunuş.",
+      "id": "430356",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/96500c0e-3ff3-4219-90a9-56ad6416a055.jpeg",
+      "kcal": null,
+      "name": "Sandviç Kruvasan",
+      "price": "350,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "Ekşi Maya Sandviç - Kuru Domatesli & Cevizli Ekmek ile Özelleştirilebilir İçerik",
+      "id": "431177",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/4118b94d-f41f-4dd5-a945-e6e2a3f86368.jpeg",
+      "kcal": null,
+      "name": "Ekşi Maya Sandviç - Kuru Domatesli & Cevizli",
+      "price": "350,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "Ekşi Maya Sandviç - Sade Ekmek ile Özelleştirilebilir İçerik",
+      "id": "431178",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/6b56cd6f-31cf-421f-94d0-3bebff6a7c83.jpeg",
+      "kcal": null,
+      "name": "Ekşi Maya Sandviç - Sade Ekmek",
+      "price": "350,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "Ekşi Maya Sandviç - Focaccia Ekmek İle Özelleştirilebilir içerik",
+      "id": "431179",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/9355a9c5-4107-4de5-826f-11079128e245.jpeg",
+      "kcal": null,
+      "name": "Ekşi Maya Sandviç - Focaccia Mor Ekmek",
+      "price": "350,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "Kahvaltı Tabağı, taze malzemelerle hazırlanmış doyurucu ve lezzetli bir seçenektir. Günün her öğününde tercih edilebilir.",
+      "id": "431203",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/fc31b02e-9c36-4e9e-8e38-a2ff3a6bcd6b.jpeg",
+      "kcal": null,
+      "name": "Kahvaltı Tabağı",
+      "price": "450,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "",
+      "id": "431742",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/e723ffd8-c401-443a-a001-174bb46e6566.jpeg",
+      "kcal": null,
+      "name": "Tuzlu Muffin",
+      "price": "100,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "",
+      "id": "431744",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/f8ad8ed9-d372-46f5-828e-a5c59ad3338f.jpeg",
+      "kcal": null,
+      "name": "Bademli Glutensiz Kek",
+      "price": "160,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "",
+      "id": "431745",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/a4d2e653-5be9-496f-928b-9b1d325c09fc.jpeg",
+      "kcal": null,
+      "name": "Cookie",
+      "price": "110,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "",
+      "id": "431746",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/032a1f2a-4133-4e8a-aeec-b1b5e828f5ce.jpeg",
+      "kcal": null,
+      "name": "Cookie Glutensiz Yulaflı",
+      "price": "70,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "",
+      "id": "431747",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/f1a1fc87-b2fc-4c6f-a05b-88f7f97e92e2.jpeg",
+      "kcal": null,
+      "name": "Muffin",
+      "price": "100,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "",
+      "id": "431748",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/1fc9ef66-1594-4d9b-a28f-f2fdcd4c7015.jpeg",
+      "kcal": null,
+      "name": "Glutensiz Poğaça",
+      "price": "80,00₺",
+      "time": null
+    },
+    {
+      "allergens": [],
+      "cat": "46885",
+      "description": "",
+      "id": "431749",
+      "image": "https://ekn1jmkybpa8.merlincdn.net/resize/400x0/qrmenu-storage/047edd8d-eec4-46e0-8472-81e235ac3c21.jpeg",
+      "kcal": null,
+      "name": "Glutensiz Sebzeli Çörek",
+      "price": "85,00₺",
+      "time": null
+    }
+  ],
+  "source": "https://qrmenuapp.akinsoft.com.tr/L1VBCV/miora-coffee/menu/c-46776"
+}
