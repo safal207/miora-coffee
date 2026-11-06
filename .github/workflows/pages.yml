@@ -21,9 +21,12 @@ jobs:
       - name: Check reproducible catalog and JavaScript
         run: |
           python3 scripts/build-data.py
-          git diff --exit-code -- dist/menu-data.js
+          python3 scripts/build-photos.py
+          git diff --exit-code -- dist/menu-data.js dist/photo-data.js
           node --check dist/app.js
           node --check dist/core.js
+          node --check dist/photos.js
+          node --check dist/photo-data.js
           node --check dist/menu-data.js
       - name: Verify catalog, assets and order integrity
         run: npm test

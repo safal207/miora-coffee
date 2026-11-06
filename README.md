@@ -19,3 +19,7 @@ This is a buildless static app. Serve `dist/` using the supported Sites preview.
 GitHub Actions runs catalog reproducibility, JavaScript syntax and all integrity tests before deploying `dist/` to GitHub Pages. Pull requests run validation only. In repository Settings → Pages, select GitHub Actions as the source.
 
 Photos and branding belong to their respective owners and are used from the supplied source menu. The bundled QR implementation is by Kazuhiko Arase under its included MIT license (`dist/assets/qr-LICENSE.txt`).
+
+## Photography
+
+Retouched photos are served as responsive 160/640/1200 px WebP assets. Original source files remain available as fallbacks. See [photo refresh](docs/photo-refresh-2026-11-06.md) and its asset manifest for coverage and provenance. Run `python scripts/build-photos.py` after adding reviewed exports.

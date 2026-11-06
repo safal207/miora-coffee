@@ -1,0 +1,856 @@
+{
+  "version": "20261106-photos1",
+  "baseCommit": "2c0d3d00cc40f06cd291919c24b87d5093a1a959",
+  "complete": false,
+  "plannedRealProducts": 84,
+  "method": "Built-in image generation; reference-preserving lighting, denoise and editorial restaging",
+  "export": "ImageMagick 7: resize and WebP encoding only",
+  "photos": {
+    "429271": {
+      "name": "İce Mocha",
+      "sourceSha256": "cc84e0f6b32bb639f16715759db6faa8cf7b59919edbb0e2a7dfca20029bd3b2",
+      "sourceDimensions": [
+        400,
+        547
+      ],
+      "productIds": [
+        "429271",
+        "429277",
+        "429282",
+        "429286",
+        "429287"
+      ],
+      "generatedSha256": "2d8a055f92a3846d815f8b71b9ba3d455f7d734c110700bf41f5dd939cc78c68",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429271-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3360,
+          "sha256": "2ff8c4c7be6e86d17cb9de14e8ba7d026604d3180440f75acd48b86ce6e68a1e"
+        },
+        "640": {
+          "path": "assets/enhanced/429271-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 30254,
+          "sha256": "b6c93a2b58d88c342f9a54bc3614e84988fc27d5f79bc1351f551cb00c58d043"
+        },
+        "1200": {
+          "path": "assets/enhanced/429271-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 85192,
+          "sha256": "7bfd485381315107cb07d176ee080ee26aaa140d1accda4d72b4a85668f27bc8"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429252": {
+      "name": "İce Americano",
+      "sourceSha256": "9bc81fe1b85ced79360c8b4eb1f927ead06586e985668ad9a1aa525e3910af1f",
+      "sourceDimensions": [
+        400,
+        527
+      ],
+      "productIds": [
+        "429252",
+        "429294"
+      ],
+      "generatedSha256": "c02916f0b95c7b56567b674b6f4e3ba821549f4033bb6a80bcb65e1e8ccd5eb5",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429252-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3612,
+          "sha256": "00da531d9860177f3f3bf68743371c4578f1e01f4609e3f096c3c95eb88bfff0"
+        },
+        "640": {
+          "path": "assets/enhanced/429252-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 34198,
+          "sha256": "5175c95b0d32e932f011bee29a14669f1e49fa653d3490f2f3ac7bb90d898347"
+        },
+        "1200": {
+          "path": "assets/enhanced/429252-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 98444,
+          "sha256": "a60e31bdc72c8aea35221fd9a627aea5e90c4a611a7f6fa54e33fe90d34c370d"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429301": {
+      "name": "Matcha Latte",
+      "sourceSha256": "c191193d6e7746f8ad6b5f4e6d843f1012886d1a4306999dfc7197ba7de2040c",
+      "sourceDimensions": [
+        400,
+        475
+      ],
+      "productIds": [
+        "429301",
+        "429303"
+      ],
+      "generatedSha256": "58ebb06ee9ef68faa6c7d8ccf507e1d925efd88dacf71f38880ac35b643dc041",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429301-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3842,
+          "sha256": "4153970a637cbe0ab21b559cbfb56f6d82d60ee4f4df79517ddf0bd3bf242820"
+        },
+        "640": {
+          "path": "assets/enhanced/429301-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 39192,
+          "sha256": "8342bf73001c9c1e7790c0440d7bf3b6dda191f1ebb283c6b281662cc1351e1c"
+        },
+        "1200": {
+          "path": "assets/enhanced/429301-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 111656,
+          "sha256": "ef7c0ae4501cb208009ffb9ef4904c96bf2296b5f875985ffe4ba5801c0a3b77"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429150": {
+      "name": "Sütlü Filtre Kahve",
+      "sourceSha256": "11f94391ea4a4949435db015c67de9c756232920c777aa4ba60ed363b6e78ddc",
+      "sourceDimensions": [
+        400,
+        483
+      ],
+      "productIds": [
+        "429150"
+      ],
+      "generatedSha256": "aaa99078a4d1b70cb5554cc6fb2bef741d94e8a943e75ae85be176208c390035",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429150-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3700,
+          "sha256": "cd996a436abedc0b2e31c14f12849a800bd20559f27239e413b97a766e50173e"
+        },
+        "640": {
+          "path": "assets/enhanced/429150-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 31510,
+          "sha256": "dd5cead5d696729a42f4c415d8d4c25967d567a499e162d9b6b963d221cedc22"
+        },
+        "1200": {
+          "path": "assets/enhanced/429150-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 91316,
+          "sha256": "baee4e546d1dbb7b8e770ed2b402742c6896abf16400675f1dc4d256731cc0c9"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "428974": {
+      "name": "Espresso Single Shot",
+      "sourceSha256": "eb3a650d2b71cd7f5c623fea44e67280f36a7639525ae90bc14a8915e802223a",
+      "sourceDimensions": [
+        400,
+        301
+      ],
+      "productIds": [
+        "428974",
+        "428976"
+      ],
+      "generatedSha256": "f0692f4568989383a7d33b2a029a9ff2891b896aa2555ef6e475373cd2b4a882",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/428974-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 2160,
+          "sha256": "bf39a2dc98b7ae33855ab7503cefdc70fe2f10fde1e328d8d704fd1e230b160b"
+        },
+        "640": {
+          "path": "assets/enhanced/428974-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 19206,
+          "sha256": "f82945723d058936c73354d8e0cd5a58f8d1b4e7147915aeae83c46f8f6fa6ad"
+        },
+        "1200": {
+          "path": "assets/enhanced/428974-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 62472,
+          "sha256": "c33ca65f91f6087622b1ab55dbf0616ab206f3b4d00fccfd13767f7fe71712e0"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "428961": {
+      "name": "Cortado",
+      "sourceSha256": "2c9d5e8abd65abfd9aabc5ddd7646b32bf3f17278ed4ce0ecaced0acfd51dbd4",
+      "sourceDimensions": [
+        400,
+        478
+      ],
+      "productIds": [
+        "428961",
+        "428979"
+      ],
+      "generatedSha256": "fb27484ce3451bc1d25247b86706ae24b850eb2db6895d37c4a9f86dd30a3f38",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/428961-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3566,
+          "sha256": "49577fdfd24def413fb56eafdaabef7633f0991aa44fb4ce0d4d5d070e537743"
+        },
+        "640": {
+          "path": "assets/enhanced/428961-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 38116,
+          "sha256": "47550cd0aa92921027107097c9d7a2a3dafaf1f06d47dbb9e71fbbe60ceaab22"
+        },
+        "1200": {
+          "path": "assets/enhanced/428961-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 111310,
+          "sha256": "964761b4366e74e102e10bbf9c393ab0afe1db9713207680b0125bd36250d482"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "430222": {
+      "name": "Antep Fıstıklı San Sebastian",
+      "sourceSha256": "bbd616c0146516a95bbe0c204d7f6436feb084fbc47a903055de5b794f21dffc",
+      "sourceDimensions": [
+        400,
+        581
+      ],
+      "productIds": [
+        "430222"
+      ],
+      "generatedSha256": "770ca7eef55d664d6f4e958c087cc690c4ac1bbda985ca0e37d8141d84d471de",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/430222-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4682,
+          "sha256": "42940604b760291590c3a3ceadc9583047c7857496c9531fc3bde1360b5e3d79"
+        },
+        "640": {
+          "path": "assets/enhanced/430222-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 46816,
+          "sha256": "b2e9f96fc468f28449c3ffba0fbc55cb066f0d55c90e4580074cffbb1e3e94cc"
+        },
+        "1200": {
+          "path": "assets/enhanced/430222-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 124548,
+          "sha256": "8c6837bb4b861d84ab3d023e387eb99d02b6c973cedd0a6a50b4c9ecb2183a3c"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429449": {
+      "name": "İce Forest Bery Matcha Latte",
+      "sourceSha256": "7d725897b267df73f6cb76adbb67f77c4c5ac012097a37f7999d32019ce3d80b",
+      "sourceDimensions": [
+        400,
+        556
+      ],
+      "productIds": [
+        "429449"
+      ],
+      "generatedSha256": "7d4c9e31655641816f9994aafe5a3387d1273471e7eb89e4c45f571c2604f398",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429449-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3880,
+          "sha256": "9522474a6046f32bb30ae81a8de9a46ddc8d74d0673e4ed5268981dac2da859b"
+        },
+        "640": {
+          "path": "assets/enhanced/429449-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 37034,
+          "sha256": "3c66c35e9a562d3c54ade79cfa6b4be6f1133c17949b4b7eba0e3b55013ae7ab"
+        },
+        "1200": {
+          "path": "assets/enhanced/429449-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 99260,
+          "sha256": "594b8e3c3137e814260b93416cf3023c4b8b10d3f332a91666923aac3203c037"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "430236": {
+      "name": "Ekşi Maya Sandviç - Tam Buğday Ekmek",
+      "sourceSha256": "0a71dd42e8009d7cb3bfbe924d153ad5408d93e9bf41df2997e66e4d6bc89fad",
+      "sourceDimensions": [
+        400,
+        590
+      ],
+      "productIds": [
+        "430236",
+        "431178"
+      ],
+      "generatedSha256": "1273143f9a006b0a44cfde7244968499464411aa0d9961024ce14a0177fa493c",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/430236-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4446,
+          "sha256": "425b99ac486780725b3c2baf5ccdc865eb3198661f07c88ed918b7b13cd9972f"
+        },
+        "640": {
+          "path": "assets/enhanced/430236-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 48226,
+          "sha256": "9d75d31c425e83eb34ce4a9d84d0f5cff36d4aa4c015db12d14a3b42c4ebf0d2"
+        },
+        "1200": {
+          "path": "assets/enhanced/430236-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 145944,
+          "sha256": "595310738292ba63b95e477397759001281e815a5cb88a7936dc949c4f5ffcdc"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429441": {
+      "name": "Cool Lime",
+      "sourceSha256": "910318356ab6f437b68a79f87289f7413d6d2b6df8f4149983a01a0ebac7847b",
+      "sourceDimensions": [
+        400,
+        597
+      ],
+      "productIds": [
+        "429441"
+      ],
+      "generatedSha256": "bf2e970302e5788f55f4df366caf528de1d7965e5bedd632e6a9a5ce0be23a7f",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429441-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3726,
+          "sha256": "1b0a4aee3fd0e59bc4aae9a6a8101d0e8e22aec6ea1c2b14f75e960851bd620f"
+        },
+        "640": {
+          "path": "assets/enhanced/429441-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 38026,
+          "sha256": "3afd91868a8bf3516fea716b4c8bea4cfc050770b95c1f3425f49e28e2e7c05f"
+        },
+        "1200": {
+          "path": "assets/enhanced/429441-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 112258,
+          "sha256": "5aaf12f0a11a64c4bf1282ec135eada05a95f3172b0417586d7cb0854d209829"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "428772": {
+      "name": "Cappuccino",
+      "sourceSha256": "1e65bde271344c70ab6c92fba369b5deb166abd682cca8f0873addedaf328ee2",
+      "sourceDimensions": [
+        400,
+        488
+      ],
+      "productIds": [
+        "428772"
+      ],
+      "generatedSha256": "f05c4fa847f4f616b141d6f5cfd97cfe6fde1539c5c4ba09130260b7c7f1522e",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/428772-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3196,
+          "sha256": "241e0534e8f68670518324bc72b0d2cb5bc89b3ad57df49ca698a1d5b6e15cee"
+        },
+        "640": {
+          "path": "assets/enhanced/428772-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 31864,
+          "sha256": "b1b8720c34d2f925ae870457467f75a6939349cb9726bbd0d9e37cb7a4dc0b8c"
+        },
+        "1200": {
+          "path": "assets/enhanced/428772-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 100504,
+          "sha256": "4f8976e40a3554994c84d1fd33e0a61cb9a08e4cd52a563ceb5c31e307a3ef54"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "428777": {
+      "name": "Caramel Cappuccino",
+      "sourceSha256": "7dcfb7339159dc62cd597c50e758c43c355894893cbb89aaf22f3d1b46ffac42",
+      "sourceDimensions": [
+        400,
+        432
+      ],
+      "productIds": [
+        "428777"
+      ],
+      "generatedSha256": "ba68a6a17a6528d43f81244380a78fc35b540ae3476c8fa2009a9cde0bcffb68",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/428777-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3470,
+          "sha256": "0961cfe43edf286b4ea75b46deea65353d39d4f0001e6f260df27bec171d4cc4"
+        },
+        "640": {
+          "path": "assets/enhanced/428777-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 35854,
+          "sha256": "a146f39a6f66c563cb1e5858d36edef0399756f737da05eef348c69578deb425"
+        },
+        "1200": {
+          "path": "assets/enhanced/428777-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 110750,
+          "sha256": "d5f886cedfa806c81a73a2041ddc0221452e0231bcb19c034811ed2ced3f6331"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "430350": {
+      "name": "Tereyağlı Sade Kruvasan",
+      "sourceSha256": "cd788cbbd3f9aa97bcef0e07d68c9cc1a73a642873c50411b064181c256e8bfb",
+      "sourceDimensions": [
+        400,
+        595
+      ],
+      "productIds": [
+        "430350"
+      ],
+      "generatedSha256": "d0358dd9974850d00287e46e1689b0b6577721c6b05b0a08e15ffe3644325593",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/430350-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4112,
+          "sha256": "bb19c349742a45259b6912eef5d348a53cc0599b4d9bb86f9a5d0867b175cca7"
+        },
+        "640": {
+          "path": "assets/enhanced/430350-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 41292,
+          "sha256": "969fa37f9b45045b645fd2b141b06bc149a37121276d2b7fb21717cbc2d4b69a"
+        },
+        "1200": {
+          "path": "assets/enhanced/430350-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 119616,
+          "sha256": "5d801d0f1afe75fa966e6a2a5ff23579d0379c9468e7ef68d16fefa0429ec155"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "430226": {
+      "name": "San Sebastian",
+      "sourceSha256": "7c6513e4c6e8fbd2bb5dc482af8c4ef45f5a1a3522277b265084fa7a8dc15765",
+      "sourceDimensions": [
+        400,
+        471
+      ],
+      "productIds": [
+        "430226"
+      ],
+      "generatedSha256": "5885b175ba9a90e6b2c9aca58654771abb14dc63319cfd848ff397f39f87f4cc",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/430226-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4154,
+          "sha256": "a208a9ebd36f9f363a7990add7c985c9ad9f2ddb9787b276343e61cef663b50b"
+        },
+        "640": {
+          "path": "assets/enhanced/430226-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 36926,
+          "sha256": "04e7694c3ef66281d8cb49a4805d94906e1973a84b4373c61377e30c652c0427"
+        },
+        "1200": {
+          "path": "assets/enhanced/430226-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 105078,
+          "sha256": "3444b82fb8db42e9de251caa5618ae882093d2e395b2cfaf159d085c7fd178ac"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "428743": {
+      "name": "Americano",
+      "sourceSha256": "726692a3b59d663c6fd146f53b7c37a4cc2db8d882c94e0f31d091898da3cfa8",
+      "sourceDimensions": [
+        400,
+        388
+      ],
+      "productIds": [
+        "428743",
+        "428977"
+      ],
+      "generatedSha256": "7df43cdb58762f8c430bbf39163b3a27442a9d450c721d44a6d07d7cf06e6320",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/428743-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 2938,
+          "sha256": "233fe976ef50e2a1de0f09666a72ebf96dc8cc46321be85a1be231e89cac9e6c"
+        },
+        "640": {
+          "path": "assets/enhanced/428743-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 30240,
+          "sha256": "5f53d3e8300184f9c9af9dc5b9f1feecd376140cd31e4d84852711fe8d990935"
+        },
+        "1200": {
+          "path": "assets/enhanced/428743-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 92158,
+          "sha256": "fc4c8731d541ed79d2fd890476122a3151c60b1164d890fac82a118e034cd6e4"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "428759": {
+      "name": "Caffe Mocha",
+      "sourceSha256": "ce6c700bcc88147a17d6248f1da845ae42b5236600cd7558a540caf01585c9f2",
+      "sourceDimensions": [
+        400,
+        508
+      ],
+      "productIds": [
+        "428759",
+        "428985",
+        "429233",
+        "429239",
+        "429243",
+        "429244"
+      ],
+      "generatedSha256": "c7fe6e4c2e51cdbc730d38a847812d80d2e975fddae9749b4546913f6679526e",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/428759-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3756,
+          "sha256": "0abf01cc61707cada6aea6ca9b1cbb05dba36f6ea354d9a41a42750cd9d71d8c"
+        },
+        "640": {
+          "path": "assets/enhanced/428759-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 35348,
+          "sha256": "6c9cd356e384dbe348f8d90ec487563391188145d7a0b459ed6fca12cebc45ca"
+        },
+        "1200": {
+          "path": "assets/enhanced/428759-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 109910,
+          "sha256": "121a2d516581ed13025924f87c25fc872cd4c441a3eb855abe8826ffb57828ca"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429264": {
+      "name": "İce Latte",
+      "sourceSha256": "0747043e62555fd125398ea2f4e54216c751e2bbf308d456f51fd40fde189e96",
+      "sourceDimensions": [
+        400,
+        548
+      ],
+      "productIds": [
+        "429264"
+      ],
+      "generatedSha256": "64b854738c1719f78b27ffabe6ffe0fee9e893333d4680b414756325322b3be9",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429264-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3100,
+          "sha256": "f2fe4ae9e34707e5a1f0f1d67f3b19d4af67b7835515ac6ade91a94a5b7274a6"
+        },
+        "640": {
+          "path": "assets/enhanced/429264-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 27514,
+          "sha256": "6bb4720ee4ef5e92a09e67856d6e57557c5fb15792401db31fe6aa41021f77d8"
+        },
+        "1200": {
+          "path": "assets/enhanced/429264-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 82576,
+          "sha256": "df664bd5c02f5106b5adffe84b8d10d6892efbe9f26ed28c66e88fb84a9a3bd1"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "428748": {
+      "name": "Caffe Latte",
+      "sourceSha256": "aa9ee089b317f9751bb0b9bb0370cc93f04d0f2fb9ce0568db21b11b4c979711",
+      "sourceDimensions": [
+        400,
+        486
+      ],
+      "productIds": [
+        "428748",
+        "428787",
+        "428981",
+        "429151"
+      ],
+      "generatedSha256": "712cd567a3c95a8107280ace4f354591bf2a62286cd17f2bcca8e9d671bf2e44",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/428748-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4070,
+          "sha256": "aadf2971a1fc52931ab4245e635fdc60cb5dde4ee2ccd240720a17c4ac74a13a"
+        },
+        "640": {
+          "path": "assets/enhanced/428748-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 42484,
+          "sha256": "b8b4b9dd7419e04bbeae1a6b2c7ead3494b3f7073ef6b9ddd9b5f014f4229573"
+        },
+        "1200": {
+          "path": "assets/enhanced/428748-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 126238,
+          "sha256": "202a01cf8aa117c3e34d275840930411545d509d0b288e2d78a49f26aad24d14"
+        }
+      },
+      "visualReview": "accepted"
+    }
+  }
+}
