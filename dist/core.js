@@ -26,6 +26,10 @@ export function addPair(cart, ids, catalog) {
   return next;
 }
 export function fold(value) {return String(value).toLocaleLowerCase('tr').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i');}
+export function resolveView(requested, saved) {
+  const allowed = ['feed', 'grid', 'list'];
+  return allowed.includes(requested) ? requested : allowed.includes(saved) ? saved : 'feed';
+}
 export function filterProducts(products, {category='featured',search='',favorites=[],featured=[]}={}) {
   const query = fold(search.trim());
   return products.filter(p => (category==='all'||category==='featured'&&featured.includes(p.id)||category==='favorites'&&favorites.includes(p.id)||p.cat===category) && (!query || fold(Object.values(p.name).join(' ')+' '+p.description).includes(query)));

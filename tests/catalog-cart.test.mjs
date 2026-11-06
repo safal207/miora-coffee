@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {products,categories,featured} from '../dist/menu-data.js';
-import {normalizeCart,totals,updateCart,addPair,filterProducts} from '../dist/core.js';
+import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from '../dist/core.js';
 const catalog=new Map(products.map(p=>[p.id,p]));
 const source=JSON.parse(readFileSync(new URL('../docs/source-menu-2026-11-05.json',import.meta.url)));
 test('all 93 source products retain identity, category and exact price',()=>{
@@ -43,4 +43,16 @@ test('favorites and category filters respect their actual memberships',()=>{
   assert.deepEqual(filterProducts(products,{category:'favorites',favorites:['429441']}).map(p=>p.id),['429441']);
   for(const cat of source.categories)assert.equal(filterProducts(products,{category:cat.id}).length,cat.count);
   assert.equal(filterProducts(products,{category:'featured',featured}).length,8);
+});
+test('a shared feed URL overrides an older stored grid or list preference',()=>{
+  assert.equal(resolveView('feed','grid'),'feed');
+  assert.equal(resolveView('feed','list'),'feed');
+  assert.equal(resolveView('list','feed'),'list');
+});
+test('new visitors see the feed while valid saved modes and legacy URLs remain supported',()=>{
+  assert.equal(resolveView(null,null),'feed');
+  assert.equal(resolveView('unsupported','grid'),'grid');
+  assert.equal(resolveView(null,'list'),'list');
+  assert.equal(resolveView('grid','feed'),'grid');
+  assert.equal(resolveView(null,{}),'feed');
 });

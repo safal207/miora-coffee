@@ -15,9 +15,10 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="assets/products/428748.jpg">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="feed.css?v=20261106-feed1">
   <script src="theme.js"></script>
   <script src="assets/qr.js" defer></script>
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=20261106-feed1"></script>
 </head>
 <body>
   <a class="skip" href="#menu">Menüye geç / Skip to menu</a>
@@ -48,9 +49,10 @@
     <div class="marquee" aria-hidden="true"><span>GOOD COFFEE</span><i>✳</i><span>GOOD FOOD</span><i>✳</i><span>GOOD MOOD</span><i>✳</i><span>MIORA MOMENTS</span><i>✳</i><span>GOOD COFFEE</span></div>
     <section id="menu" class="menu-section shell" aria-labelledby="menu-title">
       <div class="section-heading"><div><p class="eyebrow" data-i18n="menuKicker">KÜÇÜK MOLALAR, GÜZEL LEZZETLER</p><h2 id="menu-title" data-i18n="menuTitle">Bugün canın ne istiyor?</h2></div><p class="catalog-note"><span>93</span> <span data-i18n="menuChoices">farklı seçim, senin molan.</span></p></div>
+      <nav class="feed-stories" id="feed-stories" aria-label="Menü kategorileri" hidden></nav>
       <div class="toolbar" id="toolbar">
         <div class="search-row"><label class="search"><span id="search-icon" aria-hidden="true"></span><input id="search" type="search" autocomplete="off" placeholder="Bir lezzet ara…" aria-label="Menüde ara"><button class="search-clear icon-btn" type="button" id="search-clear" aria-label="Aramayı temizle" hidden>×</button></label>
-          <div class="view-switch" role="group" aria-label="Görünüm"><button class="icon-btn" type="button" id="view-grid" data-view="grid" aria-label="Fotoğraf görünümü" aria-pressed="true"></button><button class="icon-btn" type="button" id="view-list" data-view="list" aria-label="Kompakt liste" aria-pressed="false"></button></div>
+          <div class="view-switch" role="group" aria-label="Görünüm"><button class="icon-btn" type="button" id="view-feed" data-view="feed" aria-label="Akış" aria-pressed="true"></button><button class="icon-btn" type="button" id="view-grid" data-view="grid" aria-label="Fotoğraf görünümü" aria-pressed="false"></button><button class="icon-btn" type="button" id="view-list" data-view="list" aria-label="Kompakt liste" aria-pressed="false"></button></div>
           <button class="favorites-filter icon-btn" type="button" id="favorites-filter" aria-label="Favoriler" aria-pressed="false"></button>
         </div>
         <nav id="categories" class="categories" aria-label="Menü kategorileri"></nav>

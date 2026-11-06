@@ -1,5 +1,5 @@
 import {products,categories,featured,source} from './menu-data.js';
-import {normalizeCart,totals,updateCart,addPair,filterProducts} from './core.js';
+import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -34,6 +34,11 @@ en:{menu:'Menu',pairings:'Better together',heroTitle:'Your coffee.<br><em>Your m
 ru:{menu:'Меню',pairings:'Вкуснее вместе',heroTitle:'Твой кофе.<br><em>Твой момент.</em>',heroDescription:'Любимый кофе и что-нибудь вкусное к нему.<br>Загляни на маленький перерыв в Miora.',explore:'Посмотреть меню',heroNote:'Немного для себя. Немного для близких.',croissantMoment:'А ещё круассан?',menuKicker:'МАЛЕНЬКИЙ ПЕРЕРЫВ, БОЛЬШОЕ УДОВОЛЬСТВИЕ',menuTitle:'Чего хочется сегодня?',menuChoices:'варианта для твоего перерыва.',featured:'Выбор Miora',all:'Всё меню',favorites:'Избранное',search:'Найти что-нибудь вкусное…',searchLabel:'Поиск по меню',clearSearch:'Очистить поиск',grid:'Меню с фото',list:'Компактный список',count:'позиций',add:'Добавить',addToOrder:'Добавить в заказ',ask:'Уточните цену',priceMissing:'В исходном меню цена не указана. Уточните цену и наличие у сотрудника.',detail:'Подробнее',share:'Поделиться',copied:'Ссылка скопирована',copy:'Скопировать ссылку',selectCopy:'Выделите и скопируйте ссылку.',shareDescription:'Поделись ссылкой на эту вкусную находку.',favoriteAdded:'Добавлено в избранное',favoriteRemoved:'Убрано из избранного',cart:'Мой заказ',cartKicker:'СОБЕРИ СВОЙ МАЛЕНЬКИЙ ПЕРЕРЫВ',added:'Добавлено в заказ',emptyCart:'В заказе пока ничего нет. Начнём с чашечки кофе?',backToMenu:'Вернуться к меню',total:'Итого',increase:'Добавить одну порцию',decrease:'Убрать одну порцию',showStaff:'Показать сотруднику',orderNote:'Покажите список сотруднику. Заказ автоматически не отправляется, оплата не списывается.',staffTitle:'Покажите сотруднику',staffKicker:'MIORA COFFEE',staffNote:'Уточните цену и наличие у сотрудника. Заказ ещё не передан в кафе.',editOrder:'Изменить заказ',copyOrder:'Скопировать заказ',orderCopied:'Заказ скопирован',clearCart:'Очистить заказ',dineIn:'В кафе',takeaway:'С собой',qr:'QR-код заказа',qrNote:'QR-код содержит только текст этого заказа.',qrError:'Заказ слишком длинный для QR-кода. Покажите список выше.',bump:'МОЖЕТ, ЧТО-НИБУДЬ К КОФЕ?',limit:'Можно добавить до 99 порций одной позиции.',noResults:'Здесь пока ничего нет.',tryAgain:'Поищи что-нибудь другое или открой всё меню.',seeAll:'Посмотреть всё меню',sourceNote:'Цены, фотографии и состав — из исходного меню Miora · 5 ноября 2026.',pairingKicker:'СОЧЕТАНИЕ ОТ MIORA',pairingTitle:'Некоторые вещи<br>вкуснее вместе.',pairingText:'Нежная пенка капучино и сливочный Сан-Себастьян. Маленькое удовольствие для себя.',addPair:'Добавить обе позиции',pairingNote:'Обычная сумма двух позиций. Без скидки.',closing:'Встретимся за чашечкой кофе.',originalMenu:'Исходное меню ↗',demoNote:'Концепт цифрового меню. Покажите заказ сотруднику; онлайн-заказ не отправляется.',close:'Закрыть',ingredients:'Состав',originalRecipe:'Описание из исходного меню · на турецком',noIngredients:'В исходном меню состав не указан. Уточните подробности у сотрудника.',allergens:'Аллергены, указанные в исходном меню',noAllergens:'В исходном меню список аллергенов не указан.',allergenNote:'Список может быть неполным. При аллергии или чувствительности уточните состав у сотрудника.',calorieNote:'Калории перенесены из исходного меню; вес порций не указан. Значения на 100 г отмечены отдельно.',reviewCalorie:'В источнике указано 1 ккал/100 г. Это значение требует уточнения у сотрудника.',minutes:'мин',localViews:'Просмотры на этом устройстве',storageError:'Браузер не позволяет сохранить данные. Заказ доступен в этой вкладке.',photoMissing:'Фото скоро появится',searchResults:'Результаты поиска',milk:'Молочные продукты',gluten:'Глютен',eggs:'Яйца',peanuts:'Арахис',sesame:'Кунжут'}
 };
 
+Object.assign(messages.tr,{feed:'Akış',feedTitle:'Miora anları',feedKicker:'KAYDIR · KEŞFET · TADINI ÇIKAR',like:'Beğen ve kaydet',liked:'Kaydedildi',feedHint:'Fotoğrafa iki kez dokun, favorilerine ekle.',addMore:'Bir tane daha',inOrder:'Listende',viewOnDevice:'Bu cihazda görüntülendi'});
+Object.assign(messages.en,{feed:'Feed',feedTitle:'Miora moments',feedKicker:'SCROLL · DISCOVER · ENJOY',like:'Like and save',liked:'Saved',feedHint:'Double-tap a photo to save it to favourites.',addMore:'Add one more',inOrder:'On your list',viewOnDevice:'Viewed on this device'});
+Object.assign(messages.ru,{feed:'Лента',feedTitle:'Моменты Miora',feedKicker:'ЛИСТАЙ · ВДОХНОВЛЯЙСЯ · ПРОБУЙ',like:'Нравится · сохранить',liked:'В избранном',feedHint:'Дважды нажми на фото, чтобы добавить в избранное.',addMore:'Ещё одну',inOrder:'В заказе',viewOnDevice:'Просмотры на этом устройстве'});
+Object.assign(svgPaths,{feed:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 7h16M4 16h16M8 19h4"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/>',more:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'});
+
 function load(key,fallback) {try {const value=localStorage.getItem('miora:'+key);return value===null?fallback:JSON.parse(value);} catch{return fallback;}}
 let storageWarningShown=false;
 function save(key,value) {try {localStorage.setItem('miora:'+key,JSON.stringify(value));return true;} catch {if(!storageWarningShown){storageWarningShown=true;notify(t('storageError'));}return false;}}
@@ -43,12 +48,14 @@ let lang=['tr','en','ru'].includes(params.get('lang'))?params.get('lang'):['tr',
 let cart=normalizeCart(load('cart',{}),byId);
 let favoriteIds=load('favorites',[]); if(!Array.isArray(favoriteIds))favoriteIds=[];
 let favorites=new Set(favoriteIds.filter(id=>byId.has(id)));
-let view=['grid','list'].includes(params.get('view'))?params.get('view'):load('view','grid');if(!['grid','list'].includes(view))view='grid';
-let category='featured', search='', detailId=null, staffMode=false;
+let view=resolveView(params.get('view'),load('view',null));
+let category=view==='feed'?'all':'featured', search='', detailId=null, staffMode=false;
 let service=load('service','dineIn'); if(!['dineIn','takeaway'].includes(service))service='dineIn';
 let views=load('views',{}); if(!views||typeof views!=='object'||Array.isArray(views))views={};
 views=Object.fromEntries(Object.entries(views).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));
 const viewedThisSession=new Set();
+let feedObserver=null;
+const feedViewTimers=new Map();
 let toastTimer;
 const t = key => messages[lang][key]||messages.tr[key]||key;
 const name = item => item.name[lang]||item.name.tr;
@@ -61,7 +68,8 @@ function renderLanguage() {
   document.documentElement.lang=lang;$('language').value=lang;
   document.querySelectorAll('[data-i18n]').forEach(e=>{const k=e.dataset.i18n;if(['heroDescription','pairingTitle'].includes(k))e.innerHTML=t(k);else e.textContent=t(k);});
   $('hero-title').innerHTML=t('heroTitle');$('categories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',t('grid')+' / '+t('list'));$('share-link').setAttribute('aria-label',t('share')); $('search').placeholder=t('search');$('search').setAttribute('aria-label',t('searchLabel'));$('search-clear').setAttribute('aria-label',t('clearSearch'));
-  $('view-grid').setAttribute('aria-label',t('grid'));$('view-list').setAttribute('aria-label',t('list'));$('favorites-filter').setAttribute('aria-label',t('favorites'));
+  $('view-feed').setAttribute('aria-label',t('feed'));$('view-grid').setAttribute('aria-label',t('grid'));$('view-list').setAttribute('aria-label',t('list'));$('favorites-filter').setAttribute('aria-label',t('favorites'));
+  $('feed-stories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',[t('feed'),t('grid'),t('list')].join(' / '));
   document.querySelectorAll('[data-close]').forEach(e=>e.setAttribute('aria-label',t('close')));
   renderTheme();renderCategories();renderProducts();renderCartCount();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
@@ -69,25 +77,65 @@ function renderLanguage() {
 function renderCategories() {
   const all=[{id:'featured',name:t('featured'),icon:'star'},{id:'all',name:t('all'),icon:'grid'},...categories.map(c=>({id:c.id,name:c.name[lang],icon:c.icon}))];
   $('categories').innerHTML=all.map(c=>`<button class="category-btn" type="button" data-category="${c.id}" aria-pressed="${category===c.id}">${icon(c.icon)}${esc(c.name)}</button>`).join('');
+  $('feed-stories').innerHTML=all.map(c=>{const cover=products.find(p=>p.image&&(c.id==='featured'?featured.includes(p.id):c.id==='all'||p.cat===c.id));return `<button class="story-button" type="button" data-category="${c.id}" aria-pressed="${category===c.id}"><span class="story-ring"><img src="${photo(cover)}" width="64" height="64" alt="" decoding="async" loading="lazy"></span><span class="story-name">${esc(c.name)}</span></button>`;}).join('');
   $('favorites-filter').innerHTML=icon('heart');$('favorites-filter').setAttribute('aria-pressed',String(category==='favorites'));
 }
 function meta(item) {return `${item.kcal&&!item.calorieReview?`<span>${icon('flame')}${esc(item.kcal)}</span>`:''}${item.time?`<span>${icon('clock')}${item.time} ${t('minutes')}</span>`:''}`;}
 function renderProducts() {
+  stopFeedViews();
   const list=filterProducts(products,{category,search,favorites:[...favorites],featured});
   const label=category==='featured'?t('featured'):category==='all'?(search?t('searchResults'):t('all')):category==='favorites'?t('favorites'):categories.find(c=>c.id===category)?.name[lang]||t('all');
   $('result-title').textContent=label;$('result-count').textContent=`${list.length} ${t('count')}`;
-  $('empty-state').hidden=list.length>0;$('products').className='product-grid'+(view==='list'?' list-view':'');
-  $('view-grid').setAttribute('aria-pressed',String(view==='grid'));$('view-list').setAttribute('aria-pressed',String(view==='list'));$('search-clear').hidden=!search;
+  document.body.dataset.view=view;
+  $('menu-title').textContent=t(view==='feed'?'feedTitle':'menuTitle');document.querySelector('[data-i18n="menuKicker"]').textContent=t(view==='feed'?'feedKicker':'menuKicker');
+  $('feed-stories').hidden=view!=='feed';$('categories').hidden=view==='feed';
+  $('empty-state').hidden=list.length>0;$('products').className='product-grid'+(view==='list'?' list-view':view==='feed'?' feed-view':'');
+  $('view-feed').setAttribute('aria-pressed',String(view==='feed'));$('view-grid').setAttribute('aria-pressed',String(view==='grid'));$('view-list').setAttribute('aria-pressed',String(view==='list'));$('search-clear').hidden=!search;
+  if(view==='feed'){const ranks=new Map(featured.map((id,i)=>[id,i]));const ordered=category==='all'&&!search?[...list].sort((a,b)=>(ranks.get(a.id)??100)-(ranks.get(b.id)??100)):list;$('products').innerHTML=ordered.map(feedPost).join('');startFeedViews();return;}
   $('products').innerHTML=list.map(p=>`<article class="product-card" data-product="${p.id}">
     <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}"><img src="${photo(p)}" width="400" height="350" loading="lazy" decoding="async" alt="${esc(p.image?name(p):t('photoMissing'))}" ${p.image?'':'class="missing-photo"'}></button>
     <div class="product-social"><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}">${icon('share')}</button><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}</button></div></div>
     <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div><div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
+}
+function feedPost(p) {
+  const cat=categories.find(c=>c.id===p.cat),qty=cart[p.id]||0;
+  return `<article class="product-card feed-post" data-product="${p.id}" aria-labelledby="post-title-${p.id}">
+    <div class="post-head"><img class="post-avatar" src="assets/logo-source.jpg" width="36" height="36" alt=""><div><b>mioracoffeetr</b><span>${esc(cat.name[lang])}</span></div><button class="icon-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${icon('more')}</button></div>
+    <div class="feed-media"><div class="feed-photo" data-feed-photo="${p.id}"><img class="${p.image?'':'missing-photo'}" src="${photo(p)}" width="400" height="400" loading="lazy" decoding="async" alt="${esc(p.image?name(p):t('photoMissing'))}"><span class="feed-love" aria-hidden="true">${icon('heart')}</span></div></div>
+    <div class="post-actions"><button class="icon-btn feed-heart" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${esc(t('like')+' · '+name(p))}">${icon('heart')}</button><button class="icon-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('ingredients')+' · '+name(p))}">${icon('info')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}">${icon('share')}</button><span class="post-saved" data-saved="${p.id}" ${favorites.has(p.id)?'':'hidden'}>${t('liked')}</span></div>
+    <div class="post-caption"><h3 id="post-title-${p.id}"><button type="button" data-detail="${p.id}">${esc(name(p))}</button></h3><p class="post-original" ${lang==='tr'?'':'lang="tr"'}>${esc(lang==='tr'?(p.description.length>130?p.description.slice(0,127)+'…':p.description):p.name.tr)}</p><div class="post-meta">${meta(p)}</div><span class="post-views" data-views="${p.id}" ${views[p.id]?'':'hidden'}>${icon('eye')}<span>${views[p.id]||0} · ${t('viewOnDevice')}</span></span></div>
+    <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${icon('bag')}<span>${t(qty?'addMore':'addToOrder')}</span></button>`}</div>
+    <p class="feed-hint">${t('feedHint')}</p></article>`;
+}
+function recordView(id) {
+  if(!byId.has(id)||viewedThisSession.has(id))return;
+  const stored=load('views',{}),current=stored&&Number.isSafeInteger(stored[id])&&stored[id]>=0?stored[id]:0;
+  views[id]=Math.min(Math.max(views[id]||0,current)+1,1000000);viewedThisSession.add(id);save('views',views);
+  document.querySelectorAll(`[data-views="${id}"]`).forEach(el=>{el.hidden=false;el.innerHTML=`${icon('eye')}<span>${views[id]} · ${t('viewOnDevice')}</span>`;});
+}
+function stopFeedViews() {
+  feedObserver?.disconnect();feedObserver=null;
+  for(const timer of feedViewTimers.values())clearTimeout(timer);feedViewTimers.clear();
+}
+function startFeedViews() {
+  stopFeedViews();
+  if(view!=='feed'||!('IntersectionObserver' in window))return;
+  feedObserver=new IntersectionObserver(entries=>{for(const entry of entries){const id=entry.target.dataset.feedPhoto;clearTimeout(feedViewTimers.get(id));feedViewTimers.delete(id);
+    if(entry.intersectionRatio>=.65&&!document.hidden&&!document.querySelector('dialog[open]')&&!viewedThisSession.has(id))feedViewTimers.set(id,setTimeout(()=>{feedViewTimers.delete(id);if(view==='feed'&&!document.hidden&&!document.querySelector('dialog[open]')&&entry.target.isConnected)recordView(id);},1000));
+  }},{threshold:[0,.65],rootMargin:`-${document.querySelector('.header').offsetHeight+$('toolbar').offsetHeight}px 0px 0px 0px`});
+  document.querySelectorAll('[data-feed-photo]').forEach(el=>feedObserver.observe(el));
+}
+function likePhoto(id,button) {
+  if(!favorites.has(id))toggleFavorite(id);
+  button.classList.remove('like-flash');void button.offsetWidth;button.classList.add('like-flash');setTimeout(()=>button.classList.remove('like-flash'),650);
 }
 function renderCartCount() {
   const sum=totals(cart,byId);
   $('cart-open').innerHTML=`${icon('bag')}<span>${esc(t('cart'))}</span><span class="cart-count">${sum.count}</span>`;$('cart-open').setAttribute('aria-label',`${t('cart')} · ${sum.count}`);
   $('mobile-cart').hidden=!sum.count;$('mobile-cart-open').innerHTML=`<span>${icon('bag')}${esc(t('cart'))} · ${sum.count}</span><strong>${money(sum.price)}</strong>`;
   document.querySelectorAll('[data-add]').forEach(b=>{if(!b.classList.contains('add-btn'))return;const n=cart[b.dataset.add];b.classList.toggle('quantity-badge',!!n);b.innerHTML=n||icon('plus');});
+  document.querySelectorAll('.feed-add[data-add]').forEach(b=>{const n=cart[b.dataset.add]||0;b.innerHTML=`${icon('bag')}<span>${t(n?'addMore':'addToOrder')}</span>`;});
+  document.querySelectorAll('[data-post-qty]').forEach(el=>{const n=cart[el.dataset.postQty]||0;el.hidden=!n;el.textContent=`${t('inOrder')}: ${n}`;});
 }
 function refreshCart() {cart=normalizeCart(load('cart',cart),byId);}
 function commitCart(next) {cart=next;save('cart',cart);if(!totals(cart,byId).count)staffMode=false;renderCartCount();if($('cart-dialog').open)renderCart();}
@@ -96,11 +144,12 @@ function toggleFavorite(id) {
   if(!byId.has(id))return;
   if(favorites.has(id)){favorites.delete(id);notify(t('favoriteRemoved'));}else{favorites.add(id);notify(t('favoriteAdded'));}
   save('favorites',[...favorites]);document.querySelectorAll(`[data-favorite="${id}"]`).forEach(b=>b.setAttribute('aria-pressed',String(favorites.has(id))));
+  document.querySelectorAll(`[data-saved="${id}"]`).forEach(el=>el.hidden=!favorites.has(id));
   if(category==='favorites')renderProducts();
 }
 function openDetail(id) {
   if(!byId.has(id))return;detailId=id;
-  if(!viewedThisSession.has(id)){views[id]=Math.min((views[id]||0)+1,1000000);save('views',views);viewedThisSession.add(id);}
+  stopFeedViews();recordView(id);
   renderDetail();if(!$('detail-dialog').open)$('detail-dialog').showModal();$('detail-dialog').scrollTop=0;
 }
 function renderDetail() {
@@ -145,7 +194,7 @@ function renderCart() {
 function openCart() {refreshCart();staffMode=false;renderCart();$('cart-dialog').showModal();}
 async function copyText(text,success,fallback) {try {if(!navigator.clipboard?.writeText)throw new Error('clipboard');await navigator.clipboard.writeText(text);notify(success);return true;}catch{fallback?.();return false;}}
 async function shareItem(id) {
-  const p=byId.get(id);if(!p)return;const url=new URL(location.href);url.hash='';url.search='';url.searchParams.set('item',id);url.searchParams.set('lang',lang);
+  const p=byId.get(id);if(!p)return;const url=new URL(location.href);url.hash='';url.search='';url.searchParams.set('item',id);url.searchParams.set('lang',lang);url.searchParams.set('view',view);
   if(navigator.share){try{await navigator.share({title:'Miora Coffee · '+name(p),text:name(p),url:url.href});return;}catch(e){if(e.name==='AbortError')return;}}
   $('share-title').textContent=t('share')+' · Miora';$('share-description').textContent=name(p)+' — '+t('shareDescription');$('share-link').value=url.href;$('copy-link').textContent=t('copy');$('share-dialog').showModal();
 }
@@ -160,7 +209,7 @@ document.addEventListener('click',async event=>{
   if(d.favorite){toggleFavorite(d.favorite);return;}
   if(d.share){await shareItem(d.share);return;}
   if(d.category){selectCategory(d.category);return;}
-  if(d.view){view=d.view;save('view',view);renderProducts();updateUrl();return;}
+  if(d.view){const boundary=$('toolbar').getBoundingClientRect().bottom;const anchor=[...document.querySelectorAll('[data-product]')].find(el=>{const r=el.getBoundingClientRect();return r.bottom>boundary&&r.top<innerHeight;})?.dataset.product;view=resolveView(d.view,null);save('view',view);renderProducts();updateUrl();if(anchor)requestAnimationFrame(()=>{const card=document.querySelector(`[data-product="${anchor}"]`);if(card)window.scrollTo({top:Math.max(0,card.getBoundingClientRect().top+scrollY-document.querySelector('.header').offsetHeight-$('toolbar').offsetHeight-16),behavior:'instant'});});return;}
   if(d.step){refreshCart();commitCart(updateCart(cart,d.stepId,Number(d.step),byId));return;}
   if(d.service){service=d.service;save('service',service);renderCart();return;}
   if(d.action==='reset'){search='';$('search').value='';selectCategory('all');return;}
@@ -173,7 +222,7 @@ document.addEventListener('click',async event=>{
 });
 $('cart-open').addEventListener('click',openCart);$('mobile-cart-open').addEventListener('click',openCart);
 $('search-icon').innerHTML=icon('search');
-$('view-grid').innerHTML=icon('grid');$('view-list').innerHTML=icon('list');
+$('view-feed').innerHTML=icon('feed');$('view-grid').innerHTML=icon('grid');$('view-list').innerHTML=icon('list');
 $('search').addEventListener('input',event=>{search=event.target.value;if(search&&category!=='favorites'&&category!=='all'){category='all';renderCategories();}renderProducts();});
 $('search-clear').addEventListener('click',()=>{search='';$('search').value='';renderProducts();$('search').focus();});
 $('favorites-filter').addEventListener('click',()=>{search='';$('search').value='';selectCategory(category==='favorites'?'featured':'favorites');});
@@ -181,6 +230,11 @@ $('language').addEventListener('change',event=>{lang=event.target.value;save('la
 $('theme-toggle').addEventListener('click',()=>{const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=theme;try{localStorage.setItem('miora:theme',theme);}catch{}document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#1e1c19':'#f8f5ef';renderTheme();});
 $('copy-link').addEventListener('click',()=>copyText($('share-link').value,t('copied'),()=>{$('share-link').focus();$('share-link').select();notify(t('selectCopy'));}));
 document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}));
+document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('close',()=>{if(!document.querySelector('dialog[open]'))startFeedViews();}));
+document.addEventListener('dblclick',event=>{const button=event.target.closest('[data-feed-photo]');if(button){event.preventDefault();likePhoto(button.dataset.feedPhoto,button);}});
+let lastTouch=null;
+document.addEventListener('pointerup',event=>{if(event.pointerType!=='touch')return;const button=event.target.closest('[data-feed-photo]');if(!button)return;const now=Date.now();if(lastTouch&&lastTouch.id===button.dataset.feedPhoto&&now-lastTouch.at<260&&Math.hypot(event.clientX-lastTouch.x,event.clientY-lastTouch.y)<35){likePhoto(button.dataset.feedPhoto,button);lastTouch=null;}else lastTouch={id:button.dataset.feedPhoto,at:now,x:event.clientX,y:event.clientY};});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopFeedViews();else if(!document.querySelector('dialog[open]'))startFeedViews();});
 document.addEventListener('error',event=>{const image=event.target;if(image instanceof HTMLImageElement&&!image.src.endsWith('/favicon.svg')){image.src='favicon.svg';image.classList.add('missing-photo');}},true);
 window.addEventListener('storage',event=>{
   if(event.key==='miora:cart'||event.key===null){refreshCart();renderCartCount();if($('cart-dialog').open)renderCart();}
