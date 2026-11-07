@@ -1,4 +1,4 @@
-import {photoSources,photoPlaceholders} from './photo-data.js?v=20261106-photos1';
+import {photoSources,photoPlaceholders} from './photo-data.js?v=20261106-photos2';
 const placeholders=new Set(photoPlaceholders),widths=new Set([160,640,1200]);
 export const hasPhoto=item=>Boolean(item?.image)&&!placeholders.has(item.id);
 export function photoUrl(item,width=640) {

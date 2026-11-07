@@ -1,5 +1,5 @@
 {
-  "version": "20261106-photos1",
+  "version": "20261106-photos2",
   "baseCommit": "2c0d3d00cc40f06cd291919c24b87d5093a1a959",
   "complete": false,
   "plannedRealProducts": 84,
@@ -848,6 +848,834 @@
           ],
           "bytes": 126238,
           "sha256": "202a01cf8aa117c3e34d275840930411545d509d0b288e2d78a49f26aad24d14"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429921": {
+      "name": "Hindistan Cevizli Cheescake",
+      "sourceSha256": "c7c93622c37f62405b63cc83e8b556f07de2fb47495fd9daf874fea9fc16d985",
+      "sourceDimensions": [
+        400,
+        533
+      ],
+      "productIds": [
+        "429921"
+      ],
+      "generatedSha256": "2594e4eb317f35e07059353598dfc67f2355b7c519ce5a8905a65cc2a9664ce3",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429921-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4760,
+          "sha256": "dbbef5da15b1e3d6c20d0eaf5cb977e53b309c4ef465e2ffee6e770dce310a95"
+        },
+        "640": {
+          "path": "assets/enhanced/429921-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 50852,
+          "sha256": "63df2c0e5640c3acc6706b143e918bb8b9453cf91c0bfbc184660975dc566901"
+        },
+        "1200": {
+          "path": "assets/enhanced/429921-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 138444,
+          "sha256": "8da336638f5bfd4c51191188b817d254425eac9e1aff2f6c62fa42737aa2ea94"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429828": {
+      "name": "Çikolatalı Cheescake",
+      "sourceSha256": "642847a0cacb18304c6b58e6f5e624e0578b66dd13384d6c82a5032ec31c7207",
+      "sourceDimensions": [
+        400,
+        711
+      ],
+      "productIds": [
+        "429828"
+      ],
+      "generatedSha256": "254c5f69f6d7cbe1f323660031d7e3950684a8835c5b78da518a4dd70f2042bd",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429828-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 5542,
+          "sha256": "c82820891af37c12eb47a5350699ab88285af2ad9a874198dea42c0e69d55100"
+        },
+        "640": {
+          "path": "assets/enhanced/429828-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 66258,
+          "sha256": "46eaf5d07eff3b81d9dd6ee08b13f4ebb6cb86b67d00f9a2f090a833540fd876"
+        },
+        "1200": {
+          "path": "assets/enhanced/429828-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 210496,
+          "sha256": "5ad17f8883f751f2857538a791d4e70f307fe716fe05d908a3a119fee6f57f7a"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429826": {
+      "name": "Fransız Beyaz Çikolatalı Cheescake",
+      "sourceSha256": "2a352b5b6e2a0a1df380964de63d5bf0ec624eec813938efdf0ce0c9b0dea279",
+      "sourceDimensions": [
+        400,
+        711
+      ],
+      "productIds": [
+        "429826"
+      ],
+      "generatedSha256": "47ce7879d573e35d8c61cb0a8f5289bcf5198e40206be643e1d76f4c0d780fb1",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429826-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4656,
+          "sha256": "bea6186f1e79c7e5459abb664bbd1f320b8e65e4cae53c6a0d92445dbe4b42a7"
+        },
+        "640": {
+          "path": "assets/enhanced/429826-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 47020,
+          "sha256": "1ca1f57adc01b9af162c35f520a4b47b26b6be484a972b25f197c046265725cc"
+        },
+        "1200": {
+          "path": "assets/enhanced/429826-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 128686,
+          "sha256": "80f7eac323a9a6418afc75b945fc710dd351bb237d7cdabe64a73c68ffdbdee2"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "431293": {
+      "name": "2'li Hurma Topu",
+      "sourceSha256": "eaeec09bd7adfa80dcb2ed6b7ea2bd537241f8415d55574fe23c0a2bd2ef6325",
+      "sourceDimensions": [
+        400,
+        711
+      ],
+      "productIds": [
+        "431293"
+      ],
+      "generatedSha256": "5939bf9cb43a44e136383594ce4b43afdf9e9344577e6d696fedb9a250783675",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/431293-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4236,
+          "sha256": "9e05400a16e970241f3c8475e36c8e0d003ec2d1f19c2e18500c0c214086043b"
+        },
+        "640": {
+          "path": "assets/enhanced/431293-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 54962,
+          "sha256": "33eb51e359dd862dd329dfb0736d9671852b68a41384b158ee57ac3906fb127b"
+        },
+        "1200": {
+          "path": "assets/enhanced/431293-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 163510,
+          "sha256": "0cdb7d70839f1f10ac094dcccaf87f7924c3b2c3d8784aacf44cc9e9a9b58a86"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429450": {
+      "name": "İce Matcha Latre",
+      "sourceSha256": "824982fcd82027415b626c8a4bd4cc376a07066e643f704024801a7a25306913",
+      "sourceDimensions": [
+        400,
+        455
+      ],
+      "productIds": [
+        "429450"
+      ],
+      "generatedSha256": "9cf2f9fd64cc83eaca10c61c4fd99e521d6bfa35a1d98ebe4725affc899e704e",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429450-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3798,
+          "sha256": "6ea21e8f4307cb0764a28c2967b79e0adf4b35443ae13debad236d090a93b3de"
+        },
+        "640": {
+          "path": "assets/enhanced/429450-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 31262,
+          "sha256": "f302f8022a115960f916f017ab526bd76ea3057dc56a9e1cc24fcfe9716c1414"
+        },
+        "1200": {
+          "path": "assets/enhanced/429450-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 85692,
+          "sha256": "18cf2015d5c160e98e2434b389617d6f93257ac332bf87ed4e4bd89c07a42f84"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429447": {
+      "name": "Orman Meyveli Milkshake",
+      "sourceSha256": "d60c063a271f20e47d6d0008edc66f8ec33ed74d0ddff0a210b4a60bf3203f65",
+      "sourceDimensions": [
+        400,
+        572
+      ],
+      "productIds": [
+        "429447"
+      ],
+      "generatedSha256": "df94c7bfafd8e0cf741116fd3520fd875ddd18102d793bacf623c660bcb28bb9",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429447-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4584,
+          "sha256": "0d0fe1b02106f9fd5eb40b5fadff8386230c2200af26af5b6713b0dc4a0dba90"
+        },
+        "640": {
+          "path": "assets/enhanced/429447-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 40170,
+          "sha256": "e030f1c9d8db588c7fc96a383f5b5e70bbc86915793c7971c2ec9058217cd244"
+        },
+        "1200": {
+          "path": "assets/enhanced/429447-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 111718,
+          "sha256": "699f77198e0f8537f989a1e22619b66c52e581d50654bb7644a6f52372ca3a3b"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429446": {
+      "name": "Çikolotalı Milkshake",
+      "sourceSha256": "0f731e355772492ba17e69f460590e0923865c40ce10426e5dfab550db22323c",
+      "sourceDimensions": [
+        400,
+        578
+      ],
+      "productIds": [
+        "429446"
+      ],
+      "generatedSha256": "cfa04d459d1554e9b3b1471ac83f7175ebe31e59627466a9717ca95f5347a494",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429446-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4354,
+          "sha256": "dcc3ef2529ddd22e49755da314afe951bae007bd2e2fbfc7ee3b080cd27c417f"
+        },
+        "640": {
+          "path": "assets/enhanced/429446-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 38398,
+          "sha256": "47c4fdfe1696c3c1163759205fabe59ad77bfe5601b6b5ae9e9b4c7ba07bf3c3"
+        },
+        "1200": {
+          "path": "assets/enhanced/429446-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 107178,
+          "sha256": "1170eabbb94ed6ef1ed7c7aa9a00008aef4236ed4b099331774fc1456ce6fbf5"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429443": {
+      "name": "Portakal Suyu",
+      "sourceSha256": "3ddf95226c5178e1866ab23f3d0c42b62b5746bf9f70ffdb3470450c25a211e2",
+      "sourceDimensions": [
+        400,
+        587
+      ],
+      "productIds": [
+        "429443"
+      ],
+      "generatedSha256": "1b0327b13441305e0da51f1eaeaf39785b85f5d8eb6ed873ce2b84a5cbf11e37",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429443-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 2964,
+          "sha256": "1efde281eb7ea7cc69d6a470d0907f35fdf82636e1947cd6ca2671dce19a9559"
+        },
+        "640": {
+          "path": "assets/enhanced/429443-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 25902,
+          "sha256": "f497aebd110381a3fcd7da9bdc1797c412a28137505b159737daf12a52ad7c4f"
+        },
+        "1200": {
+          "path": "assets/enhanced/429443-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 76804,
+          "sha256": "a49e807f4319c85c5861372819a92a34c691f61b2b3896c6e38311610e7e43c8"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429442": {
+      "name": "Limonata",
+      "sourceSha256": "e6541c96f7c362413b3eec490a1f57c03843a527c554ae5acfa0b12e8170977b",
+      "sourceDimensions": [
+        400,
+        574
+      ],
+      "productIds": [
+        "429442"
+      ],
+      "generatedSha256": "0bfa9456037bbc3f65de759b60d6ca4cd8d007e06433439832998f4c4ce50849",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429442-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 2964,
+          "sha256": "478e320c0bd1a27a4f018e2b65bd88dd3396c6c792a10628d384493f9afebccb"
+        },
+        "640": {
+          "path": "assets/enhanced/429442-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 26312,
+          "sha256": "63192439b3b7ca21bab91e95acba797dc25198b29d5801a1a0b514de50b72e01"
+        },
+        "1200": {
+          "path": "assets/enhanced/429442-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 77748,
+          "sha256": "9a98b21f838808dfc6678141c4ecae7312f20a8c256c79510c528622f5a63b75"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429436": {
+      "name": "Berry Lime",
+      "sourceSha256": "f0a474f38badc075142522b29bef9e7e78150b5ef60871d1fbf8ddc13117aebc",
+      "sourceDimensions": [
+        400,
+        591
+      ],
+      "productIds": [
+        "429436"
+      ],
+      "generatedSha256": "0cb7be92f31e065e76ee07517897c00f7a5c2c5b09f1997af63ec6f9cb100ba5",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429436-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3468,
+          "sha256": "79e8ffddbf4a04a363de5bbda790332acaf677636115a6ea2ed867a5f6d7f38d"
+        },
+        "640": {
+          "path": "assets/enhanced/429436-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 33782,
+          "sha256": "b2c82ae17b978bf05dd6af43a13a0befac6f6dbd77d13ed1778870235633c5bb"
+        },
+        "1200": {
+          "path": "assets/enhanced/429436-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 103198,
+          "sha256": "f0df8d7a70b59d3615fb5e1c5878492db306de5185d4e39013629cf091d475a9"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429431": {
+      "name": "Chai Tea Latte",
+      "sourceSha256": "cf60dbacd95d73a1f8167f685a0776ff9bbbf43275cb9870c1a4f819da4cb0f0",
+      "sourceDimensions": [
+        400,
+        455
+      ],
+      "productIds": [
+        "429431"
+      ],
+      "generatedSha256": "680153249f0e32a9e0c112987cfd74c55b41b437220d14e7ce1efd9dd5f3945e",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429431-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4090,
+          "sha256": "45d52000a9c9a67aea7e6228727f8e04828426680bcd704f3390293525235d8e"
+        },
+        "640": {
+          "path": "assets/enhanced/429431-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 46808,
+          "sha256": "1982af639c89a698bf1c6da0c94542d8b8ab4f7f32c4faf38f427738449f1d10"
+        },
+        "1200": {
+          "path": "assets/enhanced/429431-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 145980,
+          "sha256": "bef28d0a05f505754a3bf02c360042954a76c73535bed757c99949f7c7e9e8dd"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429429": {
+      "name": "Salep",
+      "sourceSha256": "931333d763c66175452ca3579b3d242cb0deb185a98544d82416187a4ca186cc",
+      "sourceDimensions": [
+        400,
+        419
+      ],
+      "productIds": [
+        "429429"
+      ],
+      "generatedSha256": "4f8f68ecc5720861497bcd35a41fc71b8ee13f9ba00b660ee585f4d66d25bdad",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429429-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4788,
+          "sha256": "d91fb70e5f73528b3b48fa1a000f99ac1ae4e09877b65824cdf26786304e5f46"
+        },
+        "640": {
+          "path": "assets/enhanced/429429-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 57780,
+          "sha256": "dbce842c61f00c9d04f9ca09b5aa3af60eceeb8ca27810f000fafce49ac030f1"
+        },
+        "1200": {
+          "path": "assets/enhanced/429429-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 180872,
+          "sha256": "48934dd58676490af9d59c12065fbf52af7ae8e3ad492074dccf9ab9741393ae"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429400": {
+      "name": "Sıcak Çikolata",
+      "sourceSha256": "2d0b00d16ce6ab8d5945768a64171314d05f0c2ad3f6b8b9315544e45bfc7ca7",
+      "sourceDimensions": [
+        400,
+        305
+      ],
+      "productIds": [
+        "429400"
+      ],
+      "generatedSha256": "fca5f6a238b0ea01aba944e16627a76a029cb1f801e5d4f57233ddec0dfde86a",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429400-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 5050,
+          "sha256": "19f8c60eefe97e3a0f509ca8a39a6e812d26176ffc5b4071de66a6e88ae3d9f8"
+        },
+        "640": {
+          "path": "assets/enhanced/429400-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 48732,
+          "sha256": "3a844b8b401f3ea27d6765aecfd7d5b72207a857e8187192bcf72253320d1fe5"
+        },
+        "1200": {
+          "path": "assets/enhanced/429400-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 135300,
+          "sha256": "4e9f0a6b5859b0439a4f2fbb7fc1c4572a5161cc781e557c84586b5c78cad1a1"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429393": {
+      "name": "Double Türk Kahvesi",
+      "sourceSha256": "c3025f0d92e5bb837f679940ae731e3a686c04e6854e0fdf97fd2fbf9f1e4130",
+      "sourceDimensions": [
+        400,
+        374
+      ],
+      "productIds": [
+        "429393"
+      ],
+      "generatedSha256": "3b49328d3de2d6989fabba9abe5e8101501a2af00ce9520e5d7b51c49caf61f4",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429393-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3690,
+          "sha256": "1f84891e8bd95f5db70b5b795333d92e0e795ec15db69b20c427ee7335ea44d3"
+        },
+        "640": {
+          "path": "assets/enhanced/429393-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 44208,
+          "sha256": "03429afefb9c6997ad61ea7e9a98db7540acaadc1c34341d41749749c415456f"
+        },
+        "1200": {
+          "path": "assets/enhanced/429393-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 131504,
+          "sha256": "a8446767cc271564221e629d3ea137257c58f7c3c7fcaefd60161e570a429db0"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429392": {
+      "name": "Türk Kahvesi",
+      "sourceSha256": "a92118566304a225c4be8bc06fd8fa7b0c2b8985f9bf7f6fa032c161fe73da3a",
+      "sourceDimensions": [
+        400,
+        402
+      ],
+      "productIds": [
+        "429392"
+      ],
+      "generatedSha256": "afe1f2df2bb4d6aa7a4427bc3d9e506b7050be20a2499d8aafe841fe3eafee88",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429392-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3888,
+          "sha256": "f80df891c067318e7c6be069216d568cd4c40eda02aa4c966332f0dcc0b5ad4c"
+        },
+        "640": {
+          "path": "assets/enhanced/429392-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 51058,
+          "sha256": "c792b45f92d49687dc48f29517e5c6183579a9e54fa40237167fa3fe99480b4c"
+        },
+        "1200": {
+          "path": "assets/enhanced/429392-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 140750,
+          "sha256": "2cba395ad3068ba7c3de9d6b1b1829afbe6acb4e8c6195f1cc7f5d7b3194a936"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429391": {
+      "name": "Double çay",
+      "sourceSha256": "c4fc76e74dca35c2ee88f29cb9edfc2d93654f61c2594bb4d2d8cce0b8f7d262",
+      "sourceDimensions": [
+        400,
+        444
+      ],
+      "productIds": [
+        "429391"
+      ],
+      "generatedSha256": "c7e7a3c86d8f0892ac1b3bba4aaa184e6e3853a79abaefeac74a0cf1b8f5153c",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429391-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3092,
+          "sha256": "033fb7b98449757f45bd239ba66f7ca006ef94130e7ef0958351ca34c5ef9bae"
+        },
+        "640": {
+          "path": "assets/enhanced/429391-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 22784,
+          "sha256": "e43b1c83545549d9968c0d38ece0dd7cc93a646c277935bf87a6b7f0decd304f"
+        },
+        "1200": {
+          "path": "assets/enhanced/429391-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 61026,
+          "sha256": "d50e29dc34ce55ab45910140b163c6e1b55231610f50d703823783b2f03a7df2"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429390": {
+      "name": "Çay",
+      "sourceSha256": "7163fff9e4105b6c00e2b18c3d7ffdc44373690c39f4ea4dfbd9240813c809ad",
+      "sourceDimensions": [
+        400,
+        501
+      ],
+      "productIds": [
+        "429390"
+      ],
+      "generatedSha256": "777d933c03c0028536bb5523e787eaacce4d5fc955da547517124cd6b778671d",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429390-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3894,
+          "sha256": "a092d2643b2a9258fab14ff40a4eb32875524cc97aaf4a298a2568effef5d49f"
+        },
+        "640": {
+          "path": "assets/enhanced/429390-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 38778,
+          "sha256": "7ea6a6baf427b6edcb6e7cba41495a2629776b894358171eca0d9184f42e71b1"
+        },
+        "1200": {
+          "path": "assets/enhanced/429390-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 103308,
+          "sha256": "08beab39d694c352625b0e3b86623641932b72b1c2544dab09b4b21bd6bb1717"
+        }
+      },
+      "visualReview": "accepted"
+    },
+    "429293": {
+      "name": "İce White Chocolate Mocha",
+      "sourceSha256": "b1c286eb8f7c3c0a64dbba048bf4d7d979d4f26eb8d48d76d58a6d61007f743f",
+      "sourceDimensions": [
+        400,
+        574
+      ],
+      "productIds": [
+        "429293"
+      ],
+      "generatedSha256": "39816990c96ac635b88129f03a5d9ca914c816178616f85c3a4c5ef73e365b08",
+      "generatedDimensions": [
+        1254,
+        1254
+      ],
+      "assets": {
+        "160": {
+          "path": "assets/enhanced/429293-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3510,
+          "sha256": "f6c170e5394a059e5dce7654c1cd03c08bc5d659bcb077c2c844d1a9a4b95497"
+        },
+        "640": {
+          "path": "assets/enhanced/429293-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 27374,
+          "sha256": "572c7f2a4a4aad581191eb6acae198b8717074ab53d9ba1fa545f0bbc46a8117"
+        },
+        "1200": {
+          "path": "assets/enhanced/429293-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 69142,
+          "sha256": "47b5504ad6ab10d6251e6a20c3a7927008757c88e398d4e60bd5831c66aebf2e"
         }
       },
       "visualReview": "accepted"

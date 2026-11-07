@@ -2,8 +2,8 @@
 
 Source revision: `2c0d3d00cc40f06cd291919c24b87d5093a1a959`.
 
-The first published set contains 18 individually retouched source photographs,
-covering 36 menu products that shared those exact source files. This is a
+The current set contains 36 individually retouched source photographs,
+covering 54 menu products that shared those exact source files. This is a
 partial rollout of the 84 products with actual photography. Eight source
 entries contain only the Miora logo; one has no image. They remain explicit
 placeholders instead of invented food photographs.

@@ -1,5 +1,5 @@
 import {products,categories,featured,source} from './menu-data.js';
-import {photoUrl as photo,photoSet,hasPhoto} from './photos.js?v=20261106-photos1';
+import {photoUrl as photo,photoSet,hasPhoto} from './photos.js?v=20261106-photos2';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
 
 const $ = id => document.getElementById(id);
