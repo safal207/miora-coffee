@@ -85,7 +85,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,money,getPhoto}){
         '<span class="kiosk-drink-copy"><b>'+esc(p('drinkShort'))+'</b><small>+180 ₺ · '+esc(t('drinkNote').split('·').pop().trim())+'</small></span>'+
         '<span class="kiosk-check" aria-hidden="true">'+(withDrink?'✓':'+')+'</span></button>':'')+
       '<p class="kiosk-allergens">'+esc(t('allergens'))+'</p></div>':'';
-    const stepPage=review?'':'<div class="kiosk-step-heading"><span class="kiosk-step-photo">'+photo+'</span><div><h2>'+esc(title(step.title))+'</h2><p>'+esc(step.min===1&&step.max===1?t('selectOne'):t('selectUpTo')+' '+step.max+' · '+(step.min===0?t('optional'):t('selectOne')))+'</p></div></div>'+
+    const stepPage=review?'':'<div class="kiosk-step-heading"><span class="kiosk-step-photo">'+photo+'</span><div><h2>'+esc(title(step.title))+'</h2><p>'+esc((lang()==='ru'?'Выбрано ':lang()==='en'?'Selected ':'Seçilen ')+selection[step.id].length+' / '+step.max+' · '+(step.min===0?t('optional'):t('selectOne')))+'</p></div></div>'+
       choices+(index===0&&r.estimated?'<p class="kiosk-note">'+esc(title(r.note))+'</p>':'');
     content.innerHTML='<div class="kiosk-dialog-head"><div><span class="kiosk-wordmark">miora <small>COFFEE · FOOD · PLAY</small></span><p>'+esc(stepLabel)+'</p></div>'+
       '<button type="button" class="kiosk-close" data-k-close aria-label="'+esc(t('close'))+'">×</button></div>'+
