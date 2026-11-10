@@ -22,9 +22,10 @@ export function mountKiosk({getLanguage,onAdd,money,getPhoto}){
       '<span class="kiosk-entry-image">'+img(r)+'</span><span class="kiosk-entry-copy"><b>'+esc(title(r.name))+'</b><small>'+esc(title(r.short))+'</small><strong>'+esc(t('from'))+' '+esc(label(r.steps.length?orderPrice(kind,initialSelection(kind)):r.price))+'</strong></span><span class="kiosk-entry-arrow" aria-hidden="true">↗</span></button>').join('')+
       '</div>';
   }
-  function open(kind){
+  function open(kind,seedBread){
     if(!recipes[kind])return;
     lastFocus=document.activeElement;current=kind;selection=initialSelection(kind);index=0;withDrink=false;notice='';
+    if(kind==='sandwich'&&recipes.sandwich.steps[0].items.some(x=>x.id===seedBread))selection.bread=[seedBread];
     render();
     if(!dialog.open)dialog.showModal();
     content.querySelector('button[data-k-close]')?.focus({preventScroll:true});
@@ -66,8 +67,8 @@ export function mountKiosk({getLanguage,onAdd,money,getPhoto}){
       '</div>';
   }
   function validStep(step){return !step||(selection[step.id]?.length??0)>=step.min;}
-  strip.addEventListener('click',e=>{
-    const start=e.target.closest('[data-k-start]');if(start)open(start.dataset.kStart);
+  document.addEventListener('click',e=>{
+    const start=e.target.closest('[data-k-start]');if(start)open(start.dataset.kStart,start.dataset.kBread);
   });
   dialog.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b)return;
