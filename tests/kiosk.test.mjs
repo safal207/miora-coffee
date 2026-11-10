@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {products} from '../dist/menu-data.js';
 import {recipes,ui,localized} from '../dist/kiosk-data.js';
-import {initialSelection,choose,validSelection,orderPrice,makeOrder,replaceOrder,normalizeOrders,appendOrder,changeOrderQty,configuredTotals,describeOrder} from '../dist/kiosk-core.js';
+import {initialSelection,choose,validSelection,orderPrice,makeOrder,replaceOrder,normalizeOrders,appendOrder,changeOrderQty,replaceOrder,configuredTotals,describeOrder} from '../dist/kiosk-core.js';
 
 test('original 93-item catalog stays unchanged and photographed builders are additive',()=>{
   assert.equal(products.length,93);
@@ -101,4 +101,16 @@ test('editing into an identical configuration merges but never exceeds 99',()=>{
   assert.equal(merged.length,1);assert.equal(merged[0].qty,5);
   const limit=replaceOrder([makeOrder('sandwich',base,99),b],1,{kind:'sandwich',selection:base});
   assert.equal(limit,null);
+});
+
+test('editing a custom line replaces its options, preserves quantity and consolidates identical variants',()=>{
+  const a=makeOrder('sandwich',initialSelection('sandwich'),2);
+  const b=makeOrder('sandwich',choose(initialSelection('sandwich'),recipes.sandwich.steps[3],'salmon'),1);
+  const changes=replaceOrder([a,b],0,b);
+  assert.equal(changes.length,1);
+  assert.equal(changes[0].qty,3);
+  assert.match(describeOrder(changes[0],'ru'),/Лосось/);
+  assert.equal(replaceOrder([a],42,b),null);
+  assert.equal(replaceOrder([a],0,{kind:'sandwich',selection:{invalid:[]}}),null);
+  assert.equal(replaceOrder([{...a,qty:99},b],1,a),null);
 });
