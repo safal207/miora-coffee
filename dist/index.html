@@ -16,6 +16,7 @@
   <link rel="preload" as="image" href="assets/enhanced/428748-640.webp" imagesrcset="assets/enhanced/428748-640.webp 640w, assets/enhanced/428748-1200.webp 1200w" imagesizes="(max-width: 620px) 70vw, 420px">
   <link rel="stylesheet" href="style.css?v=20261106-photos2">
   <link rel="stylesheet" href="feed.css?v=20261106-feed1">
+  <link rel="stylesheet" href="kiosk.css?v=20261110-1">
   <script src="theme.js"></script>
   <script src="assets/qr.js" defer></script>
   <script type="module" src="app.js?v=20261106-photos2"></script>
@@ -50,6 +51,7 @@
     <section id="menu" class="menu-section shell" aria-labelledby="menu-title">
       <div class="section-heading"><div><p class="eyebrow" data-i18n="menuKicker">KÜÇÜK MOLALAR, GÜZEL LEZZETLER</p><h2 id="menu-title" data-i18n="menuTitle">Bugün canın ne istiyor?</h2></div><p class="catalog-note"><span>93</span> <span data-i18n="menuChoices">farklı seçim, senin molan.</span></p></div>
       <nav class="feed-stories" id="feed-stories" aria-label="Menü kategorileri" hidden></nav>
+      <section id="kiosk-strip" aria-label="Miora smart menu"></section>
       <div class="toolbar" id="toolbar">
         <div class="search-row"><label class="search"><span id="search-icon" aria-hidden="true"></span><input id="search" type="search" autocomplete="off" placeholder="Bir lezzet ara…" aria-label="Menüde ara"><button class="search-clear icon-btn" type="button" id="search-clear" aria-label="Aramayı temizle" hidden>×</button></label>
           <div class="view-switch" role="group" aria-label="Görünüm"><button class="icon-btn" type="button" id="view-feed" data-view="feed" aria-label="Akış" aria-pressed="true"></button><button class="icon-btn" type="button" id="view-grid" data-view="grid" aria-label="Fotoğraf görünümü" aria-pressed="false"></button><button class="icon-btn" type="button" id="view-list" data-view="list" aria-label="Kompakt liste" aria-pressed="false"></button></div>
@@ -73,6 +75,7 @@
   <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="detail-title"><div id="detail-content"></div></dialog>
   <dialog class="cart-dialog" id="cart-dialog" aria-labelledby="cart-title"><div class="dialog-head"><div><p class="eyebrow" id="cart-kicker"></p><h2 id="cart-title"></h2></div><button class="icon-btn close-btn" type="button" data-close="cart-dialog" aria-label="Kapat">×</button></div><div class="cart-content" id="cart-content"></div><div class="cart-footer" id="cart-footer"></div></dialog>
   <dialog class="share-dialog" id="share-dialog" aria-labelledby="share-title"><div class="dialog-head"><h2 id="share-title"></h2><button class="icon-btn close-btn" type="button" data-close="share-dialog" aria-label="Kapat">×</button></div><p id="share-description"></p><input id="share-link" readonly aria-label="Paylaşım bağlantısı"><button type="button" class="button primary" id="copy-link"></button></dialog>
+  <dialog id="kiosk-dialog" aria-label="Miora smart menu"><div id="kiosk-content"></div></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
   <noscript><div class="noscript">Menüyü görüntülemek için JavaScript’i etkinleştirin. <a href="https://qrmenuapp.akinsoft.com.tr/L1VBCV/miora-coffee/menu">Miora Coffee kaynak menüsü ↗</a></div></noscript>
 </body>
