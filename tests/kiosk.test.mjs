@@ -114,12 +114,17 @@ test('ingredient photo sources are accurately separated from illustrative AI ima
   for(const id of ['avocado-mousse','pesto','roasted-pepper','sun-tomato','onion','pickle'])
     assert.equal(visualSource('sauce',id),'ai');
   assert.equal(visualSource('extra','salmon'),'ai');
-  assert.equal(visualSource('extra','avocado'),'symbol'); // never mislabel mousse as sliced avocado
-  assert.equal(visualSource('extra','cucumber'),'symbol');
+  assert.equal(visualSource('extra','avocado'),'ai'); // real avocado slices, not mousse
+  assert.equal(visualSource('extra','cucumber'),'ai');
   const image=readFileSync('dist/assets/ingredient-atlas.webp');
   assert.equal(image.toString('ascii',0,4),'RIFF');
   assert.equal(image.toString('ascii',8,12),'WEBP');
-  assert.ok(image.byteLength<10000,'atlas must be under 10 KB');
+  assert.ok(image.byteLength>150000,'retina photos must not use the old low-resolution atlas');
+  assert.ok(image.byteLength<260000,'24 retina ingredient tiles must remain compact for mobile');
+  const vp8Signature=image.indexOf(Buffer.from([0x9d,0x01,0x2a]));
+  assert.ok(vp8Signature>12,'WebP must contain a valid VP8 image frame');
+  assert.equal(image.readUInt16LE(vp8Signature+3)&0x3fff,1152,'width must provide 192 pixels per tile');
+  assert.equal(image.readUInt16LE(vp8Signature+5)&0x3fff,768,'height must provide 192 pixels per tile');
   assert.equal(recipes.pancake.image,'431333');
   assert.equal(recipes.croissant.image,'430350');
   assert.equal(recipes.croissant.imageIsBase,true);
