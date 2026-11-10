@@ -15,7 +15,7 @@ const glyphs={
   large:'🥐',mini:'🥐',bread:'🍞',omelette:'🍳',boiled:'🥚',tahin:'🍯',honey:'🍯',nutella:'🍫'
 };
 // Existing Miora photos take priority for known bread variants. Generated atlas fills only gaps.
-// Sprite: six columns x four rows, 40px square per source tile; single lightweight WebP request.
+// Sprite: six columns x four rows, high-resolution 192px source tiles for retina mobile screens.
 const breadImages={olive:'430240','tomato-walnut':'431177',focaccia:'431179',wholewheat:'430236',plain:'431178'};
 const ingredientAtlas={
   'cheese:labne':[0,0],'cheese:white':[1,0],'cheese:strained':[2,0],
@@ -23,8 +23,8 @@ const ingredientAtlas={
   'sauce:avocado-mousse':[0,1],'sauce:pesto':[1,1],'sauce:roasted-pepper':[2,1],
   'sauce:sun-tomato':[3,1],'sauce:onion':[4,1],'sauce:pickle':[5,1],
   'extra:turkey':[0,2],'extra:beef':[1,2],'extra:salmon':[2,2],
-  'extra:tuna':[3,2],'extra:tomato':[4,2],
-  'greens:rocket':[0,3],'greens:lettuce':[1,3],'greens:dill':[3,3],
+  'extra:tuna':[3,2],'extra:tomato':[4,2],'extra:avocado':[5,2],
+  'greens:rocket':[0,3],'greens:lettuce':[1,3],'extra:cucumber':[2,3],'greens:dill':[3,3],
   'greens:mint':[4,3],'bread:purple-carrot':[5,3]
 };
 export const visualSource=(stepId,itemId)=>ingredientAtlas[stepId+':'+itemId]?'ai':breadImages[itemId]&&stepId==='bread'?'miora':'symbol';
