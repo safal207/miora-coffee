@@ -102,3 +102,25 @@ test('editing into an identical configuration merges but never exceeds 99',()=>{
   const limit=replaceOrder([makeOrder('sandwich',base,99),b],1,{kind:'sandwich',selection:base});
   assert.equal(limit,null);
 });
+
+test('ingredient photo sources are accurately separated from illustrative AI images',async()=>{
+  const {visualSource}=await import('../dist/kiosk.js');
+  const {readFileSync}=await import('node:fs');
+  assert.equal(visualSource('bread','olive'),'miora');
+  assert.equal(visualSource('bread','plain'),'miora');
+  assert.equal(visualSource('bread','purple-carrot'),'ai');
+  for(const id of ['labne','white','strained','ezine','kasar','cheddar'])
+    assert.equal(visualSource('cheese',id),'ai');
+  for(const id of ['avocado-mousse','pesto','roasted-pepper','sun-tomato','onion','pickle'])
+    assert.equal(visualSource('sauce',id),'ai');
+  assert.equal(visualSource('extra','salmon'),'ai');
+  assert.equal(visualSource('extra','avocado'),'symbol'); // never mislabel mousse as sliced avocado
+  assert.equal(visualSource('extra','cucumber'),'symbol');
+  const image=readFileSync('dist/assets/ingredient-atlas.webp');
+  assert.equal(image.toString('ascii',0,4),'RIFF');
+  assert.equal(image.toString('ascii',8,12),'WEBP');
+  assert.ok(image.byteLength<10000,'atlas must be under 10 KB');
+  assert.equal(recipes.pancake.image,'431333');
+  assert.equal(recipes.croissant.image,'430350');
+  assert.equal(recipes.croissant.imageIsBase,true);
+});

@@ -3,9 +3,9 @@ import {initialSelection,choose,validSelection,orderPrice} from './kiosk-core.js
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const phrases={
-  tr:{reviewTitle:'Seçimlerin',edit:'Düzenle',finish:'Son kontrol',photo:'Örnek fotoğraf',details:'İçerik',approx:'Başlangıç toplamı',drinkShort:'Cappuccino da ekle',editSave:'Değişiklikleri kaydet',notFinal:'Dolgu fiyatı personelle netleşir'},
-  ru:{reviewTitle:'Твой состав',edit:'Изменить',finish:'Проверь и добавь',photo:'Пример фото',details:'Ингредиенты',approx:'Сумма от',drinkShort:'Добавить капучино',editSave:'Сохранить изменения',notFinal:'Цена начинки уточняется в кафе'},
-  en:{reviewTitle:'Your ingredients',edit:'Edit',finish:'Review & add',photo:'Illustrative photo',details:'Ingredients',approx:'Total from',drinkShort:'Add a cappuccino',editSave:'Save changes',notFinal:'Confirm filling prices with staff'}
+  tr:{reviewTitle:'Seçimlerin',edit:'Düzenle',finish:'Son kontrol',photo:'Örnek fotoğraf',details:'İçerik',approx:'Başlangıç toplamı',drinkShort:'Cappuccino da ekle',editSave:'Değişiklikleri kaydet',notFinal:'Dolgu fiyatı personelle netleşir',baseImage:'Fotoğrafta sade kruvasan tabanı gösterilir.',aiNote:'Bazı malzeme görselleri yapay zekâ çizimidir; gerçek ürün fotoğrafı değildir.'},
+  ru:{reviewTitle:'Твой состав',edit:'Изменить',finish:'Проверь и добавь',photo:'Пример фото',details:'Ингредиенты',approx:'Сумма от',drinkShort:'Добавить капучино',editSave:'Сохранить изменения',notFinal:'Цена начинки уточняется в кафе',baseImage:'На фото — обычный круассан, не готовый десерт с Nutella.',aiNote:'Часть фото ингредиентов создана ИИ для примера, а не снята в Miora.'},
+  en:{reviewTitle:'Your ingredients',edit:'Edit',finish:'Review & add',photo:'Illustrative photo',details:'Ingredients',approx:'Total from',drinkShort:'Add a cappuccino',editSave:'Save changes',notFinal:'Confirm filling prices with staff',baseImage:'Photo shows the plain croissant base, not the finished Nutella pastry.',aiNote:'Some ingredient images are AI illustrations, not actual Miora product photos.'}
 };
 const glyphs={
   'purple-carrot':'🍞',labne:'🥛',white:'🧀',strained:'🧀',ezine:'🧀',kasar:'🧀',cheddar:'🧀',
@@ -14,12 +14,31 @@ const glyphs={
   lettuce:'🥬',rocket:'🥬',parsley:'🌿',dill:'🌿',mint:'🌿',
   large:'🥐',mini:'🥐',bread:'🍞',omelette:'🍳',boiled:'🥚',tahin:'🍯',honey:'🍯',nutella:'🍫'
 };
+// Existing Miora photos take priority for known bread variants. Generated atlas fills only gaps.
+// Sprite: six columns x four rows, 40px square per source tile; single lightweight WebP request.
 const breadImages={olive:'430240','tomato-walnut':'431177',focaccia:'431179',wholewheat:'430236',plain:'431178'};
+const ingredientAtlas={
+  'cheese:labne':[0,0],'cheese:white':[1,0],'cheese:strained':[2,0],
+  'cheese:ezine':[3,0],'cheese:kasar':[4,0],'cheese:cheddar':[5,0],
+  'sauce:avocado-mousse':[0,1],'sauce:pesto':[1,1],'sauce:roasted-pepper':[2,1],
+  'sauce:sun-tomato':[3,1],'sauce:onion':[4,1],'sauce:pickle':[5,1],
+  'extra:turkey':[0,2],'extra:beef':[1,2],'extra:salmon':[2,2],
+  'extra:tuna':[3,2],'extra:tomato':[4,2],
+  'greens:rocket':[0,3],'greens:lettuce':[1,3],'greens:dill':[3,3],
+  'greens:mint':[4,3],'bread:purple-carrot':[5,3]
+};
+export const visualSource=(stepId,itemId)=>ingredientAtlas[stepId+':'+itemId]?'ai':breadImages[itemId]&&stepId==='bread'?'miora':'symbol';
 const itemVisual=(step,item,getPhoto)=>{
+  const key=step.id+':'+item.id;
   const id=step.id==='bread'?breadImages[item.id]:null;
-  const photo=id&&getPhoto(id);
-  return photo?'<img class="kiosk-option-photo" src="'+esc(photo)+'" width="66" height="66" loading="lazy" decoding="async" alt="">':
-    '<span class="kiosk-option-glyph" aria-hidden="true">'+(glyphs[item.id]||'✳')+'</span>';
+  const photo=id&&(id==='431178'?'assets/products/431178.jpg':getPhoto(id));
+  if(photo)return '<img class="kiosk-option-photo" src="'+esc(photo)+'" width="66" height="66" loading="lazy" decoding="async" alt="">';
+  const point=ingredientAtlas[key];
+  if(point){
+    const x=(point[0]*20).toFixed(2),y=(point[1]*100/3).toFixed(2);
+    return '<span class="kiosk-option-photo kiosk-atlas" aria-hidden="true" style="background-position:'+x+'% '+y+'%"></span>';
+  }
+  return '<span class="kiosk-option-glyph" aria-hidden="true">'+(glyphs[item.id]||'✳')+'</span>';
 };
 export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto}){
   const strip=document.getElementById('kiosk-strip');
@@ -73,6 +92,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
     }).join('')+'</div>':'';
     const summary=review?'<div class="kiosk-review"><div class="kiosk-review-heading"><span class="kiosk-review-photo">'+photo+'</span><div>'+
       '<p class="eyebrow">'+esc(p('finish'))+'</p><h2>'+esc(title(r.name))+'</h2><p>'+esc(title(r.short))+'</p></div></div>'+
+      (r.imageIsBase?'<p class="kiosk-photo-note">'+esc(p('baseImage'))+'</p>':'')+
       (n?'<div class="kiosk-review-grid">'+r.steps.map((s,i)=>{
         const items=selection[s.id].map(id=>s.items.find(x=>x.id===id)).filter(Boolean);
         return '<button class="kiosk-review-item" type="button" data-k-goto="'+i+'">'+
@@ -86,7 +106,9 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
         '<span class="kiosk-check" aria-hidden="true">'+(withDrink?'✓':'+')+'</span></button>':'')+
       '<p class="kiosk-allergens">'+esc(t('allergens'))+'</p></div>':'';
     const stepPage=review?'':'<div class="kiosk-step-heading"><span class="kiosk-step-photo">'+photo+'</span><div><h2>'+esc(title(step.title))+'</h2><p>'+esc((lang()==='ru'?'Выбрано ':lang()==='en'?'Selected ':'Seçilen ')+selection[step.id].length+' / '+step.max+' · '+(step.min===0?t('optional'):t('selectOne')))+'</p></div></div>'+
-      choices+(index===0&&r.estimated?'<p class="kiosk-note">'+esc(title(r.note))+'</p>':'');
+      choices+
+      (step.items.some(item=>visualSource(step.id,item.id)==='ai')?'<p class="kiosk-ai-note">'+esc(p('aiNote'))+'</p>':'')+
+      (index===0&&r.estimated?'<p class="kiosk-note">'+esc(title(r.note))+'</p>':'');
     content.innerHTML='<div class="kiosk-dialog-head"><div><span class="kiosk-wordmark">miora <small>COFFEE · FOOD · PLAY</small></span><p>'+esc(stepLabel)+'</p></div>'+
       '<button type="button" class="kiosk-close" data-k-close aria-label="'+esc(t('close'))+'">×</button></div>'+
       '<div class="kiosk-progress" aria-hidden="true">'+dots+'</div>'+
