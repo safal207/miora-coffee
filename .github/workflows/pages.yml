@@ -28,6 +28,9 @@ jobs:
           node --check dist/photos.js
           node --check dist/photo-data.js
           node --check dist/menu-data.js
+          node --check dist/kiosk-data.js
+          node --check dist/kiosk-core.js
+          node --check dist/kiosk.js
       - name: Verify catalog, assets and order integrity
         run: npm test
       - name: Upload website
