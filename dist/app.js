@@ -2,7 +2,7 @@ import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto} from './photos.js?v=20261106-photos2';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
 import {mountKiosk} from './kiosk.js?v=20261110-1';
-import {appendOrder,changeOrderQty,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
+import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 
 const $ = id => document.getElementById(id);
@@ -176,10 +176,18 @@ function addConfigured(order,drink){
   if(drink)commitCart(updateCart(cart,'428772',1,byId));
   notify(t('added'));return true;
 }
+function estimatedBasket(){return configuredOrders.some(item=>recipes[item.kind].estimated);}
+function updatedConfigured(order,index){
+  const next=replaceOrder(configuredOrders,index,order);
+  if(!next){notify(t('limit'));return false;}
+  commitConfigured(next);
+  setTimeout(()=>{if(!$('kiosk-dialog').open)openCart();},0);
+  return true;
+}
 function renderCartCount() {
   const sum=orderTotals();
   $('cart-open').innerHTML=`${icon('bag')}<span>${esc(t('cart'))}</span><span class="cart-count">${sum.count}</span>`;$('cart-open').setAttribute('aria-label',`${t('cart')} · ${sum.count}`);
-  $('mobile-cart').hidden=!sum.count;$('mobile-cart-open').innerHTML=`<span>${icon('bag')}${esc(t('cart'))} · ${sum.count}</span><strong>${money(sum.price)}</strong>`;
+  $('mobile-cart').hidden=!sum.count;$('mobile-cart-open').innerHTML=`<span>${icon('bag')}${esc(t('cart'))} · ${sum.count}</span><strong>${estimatedBasket()?kioskMessages[lang].from+' ':''}${money(sum.price)}</strong>`;
   document.querySelectorAll('[data-add]').forEach(b=>{if(!b.classList.contains('add-btn'))return;const n=cart[b.dataset.add];b.classList.toggle('quantity-badge',!!n);b.innerHTML=n||icon('plus');});
   document.querySelectorAll('.feed-add[data-add]').forEach(b=>{const n=cart[b.dataset.add]||0;b.innerHTML=`${icon('bag')}<span>${t(n?'addMore':'addToOrder')}</span>`;});
   document.querySelectorAll('[data-post-qty]').forEach(el=>{const n=cart[el.dataset.postQty]||0;el.hidden=!n;el.textContent=`${t('inOrder')}: ${n}`;});
@@ -234,16 +242,40 @@ function renderCart() {
   if(!sum.count){body.innerHTML=`<div class="cart-empty">${icon('bag')}<p>${t('emptyCart')}</p></div>`;$('cart-footer').innerHTML=`<button class="button primary" type="button" data-action="back-menu">${t('backToMenu')}</button>`;return;}
   const lines=Object.entries(cart).map(([id,qty])=>{const p=byId.get(id);return `<li class="cart-line"><div class="cart-item"><img src="${photo(p,160)}" alt="" width="58" height="62"><div><b ${staffMode?'lang="tr"':''}>${staffMode?qty+' × ':''}${esc(staffMode?p.name.tr:name(p))}</b><small>${money(p.price)} × ${qty}${staffMode?'':' · '+money(p.price*qty)}</small></div></div>${staffMode?`<strong class="order-line-total">${money(p.price*qty)}</strong>`:`<div class="qty"><button type="button" data-step="-1" data-step-id="${id}" aria-label="${esc(t('decrease')+' · '+name(p))}">${icon('minus')}</button><output>${qty}</output><button type="button" data-step="1" data-step-id="${id}" aria-label="${esc(t('increase')+' · '+name(p))}" ${qty>=99?'disabled':''}>${icon('plus')}</button></div>`}</li>`;}).join('');
   const configuredLines=configuredOrders.map((item,i)=>{
-    const nameText=localized(recipes[item.kind].name,staffMode?'tr':lang);
-    const details=describeOrder(item,staffMode?'tr':lang);
+    const r=recipes[item.kind];
+    const language=staffMode?'tr':lang;
+    const nameText=localized(r.name,language);
     const subtotal=orderPrice(item.kind,item.selection)*item.qty;
-    return `<li class="cart-line"><div class="cart-item"><div class="kiosk-cart-symbol" aria-hidden="true">✳</div><div><b ${staffMode?'lang="tr"':''}>${staffMode?item.qty+' × ':''}${esc(nameText)}</b><small>${money(orderPrice(item.kind,item.selection))} × ${item.qty} · ${money(subtotal)}${recipes[item.kind].estimated?'*':''}</small><small class="kiosk-order-desc">${esc(details)}</small></div></div>${staffMode?`<strong class="order-line-total">${money(subtotal)}</strong>`:`<div class="qty"><button type="button" data-k-order="${i}" data-k-delta="-1" aria-label="${esc(t('decrease')+' · '+nameText)}">${icon('minus')}</button><output>${item.qty}</output><button type="button" data-k-order="${i}" data-k-delta="1" aria-label="${esc(t('increase')+' · '+nameText)}" ${item.qty>=99?'disabled':''}>${icon('plus')}</button></div>`}</li>`;
+    const details=r.steps.map(step=>({
+      label:localized(step.title,language),
+      values:item.selection[step.id].map(id=>localized(step.items.find(v=>v.id===id).label,language))
+    })).filter(group=>group.values.length);
+    const values=details.flatMap(group=>group.values);
+    const pills=values.slice(0,4).map(value=>`<span class="kiosk-cart-pill">${esc(value)}</span>`).join('')+
+      (values.length>4?`<span class="kiosk-cart-pill">+${values.length-4}</span>`:'');
+    const imageItem=byId.get(r.image);
+    const photoMarkup=imageItem&&hasPhoto(imageItem)?`<img src="${photo(imageItem,160)}" width="62" height="62" alt="" loading="lazy" decoding="async">`:
+      '<div class="kiosk-cart-symbol" aria-hidden="true">✳</div>';
+    const editLabel=language==='ru'?'Изменить состав':language==='en'?'Edit ingredients':'İçeriği düzenle';
+    const detailLabel=language==='ru'?'Весь состав':language==='en'?'Full ingredients':'Tüm içerik';
+    return `<li class="cart-line kiosk-cart-line"><div class="kiosk-cart-top">${photoMarkup}<div class="kiosk-cart-top-text">
+      <b ${staffMode?'lang="tr"':''}>${staffMode?item.qty+' × ':''}${esc(nameText)}</b>
+      <small>${r.estimated?(language==='ru'?'От ':language==='en'?'From ':'Başlangıç '):''}${money(orderPrice(item.kind,item.selection))} × ${item.qty} = ${money(subtotal)}</small>
+      </div></div>
+      ${pills?`<div class="kiosk-cart-pills">${pills}</div>`:''}
+      ${details.length?`<details class="kiosk-cart-details" ${staffMode?'open':''}><summary>${detailLabel}</summary>
+        <dl>${details.map(group=>`<div><dt>${esc(group.label)}</dt><dd>${esc(group.values.join(' · '))}</dd></div>`).join('')}</dl>
+        </details>`:''}
+      <div class="kiosk-cart-actions">${staffMode?`<strong class="order-line-total">${money(subtotal)}</strong>`:
+        `<button type="button" class="kiosk-cart-edit" data-k-edit="${i}">${editLabel} ↗</button>
+          <div class="qty"><button type="button" data-k-order="${i}" data-k-delta="-1" aria-label="${esc(t('decrease')+' · '+nameText)}">${icon('minus')}</button>
+          <output>${item.qty}</output><button type="button" data-k-order="${i}" data-k-delta="1" aria-label="${esc(t('increase')+' · '+nameText)}" ${item.qty>=99?'disabled':''}>${icon('plus')}</button></div>`}</div></li>`;
   }).join('');
   const kioskCaution=configuredOrders.some(o=>recipes[o.kind].estimated)?`<p class="kiosk-order-note">${esc(kioskMessages[lang].confirm)}</p>`:'';
   const extra=!staffMode&&recommend();
   body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}${configuredLines}</ul>${kioskCaution}${extra?`<section class="order-bump"><img src="${photo(extra,160)}" width="64" height="70" alt="${esc(name(extra))}"><div><p>${t('bump')}</p><b>${esc(name(extra))}</b></div><button type="button" data-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra))}">+ ${money(extra.price)}</button></section>`:''}
     ${staffMode?`<details class="order-qr"><summary>${t('qr')}</summary><canvas id="order-qr" role="img" aria-label="${t('qr')}"></canvas><small>${t('qrNote')}</small></details>`:`<div class="serve-select" role="group" aria-label="${t('dineIn')} / ${t('takeaway')}"><button type="button" data-service="dineIn" aria-pressed="${service==='dineIn'}">${t('dineIn')}</button><button type="button" data-service="takeaway" aria-pressed="${service==='takeaway'}">${t('takeaway')}</button></div>`}`;
-  $('cart-footer').innerHTML=`<div class="total-line"><span>${t('total')}</span><strong>${money(sum.price)}</strong></div>${staffMode?`<button class="button primary" type="button" data-action="edit-order">${t('editOrder')}</button><button class="clear-cart" type="button" data-action="copy-order">${t('copyOrder')}</button>`:`<button class="button primary" type="button" data-action="show-staff">${t('showStaff')} <span aria-hidden="true">↗</span></button><button class="clear-cart" type="button" data-action="clear-cart">${t('clearCart')}</button>`}<p class="checkout-note">${t('orderNote')}</p>`;
+  $('cart-footer').innerHTML=`<div class="total-line"><span>${estimatedBasket()?kioskMessages[lang].estimated:t('total')}</span><strong>${estimatedBasket()?kioskMessages[lang].from+' ':''}${money(sum.price)}</strong></div>${staffMode?`<button class="button primary" type="button" data-action="edit-order">${t('editOrder')}</button><button class="clear-cart" type="button" data-action="copy-order">${t('copyOrder')}</button>`:`<button class="button primary" type="button" data-action="show-staff">${t('showStaff')} <span aria-hidden="true">↗</span></button><button class="clear-cart" type="button" data-action="clear-cart">${t('clearCart')}</button>`}<p class="checkout-note">${t('orderNote')}</p>`;
   if(staffMode){try{drawQR($('order-qr'),orderText());}catch{$('order-qr').parentElement.innerHTML=`<p class="qr-error">${t('qrError')}</p>`;}}
   body.scrollTop=top;
   if(focusId&&focusDelta)body.querySelector(`[data-step-id="${focusId}"][data-step="${focusDelta}"]`)?.focus({preventScroll:true});
@@ -267,6 +299,7 @@ document.addEventListener('click',async event=>{
   if(d.share){await shareItem(d.share);return;}
   if(d.category){selectCategory(d.category);return;}
   if(d.view){const boundary=$('toolbar').getBoundingClientRect().bottom;const anchor=[...document.querySelectorAll('[data-product]')].find(el=>{const r=el.getBoundingClientRect();return r.bottom>boundary&&r.top<innerHeight;})?.dataset.product;view=resolveView(d.view,null);save('view',view);renderProducts();updateUrl();if(anchor)requestAnimationFrame(()=>{const card=document.querySelector(`[data-product="${anchor}"]`);if(card)window.scrollTo({top:Math.max(0,card.getBoundingClientRect().top+scrollY-document.querySelector('.header').offsetHeight-$('toolbar').offsetHeight-16),behavior:'instant'});});return;}
+  if(d.kEdit!==undefined){const lineIndex=Number(d.kEdit),item=configuredOrders[lineIndex];if(item){$('cart-dialog').close();kioskUI?.edit(item,lineIndex);}return;}
   if(d.kOrder!==undefined){commitConfigured(changeOrderQty(configuredOrders,Number(d.kOrder),Number(d.kDelta)));return;}
   if(d.step){refreshCart();commitCart(updateCart(cart,d.stepId,Number(d.step),byId));return;}
   if(d.service){service=d.service;save('service',service);renderCart();return;}
@@ -305,6 +338,6 @@ window.addEventListener('storage',event=>{
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();if($('detail-dialog').open)renderDetail();}
 });
-kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null});
+kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null});
 renderLanguage();updateUrl();
 const linked=params.get('item');if(byId.has(linked))openDetail(linked);

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {products} from '../dist/menu-data.js';
 import {recipes,ui,localized} from '../dist/kiosk-data.js';
-import {initialSelection,choose,validSelection,orderPrice,makeOrder,normalizeOrders,appendOrder,changeOrderQty,configuredTotals,describeOrder} from '../dist/kiosk-core.js';
+import {initialSelection,choose,validSelection,orderPrice,makeOrder,replaceOrder,normalizeOrders,appendOrder,changeOrderQty,configuredTotals,describeOrder} from '../dist/kiosk-core.js';
 
 test('original 93-item catalog stays unchanged and photographed builders are additive',()=>{
   assert.equal(products.length,93);
@@ -79,4 +79,26 @@ test('every kiosk option and call-to-action is localized into TR/RU/EN',()=>{
       }
     }
   }
+});
+
+test('editing an existing configured order preserves quantity and recalculates selections',()=>{
+  const base=initialSelection('sandwich');
+  const original=makeOrder('sandwich',base,2);
+  const revised=choose(base,recipes.sandwich.steps[3],'salmon');
+  const next=replaceOrder([original],0,{kind:'sandwich',selection:revised});
+  assert.equal(next.length,1);
+  assert.equal(next[0].qty,2);
+  assert.deepEqual(next[0].selection.extra,['salmon']);
+  assert.match(describeOrder(next[0],'tr'),/Somon balığı/);
+  assert.equal(replaceOrder([original],9,{kind:'sandwich',selection:revised}),null);
+  assert.equal(replaceOrder([original],0,{kind:'sandwich',selection:{extra:['fish']}}),null);
+});
+test('editing into an identical configuration merges but never exceeds 99',()=>{
+  const base=initialSelection('sandwich');
+  const distinct=choose(base,recipes.sandwich.steps[3],'tuna');
+  const a=makeOrder('sandwich',base,3),b=makeOrder('sandwich',distinct,2);
+  const merged=replaceOrder([a,b],1,{kind:'sandwich',selection:base});
+  assert.equal(merged.length,1);assert.equal(merged[0].qty,5);
+  const limit=replaceOrder([makeOrder('sandwich',base,99),b],1,{kind:'sandwich',selection:base});
+  assert.equal(limit,null);
 });

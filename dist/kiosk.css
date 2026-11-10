@@ -100,3 +100,107 @@
 .cart-line .cart-item>div:has(.kiosk-order-desc){min-width:0;overflow-wrap:anywhere}
 .detail-actions .kiosk-card-cta{flex:1;min-height:50px}
 @media(max-width:390px){.post-order.kiosk-has-config .kiosk-card-cta{min-width:110px;font-size:11px;padding:9px}}
+
+
+/* Mobile kiosk v2: visual decisions, compact review, predictable sticky action. */
+.kiosk-step-heading{display:flex;align-items:center;gap:12px;margin:3px 0 14px}
+.kiosk-step-photo{display:block;flex:0 0 66px;width:66px;height:66px;overflow:hidden;border-radius:13px;background:var(--soft)}
+.kiosk-step-photo img,.kiosk-review-photo img{width:100%;height:100%;object-fit:cover}
+.kiosk-step-photo .kiosk-placeholder,.kiosk-review-photo .kiosk-placeholder{width:100%;height:100%}
+.kiosk-step-heading h2{font:normal clamp(20px,5vw,26px)/1.15 Georgia,serif;letter-spacing:-.3px}
+.kiosk-step-heading p{font-size:11px;color:var(--muted);margin-top:6px}
+.kiosk-option{position:relative;overflow:hidden}
+.kiosk-option-photo,.kiosk-option-glyph{width:62px;height:62px;flex:0 0 62px;border-radius:12px;object-fit:cover;background:var(--soft)}
+.kiosk-option-glyph{display:grid;place-items:center;font-size:26px}
+.kiosk-option-content{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.kiosk-option-content strong{font-size:12px;line-height:1.28;overflow-wrap:anywhere}
+.kiosk-option-content small{color:var(--accent);font-weight:700;font-size:11px}
+.kiosk-option .kiosk-check{flex:0 0 20px;width:20px;height:20px;font-size:12px;align-self:center}
+.kiosk-choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kiosk-option{min-height:82px;gap:8px;padding:8px}
+.kiosk-option.selected{padding:7px}
+.kiosk-review-heading{display:flex;align-items:center;gap:13px;margin:4px 0 14px}
+.kiosk-review-photo{width:72px;height:72px;flex:0 0 72px;display:block;overflow:hidden;border-radius:13px;background:var(--soft)}
+.kiosk-review-heading h2{font:normal clamp(20px,5vw,27px)/1.18 Georgia,serif;letter-spacing:-.6px}
+.kiosk-review-heading .eyebrow{font-size:9px;margin-bottom:4px}
+.kiosk-review-heading p:not(.eyebrow){font-size:11px;color:var(--muted);margin-top:5px}
+.kiosk-review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kiosk-review-item{display:flex;flex-direction:column;justify-content:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:11px 12px;text-align:left;min-height:73px;background:var(--card);min-width:0}
+.kiosk-review-item:hover{border-color:var(--teal)}
+.kiosk-review-key{display:flex;align-items:start;justify-content:space-between;gap:7px;font-size:9px;color:var(--muted);line-height:1.35;overflow-wrap:anywhere}
+.kiosk-review-key em{font-style:normal;font-size:9px;white-space:nowrap;color:var(--teal);flex-shrink:0}
+.kiosk-review-item strong{font-size:11px;line-height:1.32;font-weight:600;overflow-wrap:anywhere}
+.kiosk-price-warning{font-size:10px;color:var(--muted);margin-top:12px;line-height:1.45}
+.kiosk-review .kiosk-drink{margin-top:10px;padding:9px 11px;min-height:63px;gap:10px}
+.kiosk-drink-photo{display:grid;place-items:center;width:48px;height:48px;flex:0 0 48px;border-radius:11px;background:var(--soft);overflow:hidden}
+.kiosk-drink-photo img{width:100%;height:100%;object-fit:cover}
+.kiosk-drink-copy{min-width:0;flex:1}
+.kiosk-drink-copy b{font-size:12px}
+.kiosk-drink-copy small{font-size:10px;line-height:1.25}
+.kiosk-allergens{margin-top:9px;font-size:10px}
+.kiosk-bottom{padding:10px 16px max(10px,env(safe-area-inset-bottom))}
+.kiosk-bottom-row{display:flex;gap:10px;align-items:center;min-width:0}
+.kiosk-bottom-row .kiosk-back{flex:0 0 43px;width:43px;height:47px;min-height:47px;font-size:21px;border-radius:11px}
+.kiosk-bottom-row .kiosk-price{display:flex;flex:1;min-width:75px;flex-direction:column;align-items:start;justify-content:center;gap:1px;margin:0}
+.kiosk-bottom-row .kiosk-price small{font-size:9px;line-height:1.2}
+.kiosk-bottom-row .kiosk-price strong{font-size:19px;line-height:1.25;white-space:nowrap}
+.kiosk-bottom-row .kiosk-next{flex:0 1 auto;min-width:143px;max-width:58%;height:47px;min-height:47px;padding:5px 13px;border-radius:11px;font-size:12px;line-height:1.25}
+.kiosk-bottom .kiosk-notice{margin-top:4px}
+@media(max-width:700px){
+  #kiosk-dialog{height:100dvh;max-height:100dvh}
+  .kiosk-dialog-head{padding:10px 15px 5px}
+  .kiosk-dialog-head p{font-size:10px;margin-top:1px}
+  .kiosk-wordmark{font-size:25px}
+  .kiosk-progress{padding:5px 15px 9px}
+  .kiosk-scroll{padding:0 15px 15px}
+  .kiosk-choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .kiosk-option{min-height:107px;flex-direction:column;align-items:start;gap:6px;padding:9px}
+  .kiosk-option.selected{padding:8px}
+  .kiosk-option-photo,.kiosk-option-glyph{width:52px;height:52px;flex:0 0 52px}
+  .kiosk-option .kiosk-check{position:absolute;top:8px;right:8px}
+  .kiosk-option-content strong{font-size:11px}
+  .kiosk-review-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .kiosk-review-item{padding:9px;min-height:69px}
+  .kiosk-review-key{font-size:9px}
+  .kiosk-review-key em{font-size:9px}
+  .kiosk-review-item strong{font-size:11px}
+}
+@media(max-width:359px){
+  .kiosk-bottom-row{gap:7px}
+  .kiosk-bottom-row .kiosk-next{min-width:126px;font-size:11px;padding:6px 8px}
+  .kiosk-bottom-row .kiosk-price strong{font-size:17px}
+  .kiosk-option{min-height:103px}
+  .kiosk-review-grid{grid-template-columns:1fr}
+  .kiosk-review-item{min-height:54px}
+}
+/* Cart: content scrolls, not the pay/checkout footer. */
+@media(max-width:620px){
+  .cart-dialog[open]{height:min(92dvh,800px);max-height:92dvh;min-height:0}
+  .cart-dialog .dialog-head{padding:12px 16px 10px}
+  .cart-dialog .dialog-head .eyebrow{font-size:8px;letter-spacing:1.2px;margin-bottom:3px}
+  .cart-dialog .dialog-head h2{font-size:25px}
+  .cart-dialog .cart-content{max-height:none;overflow-y:auto;flex:1;min-height:0;padding:4px 16px 10px}
+  .cart-dialog .cart-footer{padding:9px 16px max(10px,env(safe-area-inset-bottom))}
+  .cart-footer .button{min-height:48px;margin-top:6px}
+  .cart-footer .total-line strong{font-size:25px}
+  .cart-footer .checkout-note{font-size:9px;line-height:1.35;margin-top:5px}
+  .cart-footer .clear-cart{min-height:24px;margin:3px auto 0}
+  .cart-dialog .serve-select{margin-top:9px}
+}
+.kiosk-cart-line{display:flex;flex-direction:column;align-items:stretch;gap:10px}
+.kiosk-cart-top{display:flex;align-items:center;gap:10px;min-width:0}
+.kiosk-cart-top img{width:62px;height:62px;flex:0 0 62px;border-radius:11px;object-fit:cover;background:var(--soft)}
+.kiosk-cart-top-text{min-width:0;flex:1}
+.kiosk-cart-top-text b{font-size:14px;line-height:1.3;display:block}
+.kiosk-cart-top-text small{font-size:11px;display:block;color:var(--muted);margin-top:4px}
+.kiosk-cart-pills{display:flex;flex-wrap:wrap;gap:5px}
+.kiosk-cart-pill{background:var(--soft);border-radius:6px;padding:5px 8px;font-size:10px;line-height:1.3}
+.kiosk-cart-details{margin:0;font-size:11px}
+.kiosk-cart-details summary{cursor:pointer;color:var(--teal);padding:4px 0;min-height:33px;font-weight:600}
+.kiosk-cart-details div{display:grid;grid-template-columns:105px 1fr;gap:4px 9px;margin:6px 0 2px;line-height:1.45}
+.kiosk-cart-details dt{color:var(--muted)}
+.kiosk-cart-details dd{margin:0;overflow-wrap:anywhere}
+.kiosk-cart-actions{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.kiosk-cart-edit{font-size:12px;color:var(--teal);padding:8px 3px;min-height:40px;font-weight:700}
+.kiosk-cart-actions .qty{margin-left:auto}
+.cart-dialog .kiosk-cart-line{padding-block:13px}
