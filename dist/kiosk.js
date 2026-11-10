@@ -3,9 +3,9 @@ import {initialSelection,choose,validSelection,orderPrice} from './kiosk-core.js
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const phrases={
-  tr:{reviewTitle:'Seçimlerin',edit:'Düzenle',finish:'Son kontrol',photo:'Örnek fotoğraf',details:'İçerik',approx:'Başlangıç toplamı',drinkShort:'Cappuccino da ekle',editSave:'Değişiklikleri kaydet',notFinal:'Dolgu fiyatı personelle netleşir',aiNote:'Bazı malzeme görselleri yapay zekâ çizimidir; gerçek ürün fotoğrafı değildir.'},
-  ru:{reviewTitle:'Твой состав',edit:'Изменить',finish:'Проверь и добавь',photo:'Пример фото',details:'Ингредиенты',approx:'Сумма от',drinkShort:'Добавить капучино',editSave:'Сохранить изменения',notFinal:'Цена начинки уточняется в кафе',aiNote:'Часть фото ингредиентов создана ИИ для примера, а не снята в Miora.'},
-  en:{reviewTitle:'Your ingredients',edit:'Edit',finish:'Review & add',photo:'Illustrative photo',details:'Ingredients',approx:'Total from',drinkShort:'Add a cappuccino',editSave:'Save changes',notFinal:'Confirm filling prices with staff',aiNote:'Some ingredient images are AI illustrations, not actual Miora product photos.'}
+  tr:{reviewTitle:'Seçimlerin',edit:'Düzenle',finish:'Son kontrol',photo:'Örnek fotoğraf',details:'İçerik',approx:'Başlangıç toplamı',drinkShort:'Cappuccino da ekle',editSave:'Değişiklikleri kaydet',notFinal:'Dolgu fiyatı personelle netleşir',baseImage:'Fotoğrafta sade kruvasan tabanı gösterilir.',aiNote:'Bazı malzeme görselleri yapay zekâ çizimidir; gerçek ürün fotoğrafı değildir.'},
+  ru:{reviewTitle:'Твой состав',edit:'Изменить',finish:'Проверь и добавь',photo:'Пример фото',details:'Ингредиенты',approx:'Сумма от',drinkShort:'Добавить капучино',editSave:'Сохранить изменения',notFinal:'Цена начинки уточняется в кафе',baseImage:'На фото — обычный круассан, не готовый десерт с Nutella.',aiNote:'Часть фото ингредиентов создана ИИ для примера, а не снята в Miora.'},
+  en:{reviewTitle:'Your ingredients',edit:'Edit',finish:'Review & add',photo:'Illustrative photo',details:'Ingredients',approx:'Total from',drinkShort:'Add a cappuccino',editSave:'Save changes',notFinal:'Confirm filling prices with staff',baseImage:'Photo shows the plain croissant base, not the finished Nutella pastry.',aiNote:'Some ingredient images are AI illustrations, not actual Miora product photos.'}
 };
 const glyphs={
   'purple-carrot':'🍞',labne:'🥛',white:'🧀',strained:'🧀',ezine:'🧀',kasar:'🧀',cheddar:'🧀',
@@ -92,6 +92,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
     }).join('')+'</div>':'';
     const summary=review?'<div class="kiosk-review"><div class="kiosk-review-heading"><span class="kiosk-review-photo">'+photo+'</span><div>'+
       '<p class="eyebrow">'+esc(p('finish'))+'</p><h2>'+esc(title(r.name))+'</h2><p>'+esc(title(r.short))+'</p></div></div>'+
+      (r.imageIsBase?'<p class="kiosk-photo-note">'+esc(p('baseImage'))+'</p>':'')+
       (n?'<div class="kiosk-review-grid">'+r.steps.map((s,i)=>{
         const items=selection[s.id].map(id=>s.items.find(x=>x.id===id)).filter(Boolean);
         return '<button class="kiosk-review-item" type="button" data-k-goto="'+i+'">'+
