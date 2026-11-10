@@ -91,3 +91,12 @@
   .kiosk-step-title{font-size:24px}
 }
 @media(prefers-reduced-motion:reduce){.kiosk-entry,.kiosk-option,.kiosk-progress span{transition:none}}
+
+/* Keep kiosk actions legible in both grid and feed without changing existing cards. */
+.product-bottom.kiosk-has-config{display:block}
+.product-bottom.kiosk-has-config .kiosk-card-cta{display:block;width:100%;min-height:40px;margin-top:8px}
+.post-order.kiosk-has-config .kiosk-card-cta{min-height:44px;min-width:130px;white-space:normal;line-height:1.25}
+.kiosk-cart-symbol{width:58px;height:62px;flex:0 0 58px;display:grid;place-items:center;border-radius:9px;background:var(--soft);font-size:28px;color:var(--teal)}
+.cart-line .cart-item>div:has(.kiosk-order-desc){min-width:0;overflow-wrap:anywhere}
+.detail-actions .kiosk-card-cta{flex:1;min-height:50px}
+@media(max-width:390px){.post-order.kiosk-has-config .kiosk-card-cta{min-width:110px;font-size:11px;padding:9px}}
