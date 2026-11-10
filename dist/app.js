@@ -218,7 +218,9 @@ function recommend() {
 }
 function orderText() {
   const lines=Object.entries(cart).map(([id,qty])=>`${qty} x ${byId.get(id).name.tr} — ${money(byId.get(id).price*qty)}`);
-  return ['Miora Coffee',service==='takeaway'?'Paket':'Burada',...lines,`Toplam: ${money(totals(cart,byId).price)}`].join('\n');
+  const custom=configuredOrders.map(o=>`${o.qty} x ${describeOrder(o,'tr')} — ${money(orderPrice(o.kind,o.selection)*o.qty)}${recipes[o.kind].estimated?'*':''}`);
+  const caution=configuredOrders.some(o=>recipes[o.kind].estimated)?['* Sandviç içeriğinin son fiyatını personelle teyit ediniz.']:[];
+  return ['Miora Coffee',service==='takeaway'?'Paket':'Burada',...lines,...custom,`Toplam: ${money(orderTotals().price)}`,...caution].join('\n');
 }
 function drawQR(canvas,text) {
   const code=new window.MioraQRCode(-1,1);code.addData(String.fromCharCode(...new TextEncoder().encode(text)));code.make();
@@ -228,11 +230,18 @@ function drawQR(canvas,text) {
 }
 function renderCart() {
   const body=$('cart-content'),top=body.scrollTop,active=document.activeElement,focusId=active?.dataset?.stepId,focusDelta=active?.dataset?.step;
-  const sum=totals(cart,byId);$('cart-title').textContent=t(staffMode?'staffTitle':'cart');$('cart-kicker').textContent=t(staffMode?'staffKicker':'cartKicker');
+  const sum=orderTotals();$('cart-title').textContent=t(staffMode?'staffTitle':'cart');$('cart-kicker').textContent=t(staffMode?'staffKicker':'cartKicker');
   if(!sum.count){body.innerHTML=`<div class="cart-empty">${icon('bag')}<p>${t('emptyCart')}</p></div>`;$('cart-footer').innerHTML=`<button class="button primary" type="button" data-action="back-menu">${t('backToMenu')}</button>`;return;}
   const lines=Object.entries(cart).map(([id,qty])=>{const p=byId.get(id);return `<li class="cart-line"><div class="cart-item"><img src="${photo(p,160)}" alt="" width="58" height="62"><div><b ${staffMode?'lang="tr"':''}>${staffMode?qty+' × ':''}${esc(staffMode?p.name.tr:name(p))}</b><small>${money(p.price)} × ${qty}${staffMode?'':' · '+money(p.price*qty)}</small></div></div>${staffMode?`<strong class="order-line-total">${money(p.price*qty)}</strong>`:`<div class="qty"><button type="button" data-step="-1" data-step-id="${id}" aria-label="${esc(t('decrease')+' · '+name(p))}">${icon('minus')}</button><output>${qty}</output><button type="button" data-step="1" data-step-id="${id}" aria-label="${esc(t('increase')+' · '+name(p))}" ${qty>=99?'disabled':''}>${icon('plus')}</button></div>`}</li>`;}).join('');
+  const configuredLines=configuredOrders.map((item,i)=>{
+    const nameText=localized(recipes[item.kind].name,staffMode?'tr':lang);
+    const details=describeOrder(item,staffMode?'tr':lang);
+    const subtotal=orderPrice(item.kind,item.selection)*item.qty;
+    return `<li class="cart-line"><div class="cart-item"><div class="kiosk-cart-symbol" aria-hidden="true">✳</div><div><b ${staffMode?'lang="tr"':''}>${staffMode?item.qty+' × ':''}${esc(nameText)}</b><small>${money(orderPrice(item.kind,item.selection))} × ${item.qty} · ${money(subtotal)}${recipes[item.kind].estimated?'*':''}</small><small class="kiosk-order-desc">${esc(details)}</small></div></div>${staffMode?`<strong class="order-line-total">${money(subtotal)}</strong>`:`<div class="qty"><button type="button" data-k-order="${i}" data-k-delta="-1" aria-label="${esc(t('decrease')+' · '+nameText)}">${icon('minus')}</button><output>${item.qty}</output><button type="button" data-k-order="${i}" data-k-delta="1" aria-label="${esc(t('increase')+' · '+nameText)}" ${item.qty>=99?'disabled':''}>${icon('plus')}</button></div>`}</li>`;
+  }).join('');
+  const kioskCaution=configuredOrders.some(o=>recipes[o.kind].estimated)?`<p class="kiosk-order-note">${esc(kioskMessages[lang].confirm)}</p>`:'';
   const extra=!staffMode&&recommend();
-  body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}</ul>${extra?`<section class="order-bump"><img src="${photo(extra,160)}" width="64" height="70" alt="${esc(name(extra))}"><div><p>${t('bump')}</p><b>${esc(name(extra))}</b></div><button type="button" data-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra))}">+ ${money(extra.price)}</button></section>`:''}
+  body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}${configuredLines}</ul>${kioskCaution}${extra?`<section class="order-bump"><img src="${photo(extra,160)}" width="64" height="70" alt="${esc(name(extra))}"><div><p>${t('bump')}</p><b>${esc(name(extra))}</b></div><button type="button" data-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra))}">+ ${money(extra.price)}</button></section>`:''}
     ${staffMode?`<details class="order-qr"><summary>${t('qr')}</summary><canvas id="order-qr" role="img" aria-label="${t('qr')}"></canvas><small>${t('qrNote')}</small></details>`:`<div class="serve-select" role="group" aria-label="${t('dineIn')} / ${t('takeaway')}"><button type="button" data-service="dineIn" aria-pressed="${service==='dineIn'}">${t('dineIn')}</button><button type="button" data-service="takeaway" aria-pressed="${service==='takeaway'}">${t('takeaway')}</button></div>`}`;
   $('cart-footer').innerHTML=`<div class="total-line"><span>${t('total')}</span><strong>${money(sum.price)}</strong></div>${staffMode?`<button class="button primary" type="button" data-action="edit-order">${t('editOrder')}</button><button class="clear-cart" type="button" data-action="copy-order">${t('copyOrder')}</button>`:`<button class="button primary" type="button" data-action="show-staff">${t('showStaff')} <span aria-hidden="true">↗</span></button><button class="clear-cart" type="button" data-action="clear-cart">${t('clearCart')}</button>`}<p class="checkout-note">${t('orderNote')}</p>`;
   if(staffMode){try{drawQR($('order-qr'),orderText());}catch{$('order-qr').parentElement.innerHTML=`<p class="qr-error">${t('qrError')}</p>`;}}
