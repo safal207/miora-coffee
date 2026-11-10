@@ -21,7 +21,7 @@ const itemVisual=(step,item,getPhoto)=>{
   return photo?'<img class="kiosk-option-photo" src="'+esc(photo)+'" width="66" height="66" loading="lazy" decoding="async" alt="">':
     '<span class="kiosk-option-glyph" aria-hidden="true">'+(glyphs[item.id]||'✳')+'</span>';
 };
-export function mountKiosk({getLanguage,onAdd,onUpdate,money,getPhoto}){
+export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto}){
   const strip=document.getElementById('kiosk-strip');
   const dialog=document.getElementById('kiosk-dialog');
   if(!strip||!dialog)return {refresh(){},open(){},edit(){}};
@@ -119,7 +119,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,money,getPhoto}){
       if(index<r.steps.length){if(!validStep(r.steps[index]))return;index=returnToReview?r.steps.length:index+1;returnToReview=false;notice='';render();}
       else if(validSelection(current,selection)){
         const accepted=editIndex!==null?onUpdate?.({kind:current,selection},editIndex):onAdd({kind:current,selection},withDrink);
-        if(accepted)dialog.close();else{notice=t('max');render();}
+        if(accepted){const wasEdit=editIndex!==null;dialog.close();if(wasEdit)queueMicrotask(()=>onEdited?.());}else{notice=t('max');render();}
       }
     }
   });
