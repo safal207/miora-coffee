@@ -78,7 +78,7 @@ export const recipes={
   pancake:{
     name:L('Pankek Tabağı','Панкейки','Pancake plate'),
     short:L('5 pankek · meyve ve tatlı eşlikçiler','5 панкейков с фруктами и топпингами','5 pancakes with fruit and toppings'),
-    image:null,price:25000,estimated:false,steps:[],
+    image:'431333',price:25000,estimated:false,steps:[],
     note:L('5 pankek, muz, çilek, bal, tahin-pekmez ve Nutella.',
       '5 панкейков, банан, клубника, мёд, тахин с пекмезом и Nutella.',
       'Five pancakes, banana, strawberry, honey, tahini-molasses and Nutella.')
@@ -86,7 +86,7 @@ export const recipes={
   croissant:{
     name:L('Nutellalı Meyveli Kruvasan','Круассан с Nutella и фруктами','Nutella & fruit croissant'),
     short:L('Tatlı bir mola','Сладкая пауза','A sweet little break'),
-    image:null,price:35000,estimated:false,steps:[],
+    image:'430350',price:35000,estimated:false,steps:[],imageIsBase:true,
     note:L('Nutella ve meyvelerle servis edilen kruvasan. Meyve çeşidini personelle teyit edin.',
       'Круассан с Nutella и фруктами. Уточните вид фруктов у сотрудника.',
       'Croissant with Nutella and fruit. Ask staff which fruit is available.')
