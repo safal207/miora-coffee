@@ -1,6 +1,9 @@
 import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto} from './photos.js?v=20261106-photos2';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
+import {mountKiosk} from './kiosk.js?v=20261110-1';
+import {appendOrder,changeOrderQty,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
+import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -47,6 +50,8 @@ const params=new URLSearchParams(location.search);
 const savedLanguage=load('language','tr');
 let lang=['tr','en','ru'].includes(params.get('lang'))?params.get('lang'):['tr','en','ru'].includes(savedLanguage)?savedLanguage:'tr';
 let cart=normalizeCart(load('cart',{}),byId);
+let configuredOrders=normalizeOrders(load('configured-orders',[]));
+let kioskUI;
 let favoriteIds=load('favorites',[]); if(!Array.isArray(favoriteIds))favoriteIds=[];
 let favorites=new Set(favoriteIds.filter(id=>byId.has(id)));
 let view=resolveView(params.get('view'),load('view',null));
@@ -71,7 +76,7 @@ function renderLanguage() {
   $('view-feed').setAttribute('aria-label',t('feed'));$('view-grid').setAttribute('aria-label',t('grid'));$('view-list').setAttribute('aria-label',t('list'));$('favorites-filter').setAttribute('aria-label',t('favorites'));
   $('feed-stories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',[t('feed'),t('grid'),t('list')].join(' / '));
   document.querySelectorAll('[data-close]').forEach(e=>e.setAttribute('aria-label',t('close')));
-  renderTheme();renderCategories();renderProducts();renderCartCount();
+  renderTheme();renderCategories();renderProducts();renderCartCount();kioskUI?.refresh();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
 function renderCategories() {
@@ -91,11 +96,43 @@ function renderProducts() {
   $('feed-stories').hidden=view!=='feed';$('categories').hidden=view==='feed';
   $('empty-state').hidden=list.length>0;$('products').className='product-grid'+(view==='list'?' list-view':view==='feed'?' feed-view':'');
   $('view-feed').setAttribute('aria-pressed',String(view==='feed'));$('view-grid').setAttribute('aria-pressed',String(view==='grid'));$('view-list').setAttribute('aria-pressed',String(view==='list'));$('search-clear').hidden=!search;
-  if(view==='feed'){const ranks=new Map(featured.map((id,i)=>[id,i]));const ordered=category==='all'&&!search?[...list].sort((a,b)=>(ranks.get(a.id)??100)-(ranks.get(b.id)??100)):list;$('products').innerHTML=ordered.map(feedPost).join('');startFeedViews();return;}
+  if(view==='feed'){const ranks=new Map(featured.map((id,i)=>[id,i]));const ordered=category==='all'&&!search?[...list].sort((a,b)=>(ranks.get(a.id)??100)-(ranks.get(b.id)??100)):list;$('products').innerHTML=ordered.map(feedPost).join('');startFeedViews();enhanceKioskCards();return;}
   $('products').innerHTML=list.map(p=>`<article class="product-card" data-product="${p.id}">
     <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}"><img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}></button>
     <div class="product-social"><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}">${icon('share')}</button><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}</button></div></div>
     <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div><div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
+  enhanceKioskCards();
+}
+const kioskFor=id=>({430236:'sandwich',430240:'sandwich',431177:'sandwich',431178:'sandwich',431179:'sandwich',431203:'breakfast',431333:'pancake'})[id]||null;
+function kioskBread(id){return ({430236:'wholewheat',430240:'olive',431177:'tomato-walnut',431178:'plain',431179:'focaccia'})[id]||null;}
+function enhanceKioskCards(){
+  for(const card of document.querySelectorAll('#products [data-product]')){
+    const id=card.dataset.product,kind=kioskFor(id);if(!kind)continue;
+    const row=card.querySelector(view==='feed'?'.post-order':'.product-bottom');
+    if(!row)continue;
+    const prior=row.querySelector('button[data-add],button[data-detail]');if(!prior)continue;
+    const b=document.createElement('button');
+    b.type='button';b.className=view==='feed'?'button primary feed-add kiosk-card-cta':'kiosk-card-cta';
+    b.dataset.kStart=kind;if(kioskBread(id))b.dataset.kBread=kioskBread(id);
+    b.textContent=kioskMessages[lang].build;row.classList.add('kiosk-has-config');prior.replaceWith(b);
+    const priceNode=row.querySelector('.product-price,strong');
+    if(kind==='pancake'&&priceNode){priceNode.textContent=money(25000);priceNode.classList.remove('ask');}
+    if(kind==='breakfast'&&priceNode)priceNode.textContent=kioskMessages[lang].from+' '+money(35000);
+  }
+}
+function enhanceKioskDetail(id){
+  const kind=kioskFor(id);if(!kind)return;
+  const row=$('detail-content').querySelector('.detail-actions');
+  const button=row?.querySelector('button');if(!button)return;
+  const b=document.createElement('button');b.type='button';b.className='button primary kiosk-card-cta';
+  b.dataset.kStart=kind;if(kioskBread(id))b.dataset.kBread=kioskBread(id);
+  b.textContent=kioskMessages[lang].build;button.replaceWith(b);
+  if(kind==='pancake'){
+    const section=$('detail-content').querySelector('.detail-copy > .detail-section');
+    if(section?.querySelector('h3')?.textContent===t('ask'))section.remove();
+    const metrics=$('detail-content').querySelector('.detail-metrics');
+    if(metrics)metrics.insertAdjacentHTML('beforeend','<span class="metric detail-price">'+money(25000)+'</span>');
+  }
 }
 function feedPost(p) {
   const cat=categories.find(c=>c.id===p.cat),qty=cart[p.id]||0;
@@ -129,8 +166,18 @@ function likePhoto(id,button) {
   if(!favorites.has(id))toggleFavorite(id);
   button.classList.remove('like-flash');void button.offsetWidth;button.classList.add('like-flash');setTimeout(()=>button.classList.remove('like-flash'),650);
 }
+function orderTotals(){const regular=totals(cart,byId),custom=configuredTotals(configuredOrders);return {count:regular.count+custom.count,price:regular.price+custom.price};}
+function commitConfigured(next){configuredOrders=normalizeOrders(next);save('configured-orders',configuredOrders);if(!orderTotals().count)staffMode=false;renderCartCount();if($('cart-dialog').open)renderCart();}
+function addConfigured(order,drink){
+  const next=appendOrder(configuredOrders,order);if(!next){notify(t('limit'));return false;}
+  refreshCart();
+  if(drink&&(cart['428772']||0)>=99){notify(t('limit'));return false;}
+  commitConfigured(next);
+  if(drink)commitCart(updateCart(cart,'428772',1,byId));
+  notify(t('added'));return true;
+}
 function renderCartCount() {
-  const sum=totals(cart,byId);
+  const sum=orderTotals();
   $('cart-open').innerHTML=`${icon('bag')}<span>${esc(t('cart'))}</span><span class="cart-count">${sum.count}</span>`;$('cart-open').setAttribute('aria-label',`${t('cart')} · ${sum.count}`);
   $('mobile-cart').hidden=!sum.count;$('mobile-cart-open').innerHTML=`<span>${icon('bag')}${esc(t('cart'))} · ${sum.count}</span><strong>${money(sum.price)}</strong>`;
   document.querySelectorAll('[data-add]').forEach(b=>{if(!b.classList.contains('add-btn'))return;const n=cart[b.dataset.add];b.classList.toggle('quantity-badge',!!n);b.innerHTML=n||icon('plus');});
@@ -138,7 +185,7 @@ function renderCartCount() {
   document.querySelectorAll('[data-post-qty]').forEach(el=>{const n=cart[el.dataset.postQty]||0;el.hidden=!n;el.textContent=`${t('inOrder')}: ${n}`;});
 }
 function refreshCart() {cart=normalizeCart(load('cart',cart),byId);}
-function commitCart(next) {cart=next;save('cart',cart);if(!totals(cart,byId).count)staffMode=false;renderCartCount();if($('cart-dialog').open)renderCart();}
+function commitCart(next) {cart=next;save('cart',cart);if(!orderTotals().count)staffMode=false;renderCartCount();if($('cart-dialog').open)renderCart();}
 function add(id) {if(byId.get(id)?.price==null)return;refreshCart();if((cart[id]||0)>=99){notify(t('limit'));return;}commitCart(updateCart(cart,id,1,byId));notify(`${t('added')} · ${name(byId.get(id))}`);}
 function toggleFavorite(id) {
   if(!byId.has(id))return;
@@ -160,10 +207,11 @@ function renderDetail() {
     <section class="detail-section"><h3>${t('ingredients')}</h3>${p.description?`<p lang="tr">${esc(p.description)}</p>${lang!=='tr'?`<p class="detail-disclaimer">${t('originalRecipe')}</p>`:''}`:`<p>${t('noIngredients')}</p>`}</section>
     <section class="detail-section"><h3>${t('allergens')}</h3>${p.allergens.length?`<div class="allergens">${p.allergens.map(a=>`<span>${t(a)}</span>`).join('')}</div>`:`<p>${t('noAllergens')}</p>`}<p class="detail-disclaimer">${t('allergenNote')}</p>${p.kcal?`<p class="detail-disclaimer">${p.calorieReview?t('reviewCalorie'):t('calorieNote')}</p>`:''}</section><div class="views">${icon('eye')}${views[p.id]||0} · ${t('localViews')}</div></div>
     <div class="detail-actions">${p.price!==null?`<button class="button primary" type="button" data-add="${p.id}">${icon('plus')}${t('addToOrder')} · ${money(p.price)}</button>`:`<button class="button secondary" type="button" data-close="detail-dialog">${t('backToMenu')}</button>`}<button class="icon-btn" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${t('favorites')}">${icon('heart')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${t('share')}">${icon('share')}</button></div>`;
+  enhanceKioskDetail(detailId);
 }
 function recommend() {
-  const items=Object.keys(cart).map(id=>byId.get(id));if(!items.length)return null;
-  const hasFood=items.some(p=>['46818','46885'].includes(p.cat));
+  const items=Object.keys(cart).map(id=>byId.get(id));if(!items.length&&!configuredOrders.length)return null;
+  const hasFood=configuredOrders.length>0||items.some(p=>['46818','46885'].includes(p.cat));
   const hasDrink=items.some(p=>!['46818','46885'].includes(p.cat));
   const id=!hasFood?'430227':!hasDrink?'428743':null;
   return id&&!cart[id]?byId.get(id):null;
@@ -210,13 +258,14 @@ document.addEventListener('click',async event=>{
   if(d.share){await shareItem(d.share);return;}
   if(d.category){selectCategory(d.category);return;}
   if(d.view){const boundary=$('toolbar').getBoundingClientRect().bottom;const anchor=[...document.querySelectorAll('[data-product]')].find(el=>{const r=el.getBoundingClientRect();return r.bottom>boundary&&r.top<innerHeight;})?.dataset.product;view=resolveView(d.view,null);save('view',view);renderProducts();updateUrl();if(anchor)requestAnimationFrame(()=>{const card=document.querySelector(`[data-product="${anchor}"]`);if(card)window.scrollTo({top:Math.max(0,card.getBoundingClientRect().top+scrollY-document.querySelector('.header').offsetHeight-$('toolbar').offsetHeight-16),behavior:'instant'});});return;}
+  if(d.kOrder!==undefined){commitConfigured(changeOrderQty(configuredOrders,Number(d.kOrder),Number(d.kDelta)));return;}
   if(d.step){refreshCart();commitCart(updateCart(cart,d.stepId,Number(d.step),byId));return;}
   if(d.service){service=d.service;save('service',service);renderCart();return;}
   if(d.action==='reset'){search='';$('search').value='';selectCategory('all');return;}
   if(d.action==='add-pair'){refreshCart();const next=addPair(cart,['428772','430226'],byId);if(!next){notify(t('limit'));return;}commitCart(next);notify(t('added')+' · Cappuccino + San Sebastian');return;}
   if(d.action==='show-staff'){staffMode=true;renderCart();$('cart-content').scrollTop=0;$('cart-title').setAttribute('tabindex','-1');$('cart-title').focus();return;}
   if(d.action==='edit-order'){staffMode=false;renderCart();return;}
-  if(d.action==='clear-cart'){commitCart({});return;}
+  if(d.action==='clear-cart'){commitConfigured([]);commitCart({});return;}
   if(d.action==='back-menu'){$('cart-dialog').close();$('menu').scrollIntoView({block:'start'});return;}
   if(d.action==='copy-order')await copyText(orderText(),t('orderCopied'),()=>{const text=document.createElement('textarea');text.className='copy-order-fallback';text.value=orderText();text.setAttribute('aria-label',t('copyOrder'));$('cart-content').append(text);text.focus();text.select();notify(t('selectCopy'));});
 });
@@ -244,7 +293,9 @@ document.addEventListener('error',event=>{
 },true);
 window.addEventListener('storage',event=>{
   if(event.key==='miora:cart'||event.key===null){refreshCart();renderCartCount();if($('cart-dialog').open)renderCart();}
+  if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();if($('detail-dialog').open)renderDetail();}
 });
+kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null});
 renderLanguage();updateUrl();
 const linked=params.get('item');if(byId.has(linked))openDetail(linked);
