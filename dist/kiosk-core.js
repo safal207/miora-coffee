@@ -1,6 +1,6 @@
 import {recipes,localized} from './kiosk-data.js';
 export const initialSelection=kind=>{
-  const recipe=recipes[kind];if(!recipe)return null;
+  const recipe=Object.hasOwn(recipes,kind)?recipes[kind]:null;if(!recipe)return null;
   return Object.fromEntries(recipe.steps.map(step=>[step.id,step.min===1?[step.items[0].id]:[]]));
 };
 export function choose(selection,step,itemId){
@@ -12,7 +12,7 @@ export function choose(selection,step,itemId){
   return {...selection,[step.id]:[...ids,itemId]};
 }
 export function validSelection(kind,selection){
-  const r=recipes[kind];if(!r||!selection||typeof selection!=='object'||Array.isArray(selection))return false;
+  const r=Object.hasOwn(recipes,kind)?recipes[kind]:null;if(!r||!selection||typeof selection!=='object'||Array.isArray(selection))return false;
   if(Object.keys(selection).some(key=>!r.steps.some(s=>s.id===key)))return false;
   return r.steps.every(step=>{
     const ids=selection[step.id];return Array.isArray(ids)&&ids.length>=step.min&&ids.length<=step.max&&new Set(ids).size===ids.length&&ids.every(id=>step.items.some(o=>o.id===id));
