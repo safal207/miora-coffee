@@ -16,7 +16,7 @@ const glyphs={
 };
 // Existing Miora photos take priority for known bread variants. Generated atlas fills only gaps.
 // Sprite: six columns x four rows, 40px square per source tile; single lightweight WebP request.
-const breadImages={olive:'430240','tomato-walnut':'431177',focaccia:'431179',wholewheat:'430236'};
+const breadImages={olive:'430240','tomato-walnut':'431177',focaccia:'431179',wholewheat:'430236',plain:'431178'};
 const ingredientAtlas={
   'cheese:labne':[0,0],'cheese:white':[1,0],'cheese:strained':[2,0],
   'cheese:ezine':[3,0],'cheese:kasar':[4,0],'cheese:cheddar':[5,0],
@@ -31,7 +31,7 @@ export const visualSource=(stepId,itemId)=>ingredientAtlas[stepId+':'+itemId]?'a
 const itemVisual=(step,item,getPhoto)=>{
   const key=step.id+':'+item.id;
   const id=step.id==='bread'?breadImages[item.id]:null;
-  const photo=id&&getPhoto(id);
+  const photo=id&&(id==='431178'?'assets/products/431178.jpg':getPhoto(id));
   if(photo)return '<img class="kiosk-option-photo" src="'+esc(photo)+'" width="66" height="66" loading="lazy" decoding="async" alt="">';
   const point=ingredientAtlas[key];
   if(point){
