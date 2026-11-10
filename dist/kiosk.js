@@ -26,7 +26,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,money,getPhoto}){
   const dialog=document.getElementById('kiosk-dialog');
   if(!strip||!dialog)return {refresh(){},open(){},edit(){}};
   const content=dialog.querySelector('#kiosk-content');
-  let current=null,selection=null,index=0,withDrink=false,lastFocus=null,notice='',editIndex=null;
+  let current=null,selection=null,index=0,withDrink=false,lastFocus=null,notice='',editIndex=null,returnToReview=false;
   const lang=()=>getLanguage();
   const t=k=>ui[lang()][k]||ui.tr[k]||k;
   const p=k=>phrases[lang()][k]||phrases.tr[k]||k;
@@ -48,7 +48,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,money,getPhoto}){
     selection=existing?structuredClone(existing):initialSelection(kind);
     index=existing?recipes[kind].steps.length:0;
     editIndex=Number.isInteger(lineIndex)?lineIndex:null;
-    withDrink=false;notice='';
+    withDrink=false;notice='';returnToReview=false;
     if(!existing&&kind==='sandwich'&&recipes.sandwich.steps[0].items.some(x=>x.id===seedBread))selection.bread=[seedBread];
     render();
     if(!dialog.open)dialog.showModal();
@@ -103,8 +103,8 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,money,getPhoto}){
   dialog.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-k-close')){dialog.close();return;}
-    if(b.hasAttribute('data-k-back')){if(index>0){index--;notice='';render();}return;}
-    if(b.hasAttribute('data-k-goto')){index=Number(b.dataset.kGoto);notice='';render();return;}
+    if(b.hasAttribute('data-k-back')){if(returnToReview){index=recipes[current].steps.length;returnToReview=false;}else if(index>0)index--;notice='';render();return;}
+    if(b.hasAttribute('data-k-goto')){index=Number(b.dataset.kGoto);returnToReview=true;notice='';render();return;}
     if(b.hasAttribute('data-k-drink')){withDrink=!withDrink;render();return;}
     if(b.hasAttribute('data-k-choice')){
       const step=recipes[current].steps[index];
@@ -116,7 +116,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,money,getPhoto}){
     }
     if(b.hasAttribute('data-k-next')){
       const r=recipes[current];
-      if(index<r.steps.length){if(!validStep(r.steps[index]))return;index++;notice='';render();}
+      if(index<r.steps.length){if(!validStep(r.steps[index]))return;index=returnToReview?r.steps.length:index+1;returnToReview=false;notice='';render();}
       else if(validSelection(current,selection)){
         const accepted=editIndex!==null?onUpdate?.({kind:current,selection},editIndex):onAdd({kind:current,selection},withDrink);
         if(accepted)dialog.close();else{notice=t('max');render();}
