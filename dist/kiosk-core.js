@@ -69,3 +69,19 @@ export function describeOrder(order,lang='tr'){
   }).filter(Boolean);
   return [localized(r.name,lang),...lines].join(' · ');
 }
+
+/** Replace a personalized line without losing its identity or mixing different recipes. */
+export function replaceOrder(existing,index,raw){
+  const original=normalizeOrders(existing);
+  if(!Number.isInteger(index)||index<0||index>=original.length)return null;
+  const newItem=makeOrder(raw?.kind,raw?.selection,original[index].qty);
+  if(!newItem)return null;
+  const remaining=original.filter((_,i)=>i!==index);
+  const key=orderKey(newItem.kind,newItem.selection);
+  const duplicate=remaining.find(x=>orderKey(x.kind,x.selection)===key);
+  if(duplicate){
+    if(duplicate.qty+newItem.qty>99)return null;
+    duplicate.qty+=newItem.qty;
+  }else remaining.splice(Math.min(index,remaining.length),0,newItem);
+  return remaining;
+}
