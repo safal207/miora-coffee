@@ -180,7 +180,9 @@ function estimatedBasket(){return configuredOrders.some(item=>recipes[item.kind]
 function updatedConfigured(order,index){
   const next=replaceOrder(configuredOrders,index,order);
   if(!next){notify(t('limit'));return false;}
-  commitConfigured(next);return true;
+  commitConfigured(next);
+  setTimeout(()=>{if(!$('kiosk-dialog').open)openCart();},0);
+  return true;
 }
 function renderCartCount() {
   const sum=orderTotals();
