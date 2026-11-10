@@ -208,7 +208,7 @@
 
 /* All AI-derived illustrative ingredient tiles share one 6x4 WebP atlas (240x160). */
 .kiosk-atlas{
-  background-image:url('assets/ingredient-atlas.webp');
+  background-image:url('assets/ingredient-atlas.webp?v=retina-20261110');
   background-repeat:no-repeat;
   background-size:600% 400%;
   background-color:var(--soft);
@@ -222,3 +222,6 @@
 }
 
 .kiosk-photo-note{font-size:10px;line-height:1.45;color:var(--muted);margin:-3px 0 11px}
+
+/* HD ingredient tiles: use native downsampling rather than upscaling a 40px sprite. */
+.kiosk-atlas{image-rendering:auto;aspect-ratio:1 / 1}
