@@ -64,6 +64,8 @@ test('normalized custom orders recalculate prices and preserve fillings separate
   assert.equal(orderPrice('breakfast',{base:['large'],egg:['wrong'],sweet:[],addons:[]}),null);
   assert.equal(appendOrder([{...a,qty:99}],a),null);
   assert.deepEqual(normalizeOrders({kind:'sandwich'}),[]);
+  assert.equal(makeOrder('__proto__',{},1),null);
+  assert.deepEqual(normalizeOrders([{kind:'constructor',selection:{},qty:1}]),[]);
 });
 test('every kiosk option and call-to-action is localized into TR/RU/EN',()=>{
   for(const language of ['tr','ru','en']){
