@@ -356,3 +356,98 @@
 @media(prefers-reduced-motion:reduce){
   .hero-actions .hero-kiosk-btn{transition:none}
 }
+
+
+/* Food Desire Flow: first impression, responsive live preview and visual reassurance at cart. */
+.kiosk-live{
+  position:sticky;top:0;z-index:3;display:grid;grid-template-columns:42% minmax(0,1fr);
+  align-items:stretch;min-height:144px;margin:0 0 16px;
+  background:#193b31;color:#fff8ea;border-radius:16px;overflow:hidden;
+  box-shadow:0 8px 21px rgba(20,35,25,.10);
+}
+.kiosk-live-visual{height:100%;min-height:144px;background:#315444;overflow:hidden}
+.kiosk-live-visual img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 55%}
+.kiosk-live-placeholder{display:grid;place-items:center;width:100%;height:100%;font:italic 30px Georgia,serif;color:#e8d7ba}
+.kiosk-live-copy{display:flex;flex-direction:column;justify-content:center;gap:7px;min-width:0;padding:14px 15px}
+.kiosk-live-brand{font-size:8px;letter-spacing:1.2px;color:#e1c899}
+.kiosk-live-copy strong{font:normal clamp(18px,3.5vw,25px)/1.15 Georgia,serif;letter-spacing:-.35px}
+.kiosk-live-copy p{font-size:11px;line-height:1.4;color:#e8e7df;max-width:34ch}
+.kiosk-live-chips{display:flex;gap:5px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.kiosk-live-chips::-webkit-scrollbar{display:none}
+.kiosk-live-chip{flex:0 0 auto;border:1px solid #ffffff52;border-radius:20px;padding:4px 7px;font-size:9px;color:#fff}
+.kiosk-live-intro{position:relative;display:block;min-height:245px}
+.kiosk-live-intro .kiosk-live-visual{position:absolute;inset:0;width:100%;height:100%;min-height:0}
+.kiosk-live-intro .kiosk-live-visual::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(17,32,24,.93),rgba(17,32,24,.2) 55%,transparent)
+}
+.kiosk-live-intro .kiosk-live-visual img{object-position:center 50%}
+.kiosk-live-intro .kiosk-live-copy{
+  position:absolute;inset:auto 0 0;z-index:1;
+  padding:20px 22px;gap:6px;pointer-events:none;
+}
+.kiosk-live-intro .kiosk-live-copy strong{font-size:30px}
+.kiosk-live-intro .kiosk-live-copy p{max-width:42ch}
+.kiosk-scroll:has(.kiosk-live){scrollbar-gutter:auto}
+.kiosk-cart-sandwich:not(.kiosk-cart-staff){
+  border:1px solid var(--line);border-radius:17px;margin:10px 0 16px;
+  padding:0 0 12px;gap:11px;overflow:hidden;background:var(--card)
+}
+.kiosk-cart-showcase{width:100%;margin:0;position:relative;background:var(--soft);overflow:hidden}
+.kiosk-cart-showcase>img{display:block;width:100%;height:clamp(180px,41vw,240px);object-fit:cover;object-position:center 52%}
+.kiosk-cart-showcase-placeholder{height:200px;display:grid;place-items:center;font:italic 40px Georgia,serif;color:#fff5e2;background:radial-gradient(circle at 40% 20%,#628173,#193e32)}
+.kiosk-cart-showcase figcaption{
+  position:absolute;bottom:0;inset-inline:0;display:flex;align-items:flex-end;
+  gap:8px;justify-content:space-between;padding:26px 12px 10px;
+  color:white;background:linear-gradient(0deg,rgba(10,26,19,.88),transparent);
+  font-size:10px;line-height:1.35
+}
+.kiosk-cart-showcase figcaption strong{font-weight:750;white-space:nowrap;flex:0 0 auto}
+.kiosk-cart-showcase figcaption span{color:#f5f1e9;text-align:end;max-width:22ch}
+.kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-top,
+.kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-pills,
+.kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-details,
+.kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-actions{
+  margin-inline:14px
+}
+.kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-top-text b{font-size:16px;line-height:1.2}
+.kiosk-cart-promise{display:block;font:italic 12px Georgia,serif;color:var(--teal);margin-top:3px}
+.kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-top-text small{font-size:12px;margin-top:7px}
+.kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-pill{
+  padding:6px 9px;font-size:11px;border-radius:8px
+}
+.kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-actions{padding-top:2px;min-height:45px}
+@media(max-width:620px){
+  .kiosk-live{grid-template-columns:40% minmax(0,1fr);min-height:118px;margin-bottom:12px;border-radius:13px}
+  .kiosk-live-visual{min-height:118px}
+  .kiosk-live-copy{gap:5px;padding:10px}
+  .kiosk-live-copy strong{font-size:18px}
+  .kiosk-live-copy p{font-size:9px;line-height:1.35}
+  .kiosk-live-brand{font-size:7px;letter-spacing:.6px}
+  .kiosk-live-chip{font-size:8px;padding:3px 6px}
+  .kiosk-live-intro{display:block;min-height:212px}
+  .kiosk-live-intro .kiosk-live-visual{min-height:0}
+  .kiosk-live-intro .kiosk-live-copy{padding:15px;gap:5px}
+  .kiosk-live-intro .kiosk-live-copy strong{font-size:26px}
+  .kiosk-live-intro .kiosk-live-copy p{font-size:11px}
+  .kiosk-cart-showcase>img{height:clamp(180px,48vw,228px)}
+  .kiosk-cart-showcase figcaption{padding:24px 10px 9px;align-items:start;flex-direction:column;gap:2px}
+  .kiosk-cart-showcase figcaption span{text-align:start;max-width:none;font-size:9px}
+  .kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-top,
+  .kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-pills,
+  .kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-details,
+  .kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-actions{margin-inline:11px}
+}
+@media(max-width:360px){
+  .kiosk-live{grid-template-columns:39% 1fr}
+  .kiosk-live-intro{min-height:184px}
+  .kiosk-live-intro .kiosk-live-copy strong{font-size:23px}
+  .kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-top-text b{font-size:14px}
+}
+@media(max-height:620px) and (max-width:620px){
+  .kiosk-live-intro{min-height:176px}
+  .kiosk-live:not(.kiosk-live-intro),.kiosk-live:not(.kiosk-live-intro) .kiosk-live-visual{min-height:96px}
+}
+@media(prefers-reduced-motion:reduce){
+  .kiosk-live,.kiosk-live img,.kiosk-cart-showcase img{transition:none;animation:none}
+}
