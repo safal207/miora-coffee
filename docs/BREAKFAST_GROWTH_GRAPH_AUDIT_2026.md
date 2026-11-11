@@ -4,7 +4,7 @@ Date: 2026-11-11. Source of menu truth: `dist/menu-data.js`, `dist/kiosk-data.js
 
 ## Verified baseline
 - The published catalog contains **93** products across **8** categories.
-- **27** products are mapped onto **11** distinct shared photo sources; **8** additional positions use known placeholder photos (not counted in the 27).
+- **27** products are mapped onto **9** distinct shared photo sources; **8** additional positions use known placeholder photos (not counted in the 27).
 - Category counts: hot coffee 21; iced coffee 9; hot drinks 8; cold drinks 9; desserts 24; water/soft drinks 5; smoothies/fresh 2; food & bakery 15.
 - The breakfast configurator already exists under `recipes.breakfast`: do not create a conflicting second recipe. `r.image=431203`. The published catalog entry "Breakfast plate" (`431203`) is 450 TRY.
 - Breakfast bases: large croissant plate **450 TRY**, mini croissant plate **400 TRY**, sliced bread plate **350 TRY**. Egg: omelette **or** boiled (exactly one). Sweets: tahini–molasses, honey, Nutella (up to three). Additional bread **+20 TRY** or mini croissant **+40 TRY**, up to two add-on types. The recipe includes greens, tomato, cucumber, avocado, cheese, green and black olives, breakfast sauce and walnuts. **Do not offer salmon, pancakes, extra cheese, egg recipes, or any unconfirmed ingredients as free breakfast components.**
@@ -25,7 +25,6 @@ The clusters below are **confirmed source-level reuse**, not a computer-vision c
 | 429252 | 2 | 429252, 429294 | Iced Americano vs cold brew; brew method and ice vs extraction |
 | 429301 | 2 | 429301, 429303 | Matcha plain vs syrup version; clear variation without invented flavor |
 | 430236 | 2 | 430236, 431178 | Wholegrain vs plain sourdough; replace borrowed bread photo |
-| Other | 2 groups ×2 | See `photo-data.js` | Audit the mapping and exact source against real dish image |
 
 **No-photo placeholders (8):** `431314` mini cheesecake, `430199` banana magnolia, `430227` brownie ball, `431294` chocolate muffin, `430203` éclair, `431747` muffin, `431748` gluten-free poğaça, `431749` gluten-free vegetable bun. Get owner photos before marketing these as actual dishes.
 
