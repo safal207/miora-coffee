@@ -6,6 +6,7 @@ import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection} from './sandwich-preview.js';
 import {breakfastVisualForSelection,breakfastCopy} from './breakfast-preview.js';
+import {identityFor,diversifyPhotoOrder} from './visual-merchandising.js';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -88,9 +89,14 @@ function renderCategories() {
   $('favorites-filter').innerHTML=icon('heart');$('favorites-filter').setAttribute('aria-pressed',String(category==='favorites'));
 }
 function meta(item) {return `${item.kcal&&!item.calorieReview?`<span>${icon('flame')}${esc(item.kcal)}</span>`:''}${item.time?`<span>${icon('clock')}${item.time} ${t('minutes')}</span>`:''}`;}
+const flavorChip=item=>{
+ const name=identityFor(item,lang);
+ return name?'<span class="miora-photo-identity">'+esc(name)+'</span>':'';
+};
 function renderProducts() {
   stopFeedViews();
   const list=filterProducts(products,{category,search,favorites:[...favorites],featured});
+  const displayList=!search&&!['all','featured','favorites'].includes(category)?diversifyPhotoOrder(list):list;
   const label=category==='featured'?t('featured'):category==='all'?(search?t('searchResults'):t('all')):category==='favorites'?t('favorites'):categories.find(c=>c.id===category)?.name[lang]||t('all');
   $('result-title').textContent=label;$('result-count').textContent=`${list.length} ${t('count')}`;
   document.body.dataset.view=view;
@@ -98,9 +104,9 @@ function renderProducts() {
   $('feed-stories').hidden=view!=='feed';$('categories').hidden=view==='feed';
   $('empty-state').hidden=list.length>0;$('products').className='product-grid'+(view==='list'?' list-view':view==='feed'?' feed-view':'');
   $('view-feed').setAttribute('aria-pressed',String(view==='feed'));$('view-grid').setAttribute('aria-pressed',String(view==='grid'));$('view-list').setAttribute('aria-pressed',String(view==='list'));$('search-clear').hidden=!search;
-  if(view==='feed'){const ranks=new Map(featured.map((id,i)=>[id,i]));const ordered=category==='all'&&!search?[...list].sort((a,b)=>(ranks.get(a.id)??100)-(ranks.get(b.id)??100)):list;$('products').innerHTML=ordered.map(feedPost).join('');startFeedViews();enhanceKioskCards();return;}
-  $('products').innerHTML=list.map(p=>`<article class="product-card" data-product="${p.id}">
-    <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}"><img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}></button>
+  if(view==='feed'){const ranks=new Map(featured.map((id,i)=>[id,i]));const ordered=category==='all'&&!search?[...displayList].sort((a,b)=>(ranks.get(a.id)??100)-(ranks.get(b.id)??100)):displayList;$('products').innerHTML=ordered.map(feedPost).join('');startFeedViews();enhanceKioskCards();return;}
+  $('products').innerHTML=displayList.map(p=>`<article class="product-card" data-product="${p.id}">
+    <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}"><img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}></button>${flavorChip(p)}
     <div class="product-social"><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}">${icon('share')}</button><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}</button></div></div>
     <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div><div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
   enhanceKioskCards();
@@ -140,7 +146,7 @@ function feedPost(p) {
   const cat=categories.find(c=>c.id===p.cat),qty=cart[p.id]||0;
   return `<article class="product-card feed-post" data-product="${p.id}" aria-labelledby="post-title-${p.id}">
     <div class="post-head"><img class="post-avatar" src="assets/logo-source.jpg" width="36" height="36" alt=""><div><b>mioracoffeetr</b><span>${esc(cat.name[lang])}</span></div><button class="icon-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${icon('more')}</button></div>
-    <div class="feed-media"><div class="feed-photo" data-feed-photo="${p.id}"><img class="${hasPhoto(p)?'':'missing-photo'}" src="${photo(p)}" ${photoSet(p,'(max-width: 620px) 100vw, 624px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}"><span class="feed-love" aria-hidden="true">${icon('heart')}</span></div></div>
+    <div class="feed-media"><div class="feed-photo" data-feed-photo="${p.id}"><img class="${hasPhoto(p)?'':'missing-photo'}" src="${photo(p)}" ${photoSet(p,'(max-width: 620px) 100vw, 624px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}"><span class="feed-love" aria-hidden="true">${icon('heart')}</span>${flavorChip(p)}</div></div>
     <div class="post-actions"><button class="icon-btn feed-heart" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${esc(t('like')+' · '+name(p))}">${icon('heart')}</button><button class="icon-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('ingredients')+' · '+name(p))}">${icon('info')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}">${icon('share')}</button><span class="post-saved" data-saved="${p.id}" ${favorites.has(p.id)?'':'hidden'}>${t('liked')}</span></div>
     <div class="post-caption"><h3 id="post-title-${p.id}"><button type="button" data-detail="${p.id}">${esc(name(p))}</button></h3><p class="post-original" ${lang==='tr'?'':'lang="tr"'}>${esc(lang==='tr'?(p.description.length>130?p.description.slice(0,127)+'…':p.description):p.name.tr)}</p><div class="post-meta">${meta(p)}</div><span class="post-views" data-views="${p.id}" ${views[p.id]?'':'hidden'}>${icon('eye')}<span>${views[p.id]||0} · ${t('viewOnDevice')}</span></span></div>
     <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${icon('bag')}<span>${t(qty?'addMore':'addToOrder')}</span></button>`}</div>
