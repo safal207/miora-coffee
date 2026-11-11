@@ -504,3 +504,21 @@
 @media(prefers-reduced-motion:reduce){
   .kiosk-breakfast-idea button{transition:none;transform:none}
 }
+
+
+/* Variant identity: photo reuse is never treated as proof of an identical recipe. */
+.product-media,.feed-photo{position:relative}
+.miora-photo-identity{
+  display:inline-flex;align-items:center;max-width:calc(100% - 24px);
+  position:absolute;left:11px;bottom:11px;z-index:2;pointer-events:none;
+  border:1px solid #ffffff55;border-radius:99px;padding:7px 10px;
+  background:rgba(24,52,39,.89);backdrop-filter:blur(8px);
+  color:#fff9e8;font-size:11px;line-height:1.2;font-weight:700;
+  letter-spacing:.1px;box-shadow:0 3px 10px rgba(0,0,0,.13);
+}
+.feed-photo .miora-photo-identity{left:14px;bottom:16px;max-width:75%;font-size:12px}
+@media(max-width:620px){
+ .product-media .miora-photo-identity{left:7px;bottom:7px;padding:5px 8px;font-size:9px;max-width:calc(100% - 12px)}
+ .feed-photo .miora-photo-identity{left:12px;bottom:12px;max-width:72%;padding:6px 9px;font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.miora-photo-identity{backdrop-filter:none}}
