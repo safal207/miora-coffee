@@ -22,13 +22,37 @@ export const sandwichIdeas=[
 ];
 const types=new Set(sandwichIdeas.map(x=>x.id));
 const files=Object.freeze(Object.fromEntries(sandwichIdeas.map(x=>[x.id,'assets/sandwich-'+x.id+'.webp'])));
+// A sandwich with no chosen main filling must never show a fabricated vegetable filling.
+// Where the exact Miora bread photo is available, show the base bread instead.
+const breadPhotos=Object.freeze({
+  olive:'assets/products/430240.jpg',
+  'tomato-walnut':'assets/products/431177.jpg',
+  focaccia:'assets/products/431179.jpg',
+  wholewheat:'assets/products/430236.jpg',
+  plain:'assets/products/431178.jpg'
+});
 export const photoForFilling=(selection)=>{
   const id=selection?.extra?.[0];
-  return types.has(id)?id:'veggie';
+  return !id?'bread':types.has(id)?id:'veggie';
 };
 export const previewForSelection=(selection)=>{
   const kind=photoForFilling(selection);
-  return {kind,src:files[kind],illustrative:true};
+  if(kind==='bread'){
+    const bread=selection?.bread?.[0];
+    return {kind,src:breadPhotos[bread]||null,illustrative:true,baseOnly:true};
+  }
+  return {kind,src:files[kind],illustrative:true,baseOnly:false};
+};
+// Exact selected components are always taken from the same source-of-truth as the cart.
+// Images represent only the broad filling type; these localized labels reflect every choice.
+export const selectedIngredients=(selection,lang='tr')=>{
+  const language=['tr','ru','en'].includes(lang)?lang:'tr';
+  return recipes.sandwich.steps.flatMap(step=>{
+    const ids=selection?.[step.id];
+    if(!Array.isArray(ids))return [];
+    return ids.map(id=>step.items.find(item=>item.id===id))
+      .filter(Boolean).map(item=>item.label[language]||item.label.tr);
+  });
 };
 export const ideaSelection=id=>{
   const found=sandwichIdeas.find(x=>x.id===id);

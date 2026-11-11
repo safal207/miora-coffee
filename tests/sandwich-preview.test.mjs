@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,statSync} from 'node:fs';
-import {sandwichIdeas,previewForSelection,photoForFilling,ideaSelection,localizedIdea} from '../dist/sandwich-preview.js';
+import {sandwichIdeas,previewForSelection,photoForFilling,ideaSelection,localizedIdea,selectedIngredients} from '../dist/sandwich-preview.js';
 import {recipes} from '../dist/kiosk-data.js';
 import {validSelection,orderPrice,initialSelection,choose} from '../dist/kiosk-core.js';
 
@@ -31,9 +31,14 @@ test('photo is keyed to actual selected filling, not whatever preset was origina
  assert.notEqual(previewForSelection(withoutSalmon).src,previewForSelection(salmon).src);
  const turkey=choose(withoutSalmon,recipes.sandwich.steps.find(x=>x.id==='extra'),'turkey');
  assert.equal(previewForSelection(turkey).kind,'turkey');
- assert.equal(previewForSelection({...salmon,extra:[]}).kind,'veggie');
- assert.equal(previewForSelection(initialSelection('sandwich')).kind,'veggie');
- assert.ok(previewForSelection(initialSelection('sandwich')).illustrative);
+ assert.equal(previewForSelection({...salmon,extra:[]}).kind,'bread');
+ assert.equal(previewForSelection({...salmon,extra:[]}).src,'assets/products/431179.jpg');
+ const empty=previewForSelection(initialSelection('sandwich'));
+ assert.equal(empty.kind,'bread');
+ assert.equal(empty.src,'assets/products/430240.jpg');
+ assert.ok(empty.baseOnly);
+ assert.ok(empty.illustrative);
+ assert.equal(previewForSelection({...salmon,bread:['purple-carrot'],extra:[]}).src,null);
 });
 
 test('all five images are valid WebP, bounded size and present in deploy folder',()=>{
@@ -60,4 +65,17 @@ test('the first-screen hero exposes an accessible custom sandwich entry point',(
   assert.match(kiosk,/top\.setAttribute\('aria-label',v\('heroTitle'\)\)/);
   assert.match(css,/@media\(max-width:620px\)/);
   assert.match(css,/\.hero-actions \.hero-kiosk-btn/);
+});
+
+test('final preview shows the exact selected ingredient labels in every supported language',()=>{
+ const chosen=ideaSelection('salmon');
+ const ru=selectedIngredients(chosen,'ru');
+ assert.deepEqual(ru,['Фокачча','Лабне','Мусс из авокадо','Лосось','Руккола','Укроп']);
+ assert.ok(selectedIngredients(chosen,'en').includes('Salmon'));
+ assert.ok(selectedIngredients(chosen,'tr').includes('Somon balığı'));
+ const removed=choose(chosen,recipes.sandwich.steps.find(step=>step.id==='extra'),'tomato');
+ assert.ok(!selectedIngredients(removed,'ru').includes('Лосось'));
+ assert.ok(selectedIngredients(removed,'ru').includes('Помидор'));
+ assert.equal(selectedIngredients({...removed,extra:[]},'ru').includes('Помидор'),false);
+ assert.deepEqual(selectedIngredients({bread:['unknown'],extra:['unknown']},'ru'),[]);
 });

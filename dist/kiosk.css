@@ -296,3 +296,63 @@
   .hero-actions .hero-cta,.hero-actions .hero-kiosk-btn{width:100%;min-height:48px}
 }
 @media(prefers-reduced-motion:reduce){.hero-kiosk-btn{transition:none}}
+
+
+/* Miora discovery: make personalization the clear primary action on the landing screen. */
+.hero-actions .hero-kiosk-btn{
+  order:-1;display:inline-flex;justify-content:flex-start;gap:12px;
+  min-height:65px;padding:8px 15px 8px 8px;border:1px solid #285848;
+  background:linear-gradient(112deg,#1b4b3b 0%,#245d47 100%);
+  color:#fffaf0;box-shadow:0 8px 22px rgba(16,46,34,.19);
+  font-size:13px;font-weight:800;letter-spacing:.1px;text-align:left;flex:1 1 230px;
+  border-radius:15px
+}
+.hero-actions .hero-kiosk-btn::before{
+  content:"";display:block;flex:0 0 48px;width:48px;height:48px;
+  border-radius:11px;border:1px solid rgba(255,255,255,.23);
+  background:#efe4d2 url('assets/sandwich-salmon.webp') center/cover no-repeat
+}
+.hero-actions .hero-kiosk-btn>span:last-child{margin-left:auto;font-size:20px}
+.hero-actions .hero-kiosk-btn:hover{background:#28664b;box-shadow:0 10px 26px rgba(15,50,38,.26)}
+.hero-actions .hero-kiosk-btn:focus-visible{outline:3px solid #d8ae6e;outline-offset:3px}
+.hero-actions .hero-cta{
+  min-height:54px;flex:0 1 auto;background:var(--card);border:1px solid var(--line);
+  color:var(--teal);box-shadow:none
+}
+.hero-actions .hero-cta:hover{background:var(--soft)}
+/* Ingredient truth: the photo shows a broad style; these chips show what was actually selected. */
+.kiosk-selected-title{display:block!important;margin-top:7px;font-size:10px;font-weight:750;color:var(--ink)!important}
+.kiosk-selected-chips{display:flex;overflow-x:auto;max-width:100%;gap:6px;padding:3px 0 5px;scrollbar-width:thin;scroll-snap-type:x proximity}
+.kiosk-selected-chip{
+  flex:0 0 auto;padding:6px 9px;background:var(--soft);color:var(--ink);
+  border:1px solid var(--line);border-radius:99px;
+  font-size:10px;font-weight:650;line-height:1.2;scroll-snap-align:start;
+}
+.kiosk-pick-filling{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-top:10px;padding:10px 14px;min-height:43px;
+  border-radius:10px;background:var(--teal);color:var(--paper);
+  font-weight:700;font-size:12px
+}
+.kiosk-pick-filling:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.kiosk-empty-photo{
+  display:grid;place-items:center;color:#fdf6e9;
+  font:italic clamp(28px,7vw,44px) Georgia,serif;
+  background:radial-gradient(circle at 70% 20%,#537661,#213e31 75%)
+}
+.kiosk-review-photo>.kiosk-empty-photo{width:100%;height:100%;font-size:20px}
+.kiosk-finished>.kiosk-empty-photo{width:100%;aspect-ratio:3/2;max-height:340px}
+.kiosk-finished figcaption .kiosk-selected-title{color:var(--ink)}
+@media(max-width:620px){
+  .hero-actions .hero-kiosk-btn{width:100%;flex:0 0 auto;min-height:64px;padding:8px 14px 8px 8px}
+  .hero-actions .hero-cta{width:100%;min-height:44px;font-size:12px}
+  .kiosk-finished>.kiosk-empty-photo{max-height:240px}
+  .kiosk-selected-chips{padding-bottom:7px}
+}
+@media(max-width:350px){
+  .hero-actions .hero-kiosk-btn{font-size:12px;gap:8px}
+  .hero-actions .hero-kiosk-btn::before{flex-basis:43px;width:43px;height:43px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-actions .hero-kiosk-btn{transition:none}
+}
