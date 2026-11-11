@@ -88,8 +88,8 @@ test('food desire flow retains honest preview while giving sandwich a prominent 
  for(const k of ['starterInspiration','livePreview','starterBody','liveBody']){
   assert.match(kiosk,new RegExp(k+':'));
  }
- assert.match(kiosk,/const livePreview=current==='sandwich'&&!review/);
- assert.match(kiosk,/isStart\?'assets\/sandwich-salmon\.webp':preview\.src/);
+ assert.match(kiosk,/const livePreview=\(current==='sandwich'\|\|isBreakfast\)&&!review/);
+ assert.match(kiosk,/isStart\?\(isBreakfast\?'assets\/breakfast-large-omelette-ai\.webp':'assets\/sandwich-salmon\.webp'\):preview\.src/);
  assert.match(kiosk,/preview\.baseOnly\?v\('basePreview'\)/);
  assert.match(kiosk,/selectedIngredients\(selection,lang\(\)\)/);
  assert.match(kiosk,/livePreview\+choices/);
