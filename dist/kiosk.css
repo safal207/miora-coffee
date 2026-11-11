@@ -389,7 +389,7 @@
 .kiosk-live-intro .kiosk-live-copy strong{font-size:30px}
 .kiosk-live-intro .kiosk-live-copy p{max-width:42ch}
 .kiosk-scroll:has(.kiosk-live){scrollbar-gutter:auto}
-.kiosk-cart-sandwich:not(.kiosk-cart-staff){
+:is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff){
   border:1px solid var(--line);border-radius:17px;margin:10px 0 16px;
   padding:0 0 12px;gap:11px;overflow:hidden;background:var(--card)
 }
@@ -404,19 +404,19 @@
 }
 .kiosk-cart-showcase figcaption strong{font-weight:750;white-space:nowrap;flex:0 0 auto}
 .kiosk-cart-showcase figcaption span{color:#f5f1e9;text-align:end;max-width:22ch}
-.kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-top,
-.kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-pills,
-.kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-details,
-.kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-actions{
+:is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff)>.kiosk-cart-top,
+:is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff)>.kiosk-cart-pills,
+:is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff)>.kiosk-cart-details,
+:is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff)>.kiosk-cart-actions{
   margin-inline:14px
 }
-.kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-top-text b{font-size:16px;line-height:1.2}
+:is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff) .kiosk-cart-top-text b{font-size:16px;line-height:1.2}
 .kiosk-cart-promise{display:block;font:italic 12px Georgia,serif;color:var(--teal);margin-top:3px}
-.kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-top-text small{font-size:12px;margin-top:7px}
-.kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-pill{
+:is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff) .kiosk-cart-top-text small{font-size:12px;margin-top:7px}
+:is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff) .kiosk-cart-pill{
   padding:6px 9px;font-size:11px;border-radius:8px
 }
-.kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-actions{padding-top:2px;min-height:45px}
+:is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff) .kiosk-cart-actions{padding-top:2px;min-height:45px}
 @media(max-width:620px){
   .kiosk-live{grid-template-columns:40% minmax(0,1fr);min-height:118px;margin-bottom:12px;border-radius:13px}
   .kiosk-live-visual{min-height:118px}
@@ -433,16 +433,16 @@
   .kiosk-cart-showcase>img{height:clamp(180px,48vw,228px)}
   .kiosk-cart-showcase figcaption{padding:24px 10px 9px;align-items:start;flex-direction:column;gap:2px}
   .kiosk-cart-showcase figcaption span{text-align:start;max-width:none;font-size:9px}
-  .kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-top,
-  .kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-pills,
-  .kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-details,
-  .kiosk-cart-sandwich:not(.kiosk-cart-staff)>.kiosk-cart-actions{margin-inline:11px}
+  :is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff)>.kiosk-cart-top,
+  :is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff)>.kiosk-cart-pills,
+  :is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff)>.kiosk-cart-details,
+  :is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff)>.kiosk-cart-actions{margin-inline:11px}
 }
 @media(max-width:360px){
   .kiosk-live{grid-template-columns:39% 1fr}
   .kiosk-live-intro{min-height:184px}
   .kiosk-live-intro .kiosk-live-copy strong{font-size:23px}
-  .kiosk-cart-sandwich:not(.kiosk-cart-staff) .kiosk-cart-top-text b{font-size:14px}
+  :is(.kiosk-cart-sandwich,.kiosk-cart-breakfast):not(.kiosk-cart-staff) .kiosk-cart-top-text b{font-size:14px}
 }
 @media(max-height:620px) and (max-width:620px){
   .kiosk-live-intro{min-height:176px}
@@ -451,3 +451,65 @@
 @media(prefers-reduced-motion:reduce){
   .kiosk-live,.kiosk-live img,.kiosk-cart-showcase img{transition:none;animation:none}
 }
+
+
+/* Breakfast Builder: an honest Miora menu-photo hero and three non-promotional idea paths. */
+.kiosk-breakfast-feature{
+  display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);
+  background:#f0e7d9;color:#302a22;border-radius:20px;overflow:hidden;
+  min-height:272px;margin:12px 0 12px;border:1px solid #d6c9b5;
+  box-shadow:0 12px 28px rgba(60,45,30,.09)
+}
+.kiosk-breakfast-photo{min-height:272px;background:#dcccb4;overflow:hidden;display:block}
+.kiosk-breakfast-photo>img{display:block;width:100%;height:100%;min-height:272px;object-fit:cover;object-position:center 50%}
+.kiosk-breakfast-content{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:10px;padding:25px}
+.kiosk-breakfast-tag{font-size:9px;letter-spacing:1.8px;font-weight:800;color:#84613d}
+.kiosk-breakfast-feature h3{font:normal clamp(29px,4.1vw,45px)/1.06 Georgia,serif;letter-spacing:-.8px;color:#322920}
+.kiosk-breakfast-feature p{font-size:12px;line-height:1.55;color:#655749}
+.kiosk-breakfast-start{
+  display:inline-flex;align-items:center;justify-content:space-between;gap:14px;
+  background:#4c5c38;color:white;border-radius:99px;
+  padding:11px 17px;font-size:12px;font-weight:750;min-height:48px;min-width:185px;
+  box-shadow:0 7px 16px rgba(63,76,40,.13)
+}
+.kiosk-breakfast-start:hover{background:#36482b}
+.kiosk-breakfast-start:focus-visible,.kiosk-breakfast-idea:focus-visible{outline:3px solid #b58b54;outline-offset:3px}
+.kiosk-breakfast-content>small{font-size:9px;line-height:1.4;color:#716352}
+.kiosk-breakfast-ideas-label{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:4px 0 9px}
+.kiosk-breakfast-ideas-label strong{font:normal 21px/1.1 Georgia,serif}
+.kiosk-breakfast-ideas-label small{font-size:10px;color:var(--muted)}
+.kiosk-breakfast-ideas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:0 0 23px}
+.kiosk-breakfast-idea{
+  min-width:0;display:grid;grid-template-columns:46px minmax(0,1fr) 20px;
+  grid-template-rows:auto auto;gap:5px 9px;align-items:center;
+  padding:11px;text-align:left;min-height:86px;
+  background:var(--card);border:1px solid var(--line);border-radius:13px;
+  transition:border-color .15s,transform .15s
+}
+.kiosk-breakfast-idea:hover{border-color:#9c7d4c;transform:translateY(-1px)}
+.kiosk-breakfast-idea-icon{
+  grid-row:1/3;display:grid;place-items:center;
+  width:46px;height:46px;border-radius:11px;background:#f4e3ce;font-size:24px
+}
+.kiosk-breakfast-idea strong{grid-column:2;grid-row:1;font-size:12px;line-height:1.22;overflow-wrap:anywhere}
+.kiosk-breakfast-idea small{grid-column:2;grid-row:2;font-size:10px;line-height:1.3;color:var(--muted)}
+.kiosk-breakfast-idea-arrow{grid-column:3;grid-row:1/3;color:var(--teal)}
+.kiosk-breakfast-included{font-size:11px;line-height:1.55;color:var(--muted);margin:0}
+.kiosk-breakfast-finished .kiosk-selected-title{margin-top:8px}
+@media(max-width:700px){
+  .kiosk-breakfast-feature{grid-template-columns:1fr;min-height:0;border-radius:17px}
+  .kiosk-breakfast-photo{min-height:195px;height:195px}
+  .kiosk-breakfast-photo>img{min-height:0;height:100%;object-position:center 57%}
+  .kiosk-breakfast-content{padding:17px 16px 18px;gap:8px}
+  .kiosk-breakfast-feature h3{font-size:31px}
+  .kiosk-breakfast-start{width:100%;min-height:48px}
+  .kiosk-breakfast-ideas-label{align-items:start;flex-direction:column;gap:4px}
+  .kiosk-breakfast-ideas{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:9px;padding-bottom:8px;scrollbar-width:none}
+  .kiosk-breakfast-ideas::-webkit-scrollbar{display:none}
+  .kiosk-breakfast-idea{flex:0 0 clamp(205px,66vw,275px);scroll-snap-align:start}
+}
+@media(max-width:360px){
+  .kiosk-breakfast-photo{height:173px;min-height:173px}
+  .kiosk-breakfast-feature h3{font-size:28px}
+}
+@media(prefers-reduced-motion:reduce){.kiosk-breakfast-idea{transition:none;transform:none}}
