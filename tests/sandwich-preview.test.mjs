@@ -93,7 +93,7 @@ test('food desire flow retains honest preview while giving sandwich a prominent 
  assert.match(kiosk,/preview\.baseOnly\?v\('basePreview'\)/);
  assert.match(kiosk,/selectedIngredients\(selection,lang\(\)\)/);
  assert.match(kiosk,/livePreview\+choices/);
- assert.match(app,/const featuredPhoto=sandwich&&!staffMode/);
+ assert.match(app,/const featuredPhoto=showFood&&!staffMode/);
  assert.match(app,/kiosk-cart-showcase/);
  assert.match(app,/kiosk-cart-promise/);
  assert.match(app,/const previewPhoto=visual\?\.src\|\|null/);
