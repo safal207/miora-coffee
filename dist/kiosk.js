@@ -64,6 +64,8 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
       '<div class="kiosk-placeholder" aria-hidden="true">m<span>✳</span></div>';
   };
   function renderStrip(){
+    const top=document.getElementById('hero-kiosk-cta');
+    if(top){top.innerHTML=esc(v('heroButton'))+' <span aria-hidden="true">→</span>';top.setAttribute('aria-label',v('heroTitle'));}
     const featured='assets/sandwich-salmon.webp';
     const hero='<div class="kiosk-feature"><img src="'+featured+'" alt="" loading="lazy" decoding="async" class="kiosk-feature-photo">'+
       '<div class="kiosk-feature-content"><span class="kiosk-feature-tag">'+esc(v('heroTag'))+'</span>'+
