@@ -49,3 +49,15 @@ test('all five images are valid WebP, bounded size and present in deploy folder'
  }
  assert.ok(total<400000,'Previews total too heavy: '+total);
 });
+
+
+test('the first-screen hero exposes an accessible custom sandwich entry point',()=>{
+  const html=readFileSync('dist/index.html','utf8');
+  const kiosk=readFileSync('dist/kiosk.js','utf8');
+  const css=readFileSync('dist/kiosk.css','utf8');
+  assert.match(html,/id="hero-kiosk-cta"[^>]*data-k-start="sandwich"/);
+  assert.match(kiosk,/getElementById\('hero-kiosk-cta'\)/);
+  assert.match(kiosk,/top\.setAttribute\('aria-label',v\('heroTitle'\)\)/);
+  assert.match(css,/@media\(max-width:620px\)/);
+  assert.match(css,/\.hero-actions \.hero-kiosk-btn/);
+});

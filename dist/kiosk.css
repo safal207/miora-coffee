@@ -284,3 +284,15 @@
  .kiosk-finished>img{max-height:205px}
 }
 @media(prefers-reduced-motion:reduce){.kiosk-feature-button,.kiosk-idea button{transition:none;transform:none}}
+
+/* Make the sandwich builder discoverable above the fold without replacing Miora's original cafe hero. */
+.hero-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hero-actions .hero-cta{min-height:49px;flex:0 1 auto}
+.hero-kiosk-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:49px;padding:10px 17px;border:1px solid var(--teal);background:color-mix(in srgb,var(--teal) 9%,var(--card));color:var(--teal);border-radius:11px;font-weight:750;font-size:12px;line-height:1.3;transition:background .15s,transform .15s}
+.hero-kiosk-btn:hover{background:color-mix(in srgb,var(--teal) 17%,var(--card));transform:translateY(-1px)}
+.hero-kiosk-btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@media(max-width:620px){
+  .hero-actions{display:flex;flex-direction:column;align-items:stretch;gap:9px}
+  .hero-actions .hero-cta,.hero-actions .hero-kiosk-btn{width:100%;min-height:48px}
+}
+@media(prefers-reduced-motion:reduce){.hero-kiosk-btn{transition:none}}
