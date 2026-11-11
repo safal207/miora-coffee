@@ -451,3 +451,56 @@
 @media(prefers-reduced-motion:reduce){
   .kiosk-live,.kiosk-live img,.kiosk-cart-showcase img{transition:none;animation:none}
 }
+
+
+/* Breakfast 2.0: focus on an appetizing, truthful and mobile-first assembled plate. */
+.kiosk-breakfast-feature{
+  isolation:isolate;position:relative;display:flex;align-items:flex-end;min-height:315px;
+  border-radius:20px;overflow:hidden;margin:26px 0 0;color:#fff;
+  background:#273d30;box-shadow:0 12px 28px rgba(33,43,30,.13);
+}
+.kiosk-breakfast-feature>img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:center 57%}
+.kiosk-breakfast-feature::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(22,36,27,.93),rgba(22,36,27,.78) 36%,rgba(22,36,27,.10) 90%)}
+.kiosk-breakfast-feature-content{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:12px;min-height:315px;padding:clamp(22px,5vw,42px);max-width:550px}
+.kiosk-breakfast-feature h3{font:normal clamp(30px,5vw,47px)/1.08 Georgia,serif;max-width:420px;color:#fff}
+.kiosk-breakfast-feature p{max-width:280px;font-size:13px;line-height:1.55;color:#f3eee4}
+.kiosk-breakfast-feature .kiosk-feature-button{color:#213c2b;background:#ffe1ad}
+.kiosk-breakfast-idea-heading{margin:20px 0 11px}
+.kiosk-breakfast-idea-heading h4{font:normal clamp(22px,4vw,27px)/1.1 Georgia,serif}
+.kiosk-breakfast-ideas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:27px}
+.kiosk-breakfast-idea{min-width:0}
+.kiosk-breakfast-idea button{
+  width:100%;height:100%;min-height:203px;text-align:left;display:flex;flex-direction:column;
+  padding:0 0 12px;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;transition:transform .16s,border-color .16s;
+}
+.kiosk-breakfast-idea button:hover{transform:translateY(-2px);border-color:var(--teal)}
+.kiosk-breakfast-idea button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.kiosk-breakfast-idea img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--soft)}
+.kiosk-breakfast-idea button span{padding:9px 11px 0;color:var(--ink);font-weight:700;font-size:12px;line-height:1.35}
+.kiosk-breakfast-finished figcaption{gap:6px}
+.kiosk-breakfast-included{font-size:11px!important;line-height:1.5;color:var(--muted);padding:1px 0 7px}
+.kiosk-cart-breakfast:not(.kiosk-cart-staff) .kiosk-cart-showcase>img{object-position:center 54%}
+.kiosk-cart-breakfast:not(.kiosk-cart-staff) .kiosk-cart-promise{color:var(--teal)}
+@media(max-width:700px){
+  .kiosk-breakfast-feature{min-height:278px;border-radius:17px;margin-top:22px}
+  .kiosk-breakfast-feature>img{object-position:66% 36%}
+  .kiosk-breakfast-feature::before{background:linear-gradient(0deg,rgba(20,33,25,.94),rgba(20,33,25,.48) 54%,rgba(20,33,25,.03))}
+  .kiosk-breakfast-feature-content{width:100%;min-height:278px;justify-content:end;gap:9px;padding:18px}
+  .kiosk-breakfast-feature h3{font-size:32px;max-width:310px}
+  .kiosk-breakfast-feature p{font-size:11px;max-width:290px}
+  .kiosk-breakfast-feature .kiosk-feature-button{width:100%;min-height:45px}
+  .kiosk-breakfast-ideas{display:flex;overflow-x:auto;gap:9px;padding:0 0 8px;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none}
+  .kiosk-breakfast-ideas::-webkit-scrollbar{display:none}
+  .kiosk-breakfast-idea{flex:0 0 clamp(164px,54vw,216px);scroll-snap-align:start}
+  .kiosk-breakfast-idea button{min-height:190px}
+  .kiosk-breakfast-included{font-size:10px!important}
+}
+@media(max-width:360px){
+  .kiosk-breakfast-feature,.kiosk-breakfast-feature-content{min-height:252px}
+  .kiosk-breakfast-feature h3{font-size:28px}
+  .kiosk-breakfast-idea{flex-basis:164px}
+}
+@media(prefers-reduced-motion:reduce){
+  .kiosk-breakfast-idea button{transition:none;transform:none}
+}
