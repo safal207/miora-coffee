@@ -1,7 +1,7 @@
 import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto} from './photos.js?v=20261106-photos2';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
-import {mountKiosk} from './kiosk.js?v=20261111-sandwich1';
+import {mountKiosk} from './kiosk.js?v=20261111-hero2';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection} from './sandwich-preview.js';
