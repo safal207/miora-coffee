@@ -1,9 +1,10 @@
 import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto} from './photos.js?v=20261106-photos2';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
-import {mountKiosk} from './kiosk.js?v=20261110-retina1';
+import {mountKiosk} from './kiosk.js?v=20261111-sandwich1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
+import {previewForSelection} from './sandwich-preview.js';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -254,7 +255,9 @@ function renderCart() {
     const pills=values.slice(0,4).map(value=>`<span class="kiosk-cart-pill">${esc(value)}</span>`).join('')+
       (values.length>4?`<span class="kiosk-cart-pill">+${values.length-4}</span>`:'');
     const imageItem=byId.get(r.image);
-    const photoMarkup=imageItem&&hasPhoto(imageItem)?`<img src="${photo(imageItem,160)}" width="62" height="62" alt="" loading="lazy" decoding="async">`:
+    const previewPhoto=item.kind==='sandwich'?previewForSelection(item.selection).src:null;
+    const photoMarkup=previewPhoto?`<img src="${previewPhoto}" width="62" height="62" alt="" loading="lazy" decoding="async">`:
+      imageItem&&hasPhoto(imageItem)?`<img src="${photo(imageItem,160)}" width="62" height="62" alt="" loading="lazy" decoding="async">`:
       '<div class="kiosk-cart-symbol" aria-hidden="true">✳</div>';
     const editLabel=language==='ru'?'Изменить состав':language==='en'?'Edit ingredients':'İçeriği düzenle';
     const detailLabel=language==='ru'?'Весь состав':language==='en'?'Full ingredients':'Tüm içerik';

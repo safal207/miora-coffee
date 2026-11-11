@@ -1,11 +1,17 @@
 import {recipes,ui,localized} from './kiosk-data.js';
 import {initialSelection,choose,validSelection,orderPrice} from './kiosk-core.js';
+import {sandwichIdeas,previewForSelection,ideaSelection,localizedIdea} from './sandwich-preview.js';
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const phrases={
   tr:{reviewTitle:'Seçimlerin',edit:'Düzenle',finish:'Son kontrol',photo:'Örnek fotoğraf',details:'İçerik',approx:'Başlangıç toplamı',drinkShort:'Cappuccino da ekle',editSave:'Değişiklikleri kaydet',notFinal:'Dolgu fiyatı personelle netleşir',baseImage:'Fotoğrafta sade kruvasan tabanı gösterilir.',aiNote:'Bazı malzeme görselleri yapay zekâ çizimidir; gerçek ürün fotoğrafı değildir.'},
   ru:{reviewTitle:'Твой состав',edit:'Изменить',finish:'Проверь и добавь',photo:'Пример фото',details:'Ингредиенты',approx:'Сумма от',drinkShort:'Добавить капучино',editSave:'Сохранить изменения',notFinal:'Цена начинки уточняется в кафе',baseImage:'На фото — обычный круассан, не готовый десерт с Nutella.',aiNote:'Часть фото ингредиентов создана ИИ для примера, а не снята в Miora.'},
   en:{reviewTitle:'Your ingredients',edit:'Edit',finish:'Review & add',photo:'Illustrative photo',details:'Ingredients',approx:'Total from',drinkShort:'Add a cappuccino',editSave:'Save changes',notFinal:'Confirm filling prices with staff',baseImage:'Photo shows the plain croissant base, not the finished Nutella pastry.',aiNote:'Some ingredient images are AI illustrations, not actual Miora product photos.'}
+};
+const showcaseCopy={
+  tr:{heroTag:'SANA ÖZEL · MIORA',heroTitle:'Kendi sandviçini yarat',heroBody:'Ekmeğini, peynirini ve dolgunu seç. Sana özel küçük bir lezzet.',heroButton:'Kendim hazırlayacağım',ideas:'Başlamak için ilham',ideasNote:'Beğendiğin karışımı seç, dilediğin gibi düzenle',preview:'Sandviçin nasıl görünebilir?',photoNote:'Yapay zekâ ile hazırlanmış servis önerisidir; seçtiğin malzemeler farklı görünebilir.',configure:'Bu lezzeti düzenle',from:'Temel fiyat 350 ₺ · iç malzemelerin son fiyatını personelle teyit edin.'},
+  ru:{heroTag:'ТВОЙ ВКУС · MIORA',heroTitle:'Создай свой сэндвич',heroBody:'Твой хлеб, сыр, соус и начинка. Собери вкус, который нравится именно тебе.',heroButton:'Собрать самому',ideas:'Идеи сочетаний',ideasNote:'Выбери вариант и измени любые ингредиенты',preview:'Вот каким может быть твой сэндвич',photoNote:'AI-визуализация подачи. Точный вид и ингредиенты выбранного заказа могут отличаться.',configure:'Изменить под себя',from:'Базовая цена 350 ₺ · стоимость начинок уточняется у сотрудника.'},
+  en:{heroTag:'MADE FOR YOU · MIORA',heroTitle:'Create your sandwich',heroBody:'Choose your bread, cheese, sauce and filling. Made your way.',heroButton:'Build it myself',ideas:'Ideas to start with',ideasNote:'Choose a combination, then customize every ingredient',preview:'Your sandwich could look like this',photoNote:'AI illustration of serving style, not an exact photo of your selection.',configure:'Make it yours',from:'350 ₺ base price · confirm filling charges with staff.'}
 };
 const glyphs={
   'purple-carrot':'🍞',labne:'🥛',white:'🧀',strained:'🧀',ezine:'🧀',kasar:'🧀',cheddar:'🧀',
@@ -49,6 +55,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
   const lang=()=>getLanguage();
   const t=k=>ui[lang()][k]||ui.tr[k]||k;
   const p=k=>phrases[lang()][k]||phrases.tr[k]||k;
+  const v=k=>showcaseCopy[lang()][k]||showcaseCopy.tr[k]||k;
   const title=v=>localized(v,lang());
   const label=price=>money(price);
   const recipeImg=(r)=>{
@@ -57,15 +64,31 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
       '<div class="kiosk-placeholder" aria-hidden="true">m<span>✳</span></div>';
   };
   function renderStrip(){
-    strip.innerHTML='<div class="kiosk-intro"><div><p class="eyebrow">'+esc(t('kicker'))+'</p><h3>'+esc(t('title'))+'</h3><p>'+esc(t('subtitle'))+'</p></div></div><div class="kiosk-entry-list">'+
-      Object.entries(recipes).map(([kind,r])=>'<button type="button" class="kiosk-entry" data-k-start="'+kind+'">'+
-      '<span class="kiosk-entry-image">'+recipeImg(r)+'</span><span class="kiosk-entry-copy"><b>'+esc(title(r.name))+'</b><small>'+esc(title(r.short))+'</small><strong>'+esc(t('from'))+' '+esc(label(r.steps.length?orderPrice(kind,initialSelection(kind)):r.price))+'</strong></span><span class="kiosk-entry-arrow" aria-hidden="true">↗</span></button>').join('')+'</div>';
+    const featured='assets/sandwich-salmon.webp';
+    const hero='<div class="kiosk-feature"><img src="'+featured+'" alt="" loading="lazy" decoding="async" class="kiosk-feature-photo">'+
+      '<div class="kiosk-feature-content"><span class="kiosk-feature-tag">'+esc(v('heroTag'))+'</span>'+
+      '<h3>'+esc(v('heroTitle'))+'</h3><p>'+esc(v('heroBody'))+'</p>'+
+      '<button type="button" class="kiosk-feature-button" data-k-start="sandwich">'+esc(v('heroButton'))+' <span aria-hidden="true">→</span></button></div></div>';
+    const ideas='<div class="kiosk-idea-head"><div><h4>'+esc(v('ideas'))+'</h4><p>'+esc(v('ideasNote'))+'</p></div></div>'+
+      '<div class="kiosk-idea-list" role="list">'+sandwichIdeas.map(idea=>{
+        const words=localizedIdea(idea,lang());
+        return '<div class="kiosk-idea" role="listitem"><button type="button" data-k-idea="'+idea.id+'" aria-label="'+esc(words.name+' · '+v('configure'))+'">'+
+          '<img src="assets/sandwich-'+idea.id+'.webp" alt="" loading="lazy" decoding="async" width="220" height="147">'+
+          '<span class="kiosk-idea-name">'+esc(words.name)+'</span><small>'+esc(words.desc)+'</small>'+
+          '<span class="kiosk-idea-action">'+esc(v('configure'))+' →</span></button></div>';
+      }).join('')+'</div>';
+    const other=Object.entries(recipes).filter(([kind])=>kind!=='sandwich').map(([kind,r])=>'<button type="button" class="kiosk-entry" data-k-start="'+kind+'">'+
+      '<span class="kiosk-entry-image">'+recipeImg(r)+'</span><span class="kiosk-entry-copy"><b>'+esc(title(r.name))+'</b><small>'+esc(title(r.short))+'</small><strong>'+esc(t('from'))+' '+esc(label(r.steps.length?orderPrice(kind,initialSelection(kind)):r.price))+'</strong></span>'+
+      '<span class="kiosk-entry-arrow" aria-hidden="true">↗</span></button>').join('');
+    strip.innerHTML=hero+ideas+'<p class="kiosk-feature-disclosure">'+esc(v('photoNote'))+'</p>'+
+      '<div class="kiosk-intro"><div><p class="eyebrow">'+esc(t('kicker'))+'</p><h3>'+esc(t('title'))+'</h3><p>'+esc(t('subtitle'))+'</p></div></div>'+
+      '<div class="kiosk-entry-list">'+other+'</div>';
   }
-  function open(kind,seedBread,existing=null,lineIndex=null){
+  function open(kind,seedBread,existing=null,lineIndex=null,idea=null){
     if(!Object.hasOwn(recipes,kind))return;
     lastFocus=document.activeElement;current=kind;
-    selection=existing?structuredClone(existing):initialSelection(kind);
-    index=existing?recipes[kind].steps.length:0;
+    selection=existing?structuredClone(existing):idea?ideaSelection(idea):initialSelection(kind);
+    index=(existing||idea)?recipes[kind].steps.length:0;
     editIndex=Number.isInteger(lineIndex)?lineIndex:null;
     withDrink=false;notice='';returnToReview=false;
     if(!existing&&kind==='sandwich'&&recipes.sandwich.steps[0].items.some(x=>x.id===seedBread))selection.bread=[seedBread];
@@ -90,8 +113,10 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
         itemVisual(step,item,getPhoto)+'<span class="kiosk-option-content"><strong>'+esc(title(item.label))+'</strong>'+
         (item.price?'<small>+'+esc(label(item.price))+'</small>':'')+'</span><span class="kiosk-check" aria-hidden="true">'+(selected?'✓':'')+'</span></button>';
     }).join('')+'</div>':'';
-    const summary=review?'<div class="kiosk-review"><div class="kiosk-review-heading"><span class="kiosk-review-photo">'+photo+'</span><div>'+
+    const summary=review?'<div class="kiosk-review"><div class="kiosk-review-heading"><span class="kiosk-review-photo">'+(current==='sandwich'?'<img src="'+esc(previewForSelection(selection).src)+'" alt="" loading="lazy" decoding="async">':photo)+'</span><div>'+
       '<p class="eyebrow">'+esc(p('finish'))+'</p><h2>'+esc(title(r.name))+'</h2><p>'+esc(title(r.short))+'</p></div></div>'+
+      (current==='sandwich'?'<figure class="kiosk-finished"><img src="'+esc(previewForSelection(selection).src)+'" alt="'+esc(v('preview'))+'" loading="lazy" decoding="async" width="900" height="600">'+
+        '<figcaption><strong>'+esc(v('preview'))+'</strong><span>'+esc(v('photoNote'))+'</span></figcaption></figure>':'')+
       (r.imageIsBase?'<p class="kiosk-photo-note">'+esc(p('baseImage'))+'</p>':'')+
       (n?'<div class="kiosk-review-grid">'+r.steps.map((s,i)=>{
         const items=selection[s.id].map(id=>s.items.find(x=>x.id===id)).filter(Boolean);
@@ -121,6 +146,8 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
   document.addEventListener('click',e=>{
     const start=e.target.closest('[data-k-start]');
     if(start)open(start.dataset.kStart,start.dataset.kBread);
+    const idea=e.target.closest('[data-k-idea]');
+    if(idea)open('sandwich',null,null,null,idea.dataset.kIdea);
   });
   dialog.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b)return;
