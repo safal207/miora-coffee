@@ -88,15 +88,16 @@ test('food desire flow retains honest preview while giving sandwich a prominent 
  for(const k of ['starterInspiration','livePreview','starterBody','liveBody']){
   assert.match(kiosk,new RegExp(k+':'));
  }
- assert.match(kiosk,/const livePreview=current==='sandwich'&&!review/);
- assert.match(kiosk,/isStart\?'assets\/sandwich-salmon\.webp':preview\.src/);
+ assert.match(kiosk,/const livePreview=\(current==='sandwich'\|\|isBreakfast\)&&!review/);
+ assert.match(kiosk,/isStart\?\(isBreakfast\?'assets\/breakfast-large-omelette-ai\.webp':'assets\/sandwich-salmon\.webp'\):preview\.src/);
  assert.match(kiosk,/preview\.baseOnly\?v\('basePreview'\)/);
  assert.match(kiosk,/selectedIngredients\(selection,lang\(\)\)/);
  assert.match(kiosk,/livePreview\+choices/);
- assert.match(app,/const featuredPhoto=sandwich&&!staffMode/);
+ assert.match(app,/const featuredPhoto=showFood&&!staffMode/);
  assert.match(app,/kiosk-cart-showcase/);
  assert.match(app,/kiosk-cart-promise/);
- assert.match(app,/const previewPhoto=visual\?\.src\|\|null/);
+ assert.match(app,/const previewPhoto=breakfast\?/);
+ assert.match(app,/visual\?\.src\|\|null/);
  assert.match(app,/staffMode\?' kiosk-cart-staff':''/);
  assert.match(css,/\.kiosk-live-intro/);
  assert.match(css,/\.kiosk-cart-showcase>img/);
