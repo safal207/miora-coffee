@@ -79,3 +79,41 @@ test('final preview shows the exact selected ingredient labels in every supporte
  assert.equal(selectedIngredients({...removed,extra:[]},'ru').includes('Помидор'),false);
  assert.deepEqual(selectedIngredients({bread:['unknown'],extra:['unknown']},'ru'),[]);
 });
+
+
+test('food desire flow retains honest preview while giving sandwich a prominent live and cart photo',()=>{
+ const kiosk=readFileSync('dist/kiosk.js','utf8');
+ const app=readFileSync('dist/app.js','utf8');
+ const css=readFileSync('dist/kiosk.css','utf8');
+ for(const k of ['starterInspiration','livePreview','starterBody','liveBody']){
+  assert.match(kiosk,new RegExp(k+':'));
+ }
+ assert.match(kiosk,/const livePreview=current==='sandwich'&&!review/);
+ assert.match(kiosk,/isStart\?'assets\/sandwich-salmon\.webp':preview\.src/);
+ assert.match(kiosk,/preview\.baseOnly\?v\('basePreview'\)/);
+ assert.match(kiosk,/selectedIngredients\(selection,lang\(\)\)/);
+ assert.match(kiosk,/livePreview\+choices/);
+ assert.match(app,/const featuredPhoto=sandwich&&!staffMode/);
+ assert.match(app,/kiosk-cart-showcase/);
+ assert.match(app,/kiosk-cart-promise/);
+ assert.match(app,/const previewPhoto=visual\?\.src\|\|null/);
+ assert.match(app,/staffMode\?' kiosk-cart-staff':''/);
+ assert.match(css,/\.kiosk-live-intro/);
+ assert.match(css,/\.kiosk-cart-showcase>img/);
+ assert.match(css,/@media\(max-width:620px\)/);
+ assert.match(css,/prefers-reduced-motion/);
+});
+
+test('each variant keeps its main filling correctly reflected in all preview destinations',()=>{
+ for(const idea of sandwichIdeas){
+  const selected=ideaSelection(idea.id);
+  const preview=previewForSelection(selected);
+  assert.ok(preview.src?.startsWith('assets/sandwich-'));
+  assert.equal(preview.baseOnly,false);
+  assert.ok(selectedIngredients(selected,'en').length>2);
+  const breadOnly={...selected,extra:[]};
+  assert.equal(previewForSelection(breadOnly).kind,'bread');
+  assert.ok(previewForSelection(breadOnly).baseOnly);
+  assert.notEqual(previewForSelection(breadOnly).src,preview.src);
+ }
+});

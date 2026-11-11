@@ -1,7 +1,7 @@
 import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto} from './photos.js?v=20261106-photos2';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
-import {mountKiosk} from './kiosk.js?v=20261111-truth3';
+import {mountKiosk} from './kiosk.js?v=20261111-desire4';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection} from './sandwich-preview.js';
@@ -255,14 +255,39 @@ function renderCart() {
     const pills=values.slice(0,4).map(value=>`<span class="kiosk-cart-pill">${esc(value)}</span>`).join('')+
       (values.length>4?`<span class="kiosk-cart-pill">+${values.length-4}</span>`:'');
     const imageItem=byId.get(r.image);
-    const previewPhoto=item.kind==='sandwich'?previewForSelection(item.selection).src:null;
-    const photoMarkup=previewPhoto?`<img src="${previewPhoto}" width="62" height="62" alt="" loading="lazy" decoding="async">`:
-      imageItem&&hasPhoto(imageItem)?`<img src="${photo(imageItem,160)}" width="62" height="62" alt="" loading="lazy" decoding="async">`:
-      '<div class="kiosk-cart-symbol" aria-hidden="true">✳</div>';
+    const sandwich=item.kind==='sandwich';
+    const visual=sandwich?previewForSelection(item.selection):null;
+    const previewPhoto=visual?.src||null;
+    const compactPhoto=previewPhoto
+      ?`<img src="${esc(previewPhoto)}" width="62" height="62" alt="" loading="lazy" decoding="async">`
+      :imageItem&&hasPhoto(imageItem)&&!sandwich
+        ?`<img src="${photo(imageItem,160)}" width="62" height="62" alt="" loading="lazy" decoding="async">`
+        :'<div class="kiosk-cart-symbol" aria-hidden="true">m</div>';
+    const cartPhotoLabel=language==='ru'?(visual?.baseOnly?'Твоя основа':'Пример подачи'):
+      language==='en'?(visual?.baseOnly?'Your chosen bread':'Illustrative serving photo'):
+      visual?.baseOnly?'Seçtiğin ekmek':'Örnek servis görseli';
+    const cartPhotoDisclaimer=language==='ru'?'Фото иллюстративное, состав указан ниже':
+      language==='en'?'Illustrative image; actual ingredients listed below':
+      'Görsel örnektir; gerçek içerik aşağıda';
+    const featuredPhoto=sandwich&&!staffMode
+      ?`<figure class="kiosk-cart-showcase">${previewPhoto
+        ?`<img src="${esc(previewPhoto)}" width="900" height="600" alt="" loading="lazy" decoding="async">`
+        :'<div class="kiosk-cart-showcase-placeholder" aria-hidden="true">miora</div>'}
+        <figcaption><strong>${esc(cartPhotoLabel)}</strong><span>${esc(cartPhotoDisclaimer)}</span></figcaption></figure>`
+      :'';
+    const displayName=sandwich&&!staffMode
+      ?language==='ru'?'Твой сэндвич Miora':language==='en'?'Your Miora sandwich':'Senin Miora sandviçin'
+      :nameText;
+    const cartDesire=sandwich&&!staffMode
+      ?`<span class="kiosk-cart-promise">${esc(visual.baseOnly
+         ?language==='ru'?'Твоя основа уже выбрана':language==='en'?'Your bread is selected':'Ekmeğini seçtin'
+         :language==='ru'?'Собрано по твоему вкусу':language==='en'?'Made to your taste':'Tam damak zevkine göre')}</span>`
+      :'';
     const editLabel=language==='ru'?'Изменить состав':language==='en'?'Edit ingredients':'İçeriği düzenle';
     const detailLabel=language==='ru'?'Весь состав':language==='en'?'Full ingredients':'Tüm içerik';
-    return `<li class="cart-line kiosk-cart-line"><div class="kiosk-cart-top">${photoMarkup}<div class="kiosk-cart-top-text">
-      <b ${staffMode?'lang="tr"':''}>${staffMode?item.qty+' × ':''}${esc(nameText)}</b>
+    return `<li class="cart-line kiosk-cart-line${sandwich?' kiosk-cart-sandwich':''}${staffMode?' kiosk-cart-staff':''}">${featuredPhoto}<div class="kiosk-cart-top">${sandwich&&!staffMode?'':compactPhoto}<div class="kiosk-cart-top-text">
+      <b ${staffMode?'lang="tr"':''}>${staffMode?item.qty+' × ':''}${esc(displayName)}</b>
+      ${cartDesire}
       <small>${r.estimated?(language==='ru'?'От ':language==='en'?'From ':'Başlangıç '):''}${money(orderPrice(item.kind,item.selection))} × ${item.qty} = ${money(subtotal)}</small>
       </div></div>
       ${pills?`<div class="kiosk-cart-pills">${pills}</div>`:''}

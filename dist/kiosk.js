@@ -9,9 +9,9 @@ const phrases={
   en:{reviewTitle:'Your ingredients',edit:'Edit',finish:'Review & add',photo:'Illustrative photo',details:'Ingredients',approx:'Total from',drinkShort:'Add a cappuccino',editSave:'Save changes',notFinal:'Confirm filling prices with staff',baseImage:'Photo shows the plain croissant base, not the finished Nutella pastry.',aiNote:'Some ingredient images are AI illustrations, not actual Miora product photos.'}
 };
 const showcaseCopy={
-  tr:{heroTag:'SANA ÖZEL · MIORA',heroTitle:'Kendi sandviçini yarat',heroBody:'Ekmeğini, peynirini ve dolgunu seç. Sana özel küçük bir lezzet.',heroButton:'Sandviçimi kendim hazırlayayım',ideas:'Başlamak için ilham',ideasNote:'Beğendiğin karışımı seç, dilediğin gibi düzenle',preview:'Sandviçin nasıl görünebilir?',photoNote:'Yapay zekâ ile hazırlanmış servis önerisidir; seçtiğin malzemeler farklı görünebilir.',basePreview:'Seçtiğin ekmek',baseOnlyCopy:'Henüz iç malzeme seçmedin. Önce ekmeği gösteriyoruz.',exactIngredients:'Tam seçtiğin malzemeler',pickFilling:'İç malzeme seç',configure:'Bu lezzeti düzenle',from:'Temel fiyat 350 ₺ · iç malzemelerin son fiyatını personelle teyit edin.'},
-  ru:{heroTag:'ТВОЙ ВКУС · MIORA',heroTitle:'Создай свой сэндвич',heroBody:'Твой хлеб, сыр, соус и начинка. Собери вкус, который нравится именно тебе.',heroButton:'Собери свой сэндвич',ideas:'Идеи сочетаний',ideasNote:'Выбери вариант и измени любые ингредиенты',preview:'Вот каким может быть твой сэндвич',photoNote:'AI-визуализация подачи. Внешний вид может отличаться от вашего заказа.',basePreview:'Выбранный хлеб',baseOnlyCopy:'Начинка пока не выбрана. Показываем основу, а не готовый сэндвич.',exactIngredients:'Твой точный состав',pickFilling:'Выбрать начинку',configure:'Изменить под себя',from:'Базовая цена 350 ₺ · стоимость начинок уточняется у сотрудника.'},
-  en:{heroTag:'MADE FOR YOU · MIORA',heroTitle:'Create your sandwich',heroBody:'Choose your bread, cheese, sauce and filling. Made your way.',heroButton:'Build your sandwich',ideas:'Ideas to start with',ideasNote:'Choose a combination, then customize every ingredient',preview:'Your sandwich could look like this',photoNote:'AI illustration of serving style, not an exact photo of your selection.',basePreview:'Your chosen bread',baseOnlyCopy:'No main filling selected yet. Showing the bread rather than a finished sandwich.',exactIngredients:'Your exact ingredients',pickFilling:'Choose a filling',configure:'Make it yours',from:'350 ₺ base price · confirm filling charges with staff.'}
+  tr:{heroTag:'SANA ÖZEL · MIORA',heroTitle:'Kendi sandviçini yarat',heroBody:'Ekmeğini, peynirini ve dolgunu seç. Sana özel küçük bir lezzet.',heroButton:'Sandviçimi kendim hazırlayayım',starterInspiration:'Bir fikirle başla',starterBody:'Bu bir servis örneği. Malzemelerini sen seçeceksin.',livePreview:'Sandviçin şekilleniyor',liveBody:'Fotoğraf, seçtiğin ana iç malzemeye göre örnektir.',ideas:'Başlamak için ilham',ideasNote:'Beğendiğin karışımı seç, dilediğin gibi düzenle',preview:'Sandviçin nasıl görünebilir?',photoNote:'Yapay zekâ ile hazırlanmış servis önerisidir; seçtiğin malzemeler farklı görünebilir.',basePreview:'Seçtiğin ekmek',baseOnlyCopy:'Henüz iç malzeme seçmedin. Önce ekmeği gösteriyoruz.',exactIngredients:'Tam seçtiğin malzemeler',pickFilling:'İç malzeme seç',configure:'Bu lezzeti düzenle',from:'Temel fiyat 350 ₺ · iç malzemelerin son fiyatını personelle teyit edin.'},
+  ru:{heroTag:'ТВОЙ ВКУС · MIORA',heroTitle:'Создай свой сэндвич',heroBody:'Твой хлеб, сыр, соус и начинка. Собери вкус, который нравится именно тебе.',heroButton:'Собери свой сэндвич',starterInspiration:'Представь свой первый кусочек',starterBody:'Это пример подачи. Настоящий состав выберешь ты.',livePreview:'Твой сэндвич обретает форму',liveBody:'Фото отражает основную начинку; точный состав указан ниже.',ideas:'Идеи сочетаний',ideasNote:'Выбери вариант и измени любые ингредиенты',preview:'Вот каким может быть твой сэндвич',photoNote:'AI-визуализация подачи. Внешний вид может отличаться от вашего заказа.',basePreview:'Выбранный хлеб',baseOnlyCopy:'Начинка пока не выбрана. Показываем основу, а не готовый сэндвич.',exactIngredients:'Твой точный состав',pickFilling:'Выбрать начинку',configure:'Изменить под себя',from:'Базовая цена 350 ₺ · стоимость начинок уточняется у сотрудника.'},
+  en:{heroTag:'MADE FOR YOU · MIORA',heroTitle:'Create your sandwich',heroBody:'Choose your bread, cheese, sauce and filling. Made your way.',heroButton:'Build your sandwich',starterInspiration:'Imagine your first bite',starterBody:'This is serving inspiration. You choose the actual ingredients.',livePreview:'Your sandwich is taking shape',liveBody:'The photo illustrates the main filling; exact ingredients appear below.',ideas:'Ideas to start with',ideasNote:'Choose a combination, then customize every ingredient',preview:'Your sandwich could look like this',photoNote:'AI illustration of serving style, not an exact photo of your selection.',basePreview:'Your chosen bread',baseOnlyCopy:'No main filling selected yet. Showing the bread rather than a finished sandwich.',exactIngredients:'Your exact ingredients',pickFilling:'Choose a filling',configure:'Make it yours',from:'350 ₺ base price · confirm filling charges with staff.'}
 };
 const glyphs={
   'purple-carrot':'🍞',labne:'🥛',white:'🧀',strained:'🧀',ezine:'🧀',kasar:'🧀',cheddar:'🧀',
@@ -111,6 +111,23 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
       ?(preview.src?'<img src="'+esc(preview.src)+'" alt="" loading="lazy" decoding="async" width="900" height="600">'
         :'<span class="kiosk-empty-photo" aria-hidden="true">miora</span>'):'';
     const ingredientChips=preview?selectedIngredients(selection,lang()).map(item=>'<span class="kiosk-selected-chip">'+esc(item)+'</span>').join(''):'';
+    const livePreview=current==='sandwich'&&!review?(()=>{
+      const isStart=index===0;
+      const src=isStart?'assets/sandwich-salmon.webp':preview.src;
+      const labelText=isStart?v('starterInspiration'):preview.baseOnly?v('basePreview'):v('livePreview');
+      const bodyText=isStart?v('starterBody'):preview.baseOnly?v('baseOnlyCopy'):v('liveBody');
+      const selected=selectedIngredients(selection,lang());
+      const chips=(!isStart?selected.slice(0,4):[]).map(x=>'<span class="kiosk-live-chip">'+esc(x)+'</span>').join('');
+      const extras=selected.length>4?'<span class="kiosk-live-chip">+'+(selected.length-4)+'</span>':'';
+      const photoMarkup=src?'<img src="'+esc(src)+'" alt="" width="900" height="600" loading="'+(isStart?'eager':'lazy')+'" decoding="async">':
+        '<span class="kiosk-live-placeholder" aria-hidden="true">miora</span>';
+      return '<aside class="kiosk-live'+(isStart?' kiosk-live-intro':'')+'" aria-label="'+esc(labelText)+'">'+
+        '<div class="kiosk-live-visual">'+photoMarkup+'</div>'+
+        '<div class="kiosk-live-copy"><span class="kiosk-live-brand">miora · COFFEE · FOOD · PLAY</span>'+
+        '<strong>'+esc(labelText)+'</strong><p>'+esc(bodyText)+'</p>'+
+        (chips?'<div class="kiosk-live-chips">'+chips+extras+'</div>':'')+
+        '</div></aside>';
+    })():'';
     const stepsTotal=n+1;
     const stepLabel=t('step')+' '+(index+1)+' '+t('of')+' '+stepsTotal;
     const dots=Array.from({length:stepsTotal},(_,i)=>'<span class="'+(i<=index?'is-active':'')+'"></span>').join('');
@@ -143,7 +160,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
         '<span class="kiosk-check" aria-hidden="true">'+(withDrink?'✓':'+')+'</span></button>':'')+
       '<p class="kiosk-allergens">'+esc(t('allergens'))+'</p></div>':'';
     const stepPage=review?'':'<div class="kiosk-step-heading"><span class="kiosk-step-photo">'+photo+'</span><div><h2>'+esc(title(step.title))+'</h2><p>'+esc((lang()==='ru'?'Выбрано ':lang()==='en'?'Selected ':'Seçilen ')+selection[step.id].length+' / '+step.max+' · '+(step.min===0?t('optional'):t('selectOne')))+'</p></div></div>'+
-      choices+
+      livePreview+choices+
       (step.items.some(item=>visualSource(step.id,item.id)==='ai')?'<p class="kiosk-ai-note">'+esc(p('aiNote'))+'</p>':'')+
       (index===0&&r.estimated?'<p class="kiosk-note">'+esc(title(r.note))+'</p>':'');
     content.innerHTML='<div class="kiosk-dialog-head"><div><span class="kiosk-wordmark">miora <small>COFFEE · FOOD · PLAY</small></span><p>'+esc(stepLabel)+'</p></div>'+
