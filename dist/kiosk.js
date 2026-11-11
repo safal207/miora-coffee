@@ -123,17 +123,23 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
     const step=review?null:r.steps[index];
     const price=orderPrice(current,selection)+(review&&withDrink?18000:0);
     const photo=recipeImg(r);
-    const preview=current==='sandwich'?previewForSelection(selection):null;
+    const isBreakfast=current==='breakfast';
+    const bc=breakfastCopy[lang()]||breakfastCopy.tr;
+    const breakfastVisual=isBreakfast?breakfastVisualForSelection(selection):null;
+    const preview=current==='sandwich'?previewForSelection(selection):
+      isBreakfast?{src:breakfastVisual.src||getPhoto('431203'),baseOnly:false}:null;
     const previewMedia=preview
       ?(preview.src?'<img src="'+esc(preview.src)+'" alt="" loading="lazy" decoding="async" width="900" height="600">'
         :'<span class="kiosk-empty-photo" aria-hidden="true">miora</span>'):'';
-    const ingredientChips=preview?selectedIngredients(selection,lang()).map(item=>'<span class="kiosk-selected-chip">'+esc(item)+'</span>').join(''):'';
-    const livePreview=current==='sandwich'&&!review?(()=>{
+    const selected=preview?(isBreakfast?breakfastSelectedIngredients(selection,lang()):selectedIngredients(selection,lang())):[];
+    const ingredientChips=selected.map(item=>'<span class="kiosk-selected-chip">'+esc(item)+'</span>').join('');
+    const livePreview=(current==='sandwich'||isBreakfast)&&!review?(()=>{
       const isStart=index===0;
-      const src=isStart?'assets/sandwich-salmon.webp':preview.src;
-      const labelText=isStart?v('starterInspiration'):preview.baseOnly?v('basePreview'):v('livePreview');
-      const bodyText=isStart?v('starterBody'):preview.baseOnly?v('baseOnlyCopy'):v('liveBody');
-      const selected=selectedIngredients(selection,lang());
+      const src=isStart?(isBreakfast?'assets/breakfast-large-omelette-ai.webp':'assets/sandwich-salmon.webp'):preview.src;
+      const labelText=isBreakfast?(isStart?bc.intro:bc.live):
+        isStart?v('starterInspiration'):preview.baseOnly?v('basePreview'):v('livePreview');
+      const bodyText=isBreakfast?(isStart?bc.ai:breakfastVisual.isAI?bc.ai:bc.real):
+        isStart?v('starterBody'):preview.baseOnly?v('baseOnlyCopy'):v('liveBody');
       const chips=(!isStart?selected.slice(0,4):[]).map(x=>'<span class="kiosk-live-chip">'+esc(x)+'</span>').join('');
       const extras=selected.length>4?'<span class="kiosk-live-chip">+'+(selected.length-4)+'</span>':'';
       const photoMarkup=src?'<img src="'+esc(src)+'" alt="" width="900" height="600" loading="'+(isStart?'eager':'lazy')+'" decoding="async">':
@@ -154,7 +160,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
         itemVisual(step,item,getPhoto)+'<span class="kiosk-option-content"><strong>'+esc(title(item.label))+'</strong>'+
         (item.price?'<small>+'+esc(label(item.price))+'</small>':'')+'</span><span class="kiosk-check" aria-hidden="true">'+(selected?'✓':'')+'</span></button>';
     }).join('')+'</div>':'';
-    const summary=review?'<div class="kiosk-review"><div class="kiosk-review-heading"><span class="kiosk-review-photo">'+(current==='sandwich'?previewMedia:photo)+'</span><div>'+
+    const summary=review?'<div class="kiosk-review"><div class="kiosk-review-heading"><span class="kiosk-review-photo">'+(preview?previewMedia:photo)+'</span><div>'+
       '<p class="eyebrow">'+esc(p('finish'))+'</p><h2>'+esc(title(r.name))+'</h2><p>'+esc(title(r.short))+'</p></div></div>'+
       (current==='sandwich'?'<figure class="kiosk-finished'+(preview.baseOnly?' kiosk-finished-base':'')+'">'+previewMedia+
         '<figcaption><strong>'+esc(preview.baseOnly?v('basePreview'):v('preview'))+'</strong>'+
@@ -163,6 +169,12 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
         '<div class="kiosk-selected-chips" role="list" aria-label="'+esc(v('exactIngredients'))+'">'+ingredientChips+'</div>'+
         (preview.baseOnly?'<button type="button" class="kiosk-pick-filling" data-k-goto="3">'+esc(v('pickFilling'))+' →</button>':'')+
         '</figcaption></figure>':'')+
+      (isBreakfast?'<figure class="kiosk-finished kiosk-breakfast-finished">'+previewMedia+
+        '<figcaption><strong>'+esc(bc.ready)+'</strong><span>'+esc(breakfastVisual.isAI?bc.ai:bc.real)+'</span>'+
+        '<span class="kiosk-selected-title">'+esc(bc.exact)+'</span>'+
+        '<div class="kiosk-selected-chips" aria-label="'+esc(bc.exact)+'">'+ingredientChips+'</div>'+
+        '<span class="kiosk-selected-title">'+esc(bc.included)+'</span>'+
+        '<p class="kiosk-breakfast-included">'+esc(title(r.note))+'</p></figcaption></figure>':'')+
       (r.imageIsBase?'<p class="kiosk-photo-note">'+esc(p('baseImage'))+'</p>':'')+
       (n?'<div class="kiosk-review-grid">'+r.steps.map((s,i)=>{
         const items=selection[s.id].map(id=>s.items.find(x=>x.id===id)).filter(Boolean);
