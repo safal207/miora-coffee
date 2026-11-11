@@ -256,36 +256,45 @@ function renderCart() {
       (values.length>4?`<span class="kiosk-cart-pill">+${values.length-4}</span>`:'');
     const imageItem=byId.get(r.image);
     const sandwich=item.kind==='sandwich';
+    const breakfast=item.kind==='breakfast';
+    const featured=sandwich||breakfast;
     const visual=sandwich?previewForSelection(item.selection):null;
-    const previewPhoto=visual?.src||null;
+    const previewPhoto=visual?.src||(breakfast&&imageItem&&hasPhoto(imageItem)?photo(imageItem,640):null);
     const compactPhoto=previewPhoto
       ?`<img src="${esc(previewPhoto)}" width="62" height="62" alt="" loading="lazy" decoding="async">`
       :imageItem&&hasPhoto(imageItem)&&!sandwich
         ?`<img src="${photo(imageItem,160)}" width="62" height="62" alt="" loading="lazy" decoding="async">`
         :'<div class="kiosk-cart-symbol" aria-hidden="true">m</div>';
-    const cartPhotoLabel=language==='ru'?(visual?.baseOnly?'Твоя основа':'Пример подачи'):
+    const cartPhotoLabel=breakfast
+      ?(language==='ru'?'Пример тарелки Miora':language==='en'?'Miora plate serving example':'Miora kahvaltı tabağı örneği')
+      :language==='ru'?(visual?.baseOnly?'Твоя основа':'Пример подачи'):
       language==='en'?(visual?.baseOnly?'Your chosen bread':'Illustrative serving photo'):
       visual?.baseOnly?'Seçtiğin ekmek':'Örnek servis görseli';
-    const cartPhotoDisclaimer=language==='ru'?'Фото иллюстративное, состав указан ниже':
+    const cartPhotoDisclaimer=breakfast
+      ?(language==='ru'?'Состав выбранного завтрака может отличаться':language==='en'?'Your breakfast selections may look different':'Seçtiğin kahvaltı farklı görünebilir')
+      :language==='ru'?'Фото иллюстративное, состав указан ниже':
       language==='en'?'Illustrative image; actual ingredients listed below':
       'Görsel örnektir; gerçek içerik aşağıda';
-    const featuredPhoto=sandwich&&!staffMode
+    const featuredPhoto=featured&&!staffMode
       ?`<figure class="kiosk-cart-showcase">${previewPhoto
         ?`<img src="${esc(previewPhoto)}" width="900" height="600" alt="" loading="lazy" decoding="async">`
         :'<div class="kiosk-cart-showcase-placeholder" aria-hidden="true">miora</div>'}
         <figcaption><strong>${esc(cartPhotoLabel)}</strong><span>${esc(cartPhotoDisclaimer)}</span></figcaption></figure>`
       :'';
-    const displayName=sandwich&&!staffMode
-      ?language==='ru'?'Твой сэндвич Miora':language==='en'?'Your Miora sandwich':'Senin Miora sandviçin'
+    const displayName=featured&&!staffMode
+      ?breakfast?(language==='ru'?'Твой завтрак Miora':language==='en'?'Your Miora breakfast':'Senin Miora kahvaltın')
+        :(language==='ru'?'Твой сэндвич Miora':language==='en'?'Your Miora sandwich':'Senin Miora sandviçin')
       :nameText;
-    const cartDesire=sandwich&&!staffMode
-      ?`<span class="kiosk-cart-promise">${esc(visual.baseOnly
-         ?language==='ru'?'Твоя основа уже выбрана':language==='en'?'Your bread is selected':'Ekmeğini seçtin'
-         :language==='ru'?'Собрано по твоему вкусу':language==='en'?'Made to your taste':'Tam damak zevkine göre')}</span>`
+    const cartDesire=featured&&!staffMode
+      ?`<span class="kiosk-cart-promise">${esc(breakfast
+         ?(language==='ru'?'Собрано по твоему вкусу':language==='en'?'Made for your morning':'Senin sabahına özel')
+         :visual.baseOnly
+           ?(language==='ru'?'Твоя основа уже выбрана':language==='en'?'Your bread is selected':'Ekmeğini seçtin')
+           :(language==='ru'?'Собрано по твоему вкусу':language==='en'?'Made to your taste':'Tam damak zevkine göre'))}</span>`
       :'';
     const editLabel=language==='ru'?'Изменить состав':language==='en'?'Edit ingredients':'İçeriği düzenle';
     const detailLabel=language==='ru'?'Весь состав':language==='en'?'Full ingredients':'Tüm içerik';
-    return `<li class="cart-line kiosk-cart-line${sandwich?' kiosk-cart-sandwich':''}${staffMode?' kiosk-cart-staff':''}">${featuredPhoto}<div class="kiosk-cart-top">${sandwich&&!staffMode?'':compactPhoto}<div class="kiosk-cart-top-text">
+    return `<li class="cart-line kiosk-cart-line${sandwich?' kiosk-cart-sandwich':''}${breakfast?' kiosk-cart-breakfast':''}${staffMode?' kiosk-cart-staff':''}">${featuredPhoto}<div class="kiosk-cart-top">${featured&&!staffMode?'':compactPhoto}<div class="kiosk-cart-top-text">
       <b ${staffMode?'lang="tr"':''}>${staffMode?item.qty+' × ':''}${esc(displayName)}</b>
       ${cartDesire}
       <small>${r.estimated?(language==='ru'?'От ':language==='en'?'From ':'Başlangıç '):''}${money(orderPrice(item.kind,item.selection))} × ${item.qty} = ${money(subtotal)}</small>
