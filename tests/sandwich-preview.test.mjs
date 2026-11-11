@@ -96,7 +96,8 @@ test('food desire flow retains honest preview while giving sandwich a prominent 
  assert.match(app,/const featuredPhoto=showFood&&!staffMode/);
  assert.match(app,/kiosk-cart-showcase/);
  assert.match(app,/kiosk-cart-promise/);
- assert.match(app,/const previewPhoto=visual\?\.src\|\|null/);
+ assert.match(app,/const previewPhoto=breakfast\?/);
+ assert.match(app,/visual\?\.src\|\|null/);
  assert.match(app,/staffMode\?' kiosk-cart-staff':''/);
  assert.match(css,/\.kiosk-live-intro/);
  assert.match(css,/\.kiosk-cart-showcase>img/);
