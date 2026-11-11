@@ -225,3 +225,62 @@
 
 /* HD ingredient tiles: use native downsampling rather than upscaling a 40px sprite. */
 .kiosk-atlas{image-rendering:auto;aspect-ratio:1 / 1}
+
+
+/* Miora Sandwich Studio · image-led conversion flow, with exact choices saved separately. */
+#kiosk-strip{scroll-margin-top:78px}
+.kiosk-feature{position:relative;isolation:isolate;overflow:hidden;min-height:290px;border-radius:20px;background:#193e32;color:#fff;margin:2px 0 20px;display:flex;align-items:center;box-shadow:0 12px 32px rgba(19,33,25,.13)}
+.kiosk-feature-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:65% 46%;z-index:-2}
+.kiosk-feature::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(16,35,26,.96) 0%,rgba(16,35,26,.83) 35%,rgba(16,35,26,.18) 77%)}
+.kiosk-feature-content{display:flex;align-items:flex-start;flex-direction:column;gap:11px;padding:clamp(24px,5vw,45px);max-width:540px}
+.kiosk-feature-tag{font-size:10px;font-weight:800;letter-spacing:2px;color:#ebd6aa;text-transform:uppercase}
+.kiosk-feature h3{font:normal clamp(31px,5.1vw,51px)/1.06 Georgia,serif;color:white;letter-spacing:-.7px;text-wrap:balance}
+.kiosk-feature p{font-size:13px;color:#f5f1e8;line-height:1.5;max-width:300px}
+.kiosk-feature-button{background:#f3d6ab;color:#182d24;display:inline-flex;align-items:center;justify-content:space-between;gap:24px;border-radius:99px;min-height:49px;padding:11px 23px;font-weight:800;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.kiosk-feature-button:hover{background:#fff0d2;transform:translateY(-1px)}
+.kiosk-feature-button:focus-visible,.kiosk-idea button:focus-visible{outline:3px solid #eac78d;outline-offset:3px}
+.kiosk-idea-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:6px 0 11px}
+.kiosk-idea-head h4{font:normal clamp(22px,4vw,28px)/1.2 Georgia,serif}
+.kiosk-idea-head p{color:var(--muted);font-size:11px;margin-top:4px}
+.kiosk-idea-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.kiosk-idea{min-width:0}
+.kiosk-idea button{display:flex;flex-direction:column;text-align:left;width:100%;height:100%;min-height:220px;padding:0 0 11px;border-radius:15px;overflow:hidden;border:1px solid var(--line);background:var(--card);transition:transform .16s,border-color .16s}
+.kiosk-idea button:hover{border-color:var(--teal);transform:translateY(-2px)}
+.kiosk-idea img{width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--soft)}
+.kiosk-idea-name{font-size:12px;font-weight:800;line-height:1.25;margin:11px 10px 0}
+.kiosk-idea small{color:var(--muted);font-size:10px;line-height:1.35;overflow-wrap:anywhere;margin:5px 10px}
+.kiosk-idea-action{color:var(--teal);font-size:11px;font-weight:800;margin:auto 10px 0}
+.kiosk-feature-disclosure{font-size:10px;color:var(--muted);line-height:1.5;margin:9px 0 27px}
+.kiosk-finished{margin:0 0 12px;border-radius:15px;background:var(--soft);overflow:hidden;position:relative}
+.kiosk-finished>img{width:100%;aspect-ratio:3/2;max-height:340px;object-fit:cover;object-position:center 54%;display:block}
+.kiosk-finished figcaption{display:flex;flex-direction:column;gap:5px;padding:10px 13px;background:var(--card);border:1px solid var(--line);border-top:0;font-size:11px;line-height:1.35}
+.kiosk-finished figcaption strong{font-size:12px;color:var(--ink)}
+.kiosk-finished figcaption span{color:var(--muted)}
+.kiosk-review-heading .kiosk-review-photo img{width:100%;height:100%;object-fit:cover}
+@media(max-width:800px){
+ .kiosk-idea-list{display:flex;overflow-x:auto;padding-bottom:8px;gap:9px;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+ .kiosk-idea-list::-webkit-scrollbar{display:none}
+ .kiosk-idea{flex:0 0 clamp(158px,48vw,207px);scroll-snap-align:start}
+ .kiosk-idea button{min-height:210px}
+}
+@media(max-width:620px){
+ .kiosk-feature{min-height:280px;margin:2px 0 18px;border-radius:17px;align-items:flex-end}
+ .kiosk-feature-photo{object-position:71% 34%}
+ .kiosk-feature::before{background:linear-gradient(0deg,rgba(16,35,26,.97) 0%,rgba(16,35,26,.78) 42%,rgba(16,35,26,.10) 100%)}
+ .kiosk-feature-content{padding:18px 18px 20px;gap:9px;width:100%}
+ .kiosk-feature h3{font-size:32px;max-width:290px}
+ .kiosk-feature p{font-size:11px;max-width:280px}
+ .kiosk-feature-tag{font-size:9px}
+ .kiosk-feature-button{min-height:47px;width:100%;font-size:13px;padding:10px 18px}
+ .kiosk-idea-head h4{font-size:22px}
+ .kiosk-idea{flex-basis:61vw;max-width:210px}
+ .kiosk-feature-disclosure{font-size:9px}
+ .kiosk-finished>img{max-height:240px}
+ .kiosk-finished figcaption{padding:9px 11px}
+}
+@media(max-width:360px){
+ .kiosk-feature h3{font-size:29px}
+ .kiosk-feature{min-height:260px}
+ .kiosk-finished>img{max-height:205px}
+}
+@media(prefers-reduced-motion:reduce){.kiosk-feature-button,.kiosk-idea button{transition:none;transform:none}}
