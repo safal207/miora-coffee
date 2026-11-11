@@ -1,6 +1,7 @@
 import {recipes,ui,localized} from './kiosk-data.js';
 import {initialSelection,choose,validSelection,orderPrice} from './kiosk-core.js';
 import {sandwichIdeas,previewForSelection,ideaSelection,localizedIdea,selectedIngredients} from './sandwich-preview.js';
+import {breakfastIdeas,breakfastIdeaSelection,breakfastVisualForSelection,breakfastSelectedIngredients,breakfastCopy,localizedBreakfastIdea} from './breakfast-preview.js';
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const phrases={
@@ -79,17 +80,33 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
           '<span class="kiosk-idea-name">'+esc(words.name)+'</span><small>'+esc(words.desc)+'</small>'+
           '<span class="kiosk-idea-action">'+esc(v('configure'))+' →</span></button></div>';
       }).join('')+'</div>';
-    const other=Object.entries(recipes).filter(([kind])=>kind!=='sandwich').map(([kind,r])=>'<button type="button" class="kiosk-entry" data-k-start="'+kind+'">'+
+    const bc=breakfastCopy[lang()]||breakfastCopy.tr;
+    const breakfastHero='<section class="kiosk-breakfast-feature">'+
+      '<img src="assets/breakfast-large-omelette-ai.webp" alt="" width="1200" height="800" loading="lazy" decoding="async">'+
+      '<div class="kiosk-breakfast-feature-content"><span class="kiosk-feature-tag">'+esc(bc.tag)+'</span>'+
+      '<h3>'+esc(bc.title)+'</h3><p>'+esc(bc.body)+'</p>'+
+      '<button type="button" class="kiosk-feature-button" data-k-start="breakfast">'+esc(bc.cta)+' →</button></div></section>'+
+      '<p class="kiosk-feature-disclosure">'+esc(bc.ai)+'</p>';
+    const breakfastIdeasHtml='<div class="kiosk-breakfast-idea-heading"><h4>'+esc(bc.ideas)+'</h4></div>'+
+      '<div class="kiosk-breakfast-ideas" role="list">'+breakfastIdeas.map(idea=>{
+        const img=breakfastVisualForSelection(breakfastIdeaSelection(idea.id));
+        const src=img.src||getPhoto('431203')||'favicon.svg';
+        const txt=localizedBreakfastIdea(idea,lang());
+        return '<div role="listitem" class="kiosk-breakfast-idea"><button type="button" data-k-breakfast-idea="'+esc(idea.id)+'">'+
+          '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async" width="210" height="135">'+
+          '<span>'+esc(txt)+'</span></button></div>';
+      }).join('')+'</div>';
+    const other=Object.entries(recipes).filter(([kind])=>kind!=='sandwich'&&kind!=='breakfast').map(([kind,r])=>'<button type="button" class="kiosk-entry" data-k-start="'+kind+'">'+
       '<span class="kiosk-entry-image">'+recipeImg(r)+'</span><span class="kiosk-entry-copy"><b>'+esc(title(r.name))+'</b><small>'+esc(title(r.short))+'</small><strong>'+esc(t('from'))+' '+esc(label(r.steps.length?orderPrice(kind,initialSelection(kind)):r.price))+'</strong></span>'+
       '<span class="kiosk-entry-arrow" aria-hidden="true">↗</span></button>').join('');
-    strip.innerHTML=hero+ideas+'<p class="kiosk-feature-disclosure">'+esc(v('photoNote'))+'</p>'+
+    strip.innerHTML=hero+ideas+'<p class="kiosk-feature-disclosure">'+esc(v('photoNote'))+'</p>'+breakfastHero+breakfastIdeasHtml+
       '<div class="kiosk-intro"><div><p class="eyebrow">'+esc(t('kicker'))+'</p><h3>'+esc(t('title'))+'</h3><p>'+esc(t('subtitle'))+'</p></div></div>'+
       '<div class="kiosk-entry-list">'+other+'</div>';
   }
   function open(kind,seedBread,existing=null,lineIndex=null,idea=null){
     if(!Object.hasOwn(recipes,kind))return;
     lastFocus=document.activeElement;current=kind;
-    selection=existing?structuredClone(existing):idea?ideaSelection(idea):initialSelection(kind);
+    selection=existing?structuredClone(existing):idea?(kind==='breakfast'?breakfastIdeaSelection(idea):ideaSelection(idea)):initialSelection(kind);
     index=(existing||idea)?recipes[kind].steps.length:0;
     editIndex=Number.isInteger(lineIndex)?lineIndex:null;
     withDrink=false;notice='';returnToReview=false;
@@ -177,6 +194,8 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
     if(start)open(start.dataset.kStart,start.dataset.kBread);
     const idea=e.target.closest('[data-k-idea]');
     if(idea)open('sandwich',null,null,null,idea.dataset.kIdea);
+    const breakfastIdea=e.target.closest('[data-k-breakfast-idea]');
+    if(breakfastIdea)open('breakfast',null,null,null,breakfastIdea.dataset.kBreakfastIdea);
   });
   dialog.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b)return;
