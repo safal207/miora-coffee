@@ -1,6 +1,7 @@
 import {recipes,ui,localized} from './kiosk-data.js';
 import {initialSelection,choose,validSelection,orderPrice} from './kiosk-core.js';
 import {sandwichIdeas,previewForSelection,ideaSelection,localizedIdea,selectedIngredients} from './sandwich-preview.js';
+import {breakfastIdeas,breakfastIdeaSelection,breakfastChoiceLabels,breakfastIdeaText} from './breakfast-ideas.js';
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const phrases={
@@ -12,6 +13,11 @@ const showcaseCopy={
   tr:{heroTag:'SANA ÖZEL · MIORA',heroTitle:'Kendi sandviçini yarat',heroBody:'Ekmeğini, peynirini ve dolgunu seç. Sana özel küçük bir lezzet.',heroButton:'Sandviçimi kendim hazırlayayım',starterInspiration:'Bir fikirle başla',starterBody:'Bu bir servis örneği. Malzemelerini sen seçeceksin.',livePreview:'Sandviçin şekilleniyor',liveBody:'Fotoğraf, seçtiğin ana iç malzemeye göre örnektir.',ideas:'Başlamak için ilham',ideasNote:'Beğendiğin karışımı seç, dilediğin gibi düzenle',preview:'Sandviçin nasıl görünebilir?',photoNote:'Yapay zekâ ile hazırlanmış servis önerisidir; seçtiğin malzemeler farklı görünebilir.',basePreview:'Seçtiğin ekmek',baseOnlyCopy:'Henüz iç malzeme seçmedin. Önce ekmeği gösteriyoruz.',exactIngredients:'Tam seçtiğin malzemeler',pickFilling:'İç malzeme seç',configure:'Bu lezzeti düzenle',from:'Temel fiyat 350 ₺ · iç malzemelerin son fiyatını personelle teyit edin.'},
   ru:{heroTag:'ТВОЙ ВКУС · MIORA',heroTitle:'Создай свой сэндвич',heroBody:'Твой хлеб, сыр, соус и начинка. Собери вкус, который нравится именно тебе.',heroButton:'Собери свой сэндвич',starterInspiration:'Представь свой первый кусочек',starterBody:'Это пример подачи. Настоящий состав выберешь ты.',livePreview:'Твой сэндвич обретает форму',liveBody:'Фото отражает основную начинку; точный состав указан ниже.',ideas:'Идеи сочетаний',ideasNote:'Выбери вариант и измени любые ингредиенты',preview:'Вот каким может быть твой сэндвич',photoNote:'AI-визуализация подачи. Внешний вид может отличаться от вашего заказа.',basePreview:'Выбранный хлеб',baseOnlyCopy:'Начинка пока не выбрана. Показываем основу, а не готовый сэндвич.',exactIngredients:'Твой точный состав',pickFilling:'Выбрать начинку',configure:'Изменить под себя',from:'Базовая цена 350 ₺ · стоимость начинок уточняется у сотрудника.'},
   en:{heroTag:'MADE FOR YOU · MIORA',heroTitle:'Create your sandwich',heroBody:'Choose your bread, cheese, sauce and filling. Made your way.',heroButton:'Build your sandwich',starterInspiration:'Imagine your first bite',starterBody:'This is serving inspiration. You choose the actual ingredients.',livePreview:'Your sandwich is taking shape',liveBody:'The photo illustrates the main filling; exact ingredients appear below.',ideas:'Ideas to start with',ideasNote:'Choose a combination, then customize every ingredient',preview:'Your sandwich could look like this',photoNote:'AI illustration of serving style, not an exact photo of your selection.',basePreview:'Your chosen bread',baseOnlyCopy:'No main filling selected yet. Showing the bread rather than a finished sandwich.',exactIngredients:'Your exact ingredients',pickFilling:'Choose a filling',configure:'Make it yours',from:'350 ₺ base price · confirm filling charges with staff.'}
+};
+const breakfastCopy={
+  tr:{tag:'SABAH RİTÜELİN · MIORA',hero:'Kendi kahvaltını hazırla',body:'Kruvasan ya da ekmek, yumurtan ve tatlı eşlikçilerin. Tabağını sen seç.',start:'Kahvaltımı hazırlayayım',ideas:'Güne başlamak için üç fikir',ideaHint:'Gerçek menüdeki seçeneklerle başla, dilediğin gibi düzenle',inspire:'Güne güzel başla',example:'Bu Miora kahvaltı tabağının örnek fotoğrafı; seçimlerin farklı görünebilir.',live:'Tabağın şekilleniyor',chosen:'Tam seçtiklerin',included:'Tabağın içinde ayrıca',final:'Kahvaltın neredeyse hazır',photo:'Miora kahvaltı tabağının örnek fotoğrafı; kişisel seçiminle aynı olmayabilir.'},
+  ru:{tag:'ТВОЁ УТРО · MIORA',hero:'Собери свой завтрак',body:'Выбери круассан или хлеб, приготовление яйца и сладкие дополнения. Создай своё утро.',start:'Собрать завтрак',ideas:'Три идеи для начала',ideaHint:'Только сочетания из меню Miora — всё можно изменить',inspire:'Вкусное утро начинается здесь',example:'Фото обычной тарелки Miora: твой выбор может выглядеть иначе.',live:'Твоя тарелка собирается',chosen:'Выбрано тобой',included:'В тарелку также входят',final:'Твой завтрак почти готов',photo:'Пример подачи завтрака Miora, не точная фотография выбранного состава.'},
+  en:{tag:'YOUR MORNING · MIORA',hero:'Build your breakfast',body:'Choose croissant or bread, your eggs and sweet extras. Make the morning yours.',start:'Build my breakfast',ideas:'Three ideas to start',ideaHint:'All options come from Miora’s menu and can be changed',inspire:'A delicious morning starts here',example:'Photo of a standard Miora breakfast plate; your choices may look different.',live:'Your breakfast is taking shape',chosen:'Your actual choices',included:'Also included on the plate',final:'Your breakfast is almost ready',photo:'Miora breakfast plate serving example, not an exact image of the chosen combination.'}
 };
 const glyphs={
   'purple-carrot':'🍞',labne:'🥛',white:'🧀',strained:'🧀',ezine:'🧀',kasar:'🧀',cheddar:'🧀',
@@ -56,6 +62,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
   const t=k=>ui[lang()][k]||ui.tr[k]||k;
   const p=k=>phrases[lang()][k]||phrases.tr[k]||k;
   const v=k=>showcaseCopy[lang()][k]||showcaseCopy.tr[k]||k;
+  const bv=k=>breakfastCopy[lang()][k]||breakfastCopy.tr[k]||k;
   const title=v=>localized(v,lang());
   const label=price=>money(price);
   const recipeImg=(r)=>{
@@ -79,18 +86,33 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
           '<span class="kiosk-idea-name">'+esc(words.name)+'</span><small>'+esc(words.desc)+'</small>'+
           '<span class="kiosk-idea-action">'+esc(v('configure'))+' →</span></button></div>';
       }).join('')+'</div>';
-    const other=Object.entries(recipes).filter(([kind])=>kind!=='sandwich').map(([kind,r])=>'<button type="button" class="kiosk-entry" data-k-start="'+kind+'">'+
+    const bPhoto=getPhoto('431203');
+    const bHero='<section class="kiosk-breakfast-feature" aria-label="'+esc(bv('hero'))+'">'+
+      '<span class="kiosk-breakfast-photo">'+(bPhoto?'<img src="'+esc(bPhoto)+'" loading="lazy" decoding="async" alt="">':recipeImg(recipes.breakfast))+'</span>'+
+      '<div class="kiosk-breakfast-content"><span class="kiosk-breakfast-tag">'+esc(bv('tag'))+'</span>'+
+      '<h3>'+esc(bv('hero'))+'</h3><p>'+esc(bv('body'))+'</p>'+
+      '<button type="button" class="kiosk-breakfast-start" data-k-start="breakfast">'+esc(bv('start'))+' →</button>'+
+      '<small>'+esc(bv('example'))+'</small></div></section>';
+    const bIdeas='<div class="kiosk-breakfast-ideas" role="group" aria-label="'+esc(bv('ideas'))+'">'+breakfastIdeas.map(idea=>{
+      const words=breakfastIdeaText(idea,lang());
+      return '<button type="button" class="kiosk-breakfast-idea" data-k-bidea="'+esc(idea.id)+'" aria-label="'+esc(words.name)+'">'+
+        '<span aria-hidden="true" class="kiosk-breakfast-idea-icon">'+idea.icon+'</span>'+
+        '<strong>'+esc(words.name)+'</strong><small>'+esc(words.caption)+'</small><span aria-hidden="true" class="kiosk-breakfast-idea-arrow">→</span></button>';
+    }).join('')+'</div>';
+    const other=Object.entries(recipes).filter(([kind])=>!['sandwich','breakfast'].includes(kind)).map(([kind,r])=>'<button type="button" class="kiosk-entry" data-k-start="'+kind+'">'+
       '<span class="kiosk-entry-image">'+recipeImg(r)+'</span><span class="kiosk-entry-copy"><b>'+esc(title(r.name))+'</b><small>'+esc(title(r.short))+'</small><strong>'+esc(t('from'))+' '+esc(label(r.steps.length?orderPrice(kind,initialSelection(kind)):r.price))+'</strong></span>'+
       '<span class="kiosk-entry-arrow" aria-hidden="true">↗</span></button>').join('');
     strip.innerHTML=hero+ideas+'<p class="kiosk-feature-disclosure">'+esc(v('photoNote'))+'</p>'+
+      bHero+'<div class="kiosk-breakfast-ideas-label"><strong>'+esc(bv('ideas'))+'</strong><small>'+esc(bv('ideaHint'))+'</small></div>'+bIdeas+
       '<div class="kiosk-intro"><div><p class="eyebrow">'+esc(t('kicker'))+'</p><h3>'+esc(t('title'))+'</h3><p>'+esc(t('subtitle'))+'</p></div></div>'+
       '<div class="kiosk-entry-list">'+other+'</div>';
   }
   function open(kind,seedBread,existing=null,lineIndex=null,idea=null){
     if(!Object.hasOwn(recipes,kind))return;
     lastFocus=document.activeElement;current=kind;
-    selection=existing?structuredClone(existing):idea?ideaSelection(idea):initialSelection(kind);
-    index=(existing||idea)?recipes[kind].steps.length:0;
+    const suggested=idea?(kind==='sandwich'?ideaSelection(idea):kind==='breakfast'?breakfastIdeaSelection(idea):null):null;
+    selection=existing?structuredClone(existing):suggested||initialSelection(kind);
+    index=(existing||suggested)?recipes[kind].steps.length:0;
     editIndex=Number.isInteger(lineIndex)?lineIndex:null;
     withDrink=false;notice='';returnToReview=false;
     if(!existing&&kind==='sandwich'&&recipes.sandwich.steps[0].items.some(x=>x.id===seedBread))selection.bread=[seedBread];
@@ -107,16 +129,22 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
     const price=orderPrice(current,selection)+(review&&withDrink?18000:0);
     const photo=recipeImg(r);
     const preview=current==='sandwich'?previewForSelection(selection):null;
+    const breakfast=current==='breakfast';
+    const breakfastPhoto=breakfast?getPhoto('431203'):null;
+    const breakfastMedia=breakfast
+      ?(breakfastPhoto?'<img src="'+esc(breakfastPhoto)+'" alt="" loading="lazy" decoding="async" width="900" height="600">':
+        '<span class="kiosk-empty-photo" aria-hidden="true">miora</span>'):'';
+    const breakfastChips=breakfast?breakfastChoiceLabels(selection,lang()).map(name=>'<span class="kiosk-selected-chip">'+esc(name)+'</span>').join(''):'';
     const previewMedia=preview
       ?(preview.src?'<img src="'+esc(preview.src)+'" alt="" loading="lazy" decoding="async" width="900" height="600">'
         :'<span class="kiosk-empty-photo" aria-hidden="true">miora</span>'):'';
     const ingredientChips=preview?selectedIngredients(selection,lang()).map(item=>'<span class="kiosk-selected-chip">'+esc(item)+'</span>').join(''):'';
-    const livePreview=current==='sandwich'&&!review?(()=>{
+    const livePreview=(current==='sandwich'||breakfast)&&!review?(()=>{
       const isStart=index===0;
-      const src=isStart?'assets/sandwich-salmon.webp':preview.src;
-      const labelText=isStart?v('starterInspiration'):preview.baseOnly?v('basePreview'):v('livePreview');
-      const bodyText=isStart?v('starterBody'):preview.baseOnly?v('baseOnlyCopy'):v('liveBody');
-      const selected=selectedIngredients(selection,lang());
+      const src=breakfast?breakfastPhoto:isStart?'assets/sandwich-salmon.webp':preview.src;
+      const labelText=breakfast?(isStart?bv('inspire'):bv('live')):isStart?v('starterInspiration'):preview.baseOnly?v('basePreview'):v('livePreview');
+      const bodyText=breakfast?bv('example'):isStart?v('starterBody'):preview.baseOnly?v('baseOnlyCopy'):v('liveBody');
+      const selected=breakfast?breakfastChoiceLabels(selection,lang()):selectedIngredients(selection,lang());
       const chips=(!isStart?selected.slice(0,4):[]).map(x=>'<span class="kiosk-live-chip">'+esc(x)+'</span>').join('');
       const extras=selected.length>4?'<span class="kiosk-live-chip">+'+(selected.length-4)+'</span>':'';
       const photoMarkup=src?'<img src="'+esc(src)+'" alt="" width="900" height="600" loading="'+(isStart?'eager':'lazy')+'" decoding="async">':
@@ -137,7 +165,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
         itemVisual(step,item,getPhoto)+'<span class="kiosk-option-content"><strong>'+esc(title(item.label))+'</strong>'+
         (item.price?'<small>+'+esc(label(item.price))+'</small>':'')+'</span><span class="kiosk-check" aria-hidden="true">'+(selected?'✓':'')+'</span></button>';
     }).join('')+'</div>':'';
-    const summary=review?'<div class="kiosk-review"><div class="kiosk-review-heading"><span class="kiosk-review-photo">'+(current==='sandwich'?previewMedia:photo)+'</span><div>'+
+    const summary=review?'<div class="kiosk-review"><div class="kiosk-review-heading"><span class="kiosk-review-photo">'+(current==='sandwich'?previewMedia:breakfast?breakfastMedia:photo)+'</span><div>'+
       '<p class="eyebrow">'+esc(p('finish'))+'</p><h2>'+esc(title(r.name))+'</h2><p>'+esc(title(r.short))+'</p></div></div>'+
       (current==='sandwich'?'<figure class="kiosk-finished'+(preview.baseOnly?' kiosk-finished-base':'')+'">'+previewMedia+
         '<figcaption><strong>'+esc(preview.baseOnly?v('basePreview'):v('preview'))+'</strong>'+
@@ -145,6 +173,13 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
         '<span class="kiosk-selected-title">'+esc(v('exactIngredients'))+'</span>'+
         '<div class="kiosk-selected-chips" role="list" aria-label="'+esc(v('exactIngredients'))+'">'+ingredientChips+'</div>'+
         (preview.baseOnly?'<button type="button" class="kiosk-pick-filling" data-k-goto="3">'+esc(v('pickFilling'))+' →</button>':'')+
+        '</figcaption></figure>':'')+
+      (breakfast?'<figure class="kiosk-finished kiosk-breakfast-finished">'+breakfastMedia+
+        '<figcaption><strong>'+esc(bv('final'))+'</strong><span>'+esc(bv('photo'))+'</span>'+
+        '<span class="kiosk-selected-title">'+esc(bv('chosen'))+'</span>'+
+        '<div class="kiosk-selected-chips" role="list" aria-label="'+esc(bv('chosen'))+'">'+breakfastChips+'</div>'+
+        '<span class="kiosk-selected-title">'+esc(bv('included'))+'</span>'+
+        '<p class="kiosk-breakfast-included">'+esc(title(r.note))+'</p>'+
         '</figcaption></figure>':'')+
       (r.imageIsBase?'<p class="kiosk-photo-note">'+esc(p('baseImage'))+'</p>':'')+
       (n?'<div class="kiosk-review-grid">'+r.steps.map((s,i)=>{
@@ -177,6 +212,8 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
     if(start)open(start.dataset.kStart,start.dataset.kBread);
     const idea=e.target.closest('[data-k-idea]');
     if(idea)open('sandwich',null,null,null,idea.dataset.kIdea);
+    const breakfastIdea=e.target.closest('[data-k-bidea]');
+    if(breakfastIdea)open('breakfast',null,null,null,breakfastIdea.dataset.kBidea);
   });
   dialog.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b)return;
