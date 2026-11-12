@@ -17,3 +17,4 @@
 @media(max-height:600px){.story-button{min-height:70px;gap:3px}.story-ring{width:44px;height:44px;padding:2px}.story-ring img{width:38px;height:38px}.story-button[aria-pressed=true] .story-ring{padding:1px}.feed-stories{padding-bottom:5px}.story-name{font-size:8px}}
 
 .product-open .menu-photo-pending{width:100%;height:100%}.list-view .menu-photo-pending{aspect-ratio:auto;min-height:135px;padding:8px}.list-view .menu-photo-pending>span{font-size:21px}
+.story-ring img[src*="originals/460119-"],.story-ring img[src*="originals/460120-"]{object-position:50% 90%}
