@@ -5,7 +5,7 @@
   body[data-view="feed"] .section-heading h2{font-size:37px}
   body[data-view="feed"] .section-heading .eyebrow{font-size:8px;letter-spacing:1.7px}
   body[data-view="feed"] .catalog-note{display:none}
-  .feed-stories{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain;padding:0 0 15px}
+  .feed-stories{position:sticky;top:var(--header-h);z-index:16;background:var(--paper);display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain;padding:8px 0 15px}
   .feed-stories::-webkit-scrollbar{display:none}
   .story-button{flex:0 0 75px;width:75px;min-height:100px;padding:1px;display:flex;flex-direction:column;align-items:center;gap:7px}
   .story-ring{display:block;width:68px;height:68px;padding:3px;border:1px solid var(--line);border-radius:50%;transition:border-color .15s}
@@ -14,7 +14,7 @@
   .story-button[aria-pressed="true"] .story-ring{border:2px solid var(--accent);padding:2px}
   .story-button[aria-pressed="true"] .story-name{color:var(--ink);font-weight:700}
   .story-button:hover .story-ring{border-color:var(--accent)}
-  body[data-view="feed"] .toolbar{padding:10px 0;border-bottom:1px solid var(--line)}
+  body[data-view="feed"] .toolbar{top:calc(var(--header-h) + var(--stories-h,123px));padding:10px 0;border-bottom:1px solid var(--line)}
   body[data-view="feed"] .result-heading{padding:18px 1px 14px}
   body[data-view="feed"] .result-heading h3{font:600 14px Arial,Helvetica,sans-serif;letter-spacing:0}
   .product-grid.feed-view{display:flex;flex-direction:column;gap:24px}

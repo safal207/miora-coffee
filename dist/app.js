@@ -339,7 +339,22 @@ async function shareItem(id) {
   if(navigator.share){try{await navigator.share({title:'Miora Coffee · '+name(p),text:name(p),url:url.href});return;}catch(e){if(e.name==='AbortError')return;}}
   $('share-title').textContent=t('share')+' · Miora';$('share-description').textContent=name(p)+' — '+t('shareDescription');$('share-link').value=url.href;$('copy-link').textContent=t('copy');$('share-dialog').showModal();
 }
-function selectCategory(id) {category=id;renderCategories();renderProducts();}
+function showCategoryResults() {
+  const header=document.querySelector('.header').offsetHeight;
+  const stories=view==='feed'?$('feed-stories').offsetHeight:0;
+  const toolbar=$('toolbar').offsetHeight;
+  const top=document.querySelector('.result-heading').getBoundingClientRect().top+scrollY-header-stories-toolbar-8;
+  window.scrollTo({top:Math.max(0,top),behavior:'instant'});
+}
+function selectCategory(id) {
+  category=id;search='';$('search').value='';
+  // Keep the navigation nodes, keyboard focus and horizontal position intact.
+  document.querySelectorAll('[data-category]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.category===id)));
+  $('favorites-filter').setAttribute('aria-pressed',String(id==='favorites'));
+  renderProducts();
+  $('category-status').textContent=$('result-title').textContent+' · '+$('result-count').textContent;
+  showCategoryResults();
+}
 
 document.addEventListener('click',async event=>{
   const button=event.target.closest('button,a[data-action]');if(!button)return;
@@ -349,7 +364,7 @@ document.addEventListener('click',async event=>{
   if(d.add){add(d.add);return;}
   if(d.favorite){toggleFavorite(d.favorite);return;}
   if(d.share){await shareItem(d.share);return;}
-  if(button.hasAttribute('data-video-desserts')){search='';$('search').value='';selectCategory('46818');$('result-title').setAttribute('tabindex','-1');$('result-title').focus({preventScroll:true});$('result-title').scrollIntoView({block:'start'});return;}
+  if(button.hasAttribute('data-video-desserts')){selectCategory('46818');$('result-title').setAttribute('tabindex','-1');$('result-title').focus({preventScroll:true});return;}
   if(d.category){selectCategory(d.category);return;}
   if(d.view){const boundary=$('toolbar').getBoundingClientRect().bottom;const anchor=[...document.querySelectorAll('[data-product]')].find(el=>{const r=el.getBoundingClientRect();return r.bottom>boundary&&r.top<innerHeight;})?.dataset.product;view=resolveView(d.view,null);save('view',view);renderProducts();updateUrl();if(anchor)requestAnimationFrame(()=>{const card=document.querySelector(`[data-product="${anchor}"]`);if(card)window.scrollTo({top:Math.max(0,card.getBoundingClientRect().top+scrollY-document.querySelector('.header').offsetHeight-$('toolbar').offsetHeight-16),behavior:'instant'});});return;}
   if(d.kEdit!==undefined){const lineIndex=Number(d.kEdit),item=configuredOrders[lineIndex];if(item){$('cart-dialog').close();kioskUI?.edit(item,lineIndex);}return;}
@@ -391,6 +406,12 @@ window.addEventListener('storage',event=>{
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();if($('detail-dialog').open)renderDetail();}
 });
+// Translated category labels can change the sticky row height.
+const storySizeObserver=new ResizeObserver(()=>{
+  const height=$('feed-stories').offsetHeight;
+  if(height)document.documentElement.style.setProperty('--stories-h',height+'px');
+});
+storySizeObserver.observe($('feed-stories'));
 kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null});
 renderLanguage();updateUrl();
 const linked=params.get('item');if(byId.has(linked))openDetail(linked);
