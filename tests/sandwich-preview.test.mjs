@@ -92,7 +92,8 @@ test('food desire flow retains honest preview while giving sandwich a prominent 
  assert.match(kiosk,/isStart\?\(isBreakfast\?'assets\/breakfast-large-omelette-ai\.webp':'assets\/sandwich-salmon\.webp'\):preview\.src/);
  assert.match(kiosk,/preview\.baseOnly\?v\('basePreview'\)/);
  assert.match(kiosk,/selectedIngredients\(selection,lang\(\)\)/);
- assert.match(kiosk,/livePreview\+choices/);
+ assert.ok(kiosk.indexOf('livePreview+')<kiosk.indexOf('+choices+'));
+ assert.match(kiosk,/\+choices\+/);
  assert.match(app,/const featuredPhoto=showFood&&!staffMode/);
  assert.match(app,/kiosk-cart-showcase/);
  assert.match(app,/kiosk-cart-promise/);
