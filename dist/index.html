@@ -13,14 +13,14 @@
   <meta name="color-scheme" content="light dark">
   <title>Miora Coffee · Coffee, Food & Play</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preload" as="image" href="assets/enhanced/428748-640.webp" imagesrcset="assets/enhanced/428748-640.webp 640w, assets/enhanced/428748-1200.webp 1200w" imagesizes="(max-width: 620px) 70vw, 420px">
   <link rel="stylesheet" href="style.css?v=20261106-photos2">
   <link rel="stylesheet" href="feed.css?v=20261112-navigation1">
   <link rel="stylesheet" href="kiosk.css?v=20261111-visual6">
   <link rel="stylesheet" href="video-stories.css?v=20261112-videos1">
+  <link rel="stylesheet" href="desire-journey.css?v=20261112-desire1">
   <script src="theme.js"></script>
   <script src="assets/qr.js" defer></script>
-  <script type="module" src="app.js?v=20261112-navigation1"></script>
+  <script type="module" src="app.js?v=20261112-desire1"></script>
 </head>
 <body>
   <a class="skip" href="#menu">Menüye geç / Skip to menu</a>
@@ -52,7 +52,7 @@
     <section id="menu" class="menu-section shell" aria-labelledby="menu-title">
       <div class="section-heading"><div><p class="eyebrow" data-i18n="menuKicker">KÜÇÜK MOLALAR, GÜZEL LEZZETLER</p><h2 id="menu-title" data-i18n="menuTitle">Bugün canın ne istiyor?</h2></div><p class="catalog-note"><span>93</span> <span data-i18n="menuChoices">farklı seçim, senin molan.</span></p></div>
       <nav class="feed-stories" id="feed-stories" aria-label="Menü kategorileri" hidden></nav>
-      <section id="kiosk-strip" aria-label="Miora smart menu"></section>
+      <section class="builder-entry" aria-label="Miora"><p data-journey-copy="made">Kendi lezzetini oluştur</p><div class="builder-shortcuts"><button type="button" data-k-start="sandwich" data-journey-copy="sandwich">Sandviç oluştur</button><button type="button" data-k-start="breakfast" data-journey-copy="breakfast">Breakfast 2.0</button></div><details id="builder-discovery"><summary data-journey-copy="ideas">Fikirler ve Instagram videoları</summary><section id="kiosk-strip" aria-label="Miora smart menu"></section></details></section>
       <div class="toolbar" id="toolbar">
         <div class="search-row"><label class="search"><span id="search-icon" aria-hidden="true"></span><input id="search" type="search" autocomplete="off" placeholder="Bir lezzet ara…" aria-label="Menüde ara"><button class="search-clear icon-btn" type="button" id="search-clear" aria-label="Aramayı temizle" hidden>×</button></label>
           <div class="view-switch" role="group" aria-label="Görünüm"><button class="icon-btn" type="button" id="view-feed" data-view="feed" aria-label="Akış" aria-pressed="true"></button><button class="icon-btn" type="button" id="view-grid" data-view="grid" aria-label="Fotoğraf görünümü" aria-pressed="false"></button><button class="icon-btn" type="button" id="view-list" data-view="list" aria-label="Kompakt liste" aria-pressed="false"></button></div>
@@ -62,8 +62,8 @@
       </div>
       <p id="category-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="result-heading"><h3 id="result-title">Miora seçkisi</h3><span id="result-count" role="status"></span></div>
-      <div id="dessert-video" hidden></div>
       <div id="products" class="product-grid"></div>
+      <div id="dessert-video" hidden></div>
       <div class="empty-state" id="empty-state" hidden><span aria-hidden="true">⌕</span><h3 data-i18n="noResults">Burada henüz bir şey yok.</h3><p data-i18n="tryAgain">Başka bir lezzet ara veya tüm menüyü aç.</p><button type="button" class="button secondary" data-action="reset" data-i18n="seeAll">Tüm menüyü gör</button></div>
       <p class="source-note" data-i18n="sourceNote">Fiyatlar ve içerik bilgileri Miora’nın kaynak menüsünden · 5 Kasım 2026. Fotoğraflar menü için rötuşlanmıştır.</p>
     </section>

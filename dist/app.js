@@ -1,13 +1,14 @@
+import {desireSections,journeyCopy,localizedJourney} from './desire-journey.js';
 import {videoStory,dessertStoryVisible} from './video-stories.js';
 import {products,categories,featured,source} from './menu-data.js';
-import {photoUrl as photo,photoSet,hasPhoto} from './photos.js?v=20261106-photos2';
+import {photoUrl as photo,photoSet,hasPhoto,photoKind} from './photos.js?v=20261112-desire1';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection} from './sandwich-preview.js';
 import {breakfastVisualForSelection,breakfastCopy} from './breakfast-preview.js';
-import {identityFor,diversifyPhotoOrder,storyCoverIds} from './visual-merchandising.js?v=20261112-covers1';
+import {identityFor,diversifyPhotoOrder,storyCoverIds,visualSourceOf} from './visual-merchandising.js?v=20261112-covers1';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -59,7 +60,8 @@ let kioskUI;
 let favoriteIds=load('favorites',[]); if(!Array.isArray(favoriteIds))favoriteIds=[];
 let favorites=new Set(favoriteIds.filter(id=>byId.has(id)));
 let view=resolveView(params.get('view'),load('view',null));
-let category=view==='feed'?'all':'featured', search='', detailId=null, staffMode=false;
+const requestedCategory=params.get('category');
+let category=['all','featured',...categories.map(c=>c.id)].includes(requestedCategory)?requestedCategory:view==='feed'?'all':'featured', search='', detailId=null, staffMode=false;
 let service=load('service','dineIn'); if(!['dineIn','takeaway'].includes(service))service='dineIn';
 let views=load('views',{}); if(!views||typeof views!=='object'||Array.isArray(views))views={};
 views=Object.fromEntries(Object.entries(views).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));
@@ -71,7 +73,7 @@ const t = key => messages[lang][key]||messages.tr[key]||key;
 const name = item => item.name[lang]||item.name.tr;
 const money = value => new Intl.NumberFormat(lang==='tr'?'tr-TR':lang==='ru'?'ru-RU':'en-GB',{maximumFractionDigits:2}).format(value/100)+' ₺';
 function notify(text) {clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,2600);}
-function updateUrl() {const url=new URL(location.href);url.searchParams.set('lang',lang);url.searchParams.set('view',view);history.replaceState(null,'',url);}
+function updateUrl() {const url=new URL(location.href);url.searchParams.set('lang',lang);url.searchParams.set('view',view);url.searchParams.set('category',category);history.replaceState(null,'',url);}
 function renderTheme() {const dark=document.documentElement.dataset.theme==='dark';$('theme-toggle').innerHTML=icon(dark?'sun':'moon');$('theme-toggle').setAttribute('aria-label',lang==='ru'?(dark?'Светлая тема':'Тёмная тема'):lang==='en'?(dark?'Light theme':'Dark theme'):(dark?'Açık tema':'Koyu tema'));$('theme-toggle').setAttribute('aria-pressed',String(dark));}
 function renderLanguage() {
   document.documentElement.lang=lang;$('language').value=lang;
@@ -80,6 +82,7 @@ function renderLanguage() {
   $('view-feed').setAttribute('aria-label',t('feed'));$('view-grid').setAttribute('aria-label',t('grid'));$('view-list').setAttribute('aria-label',t('list'));$('favorites-filter').setAttribute('aria-label',t('favorites'));
   $('feed-stories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',[t('feed'),t('grid'),t('list')].join(' / '));
   document.querySelectorAll('[data-close]').forEach(e=>e.setAttribute('aria-label',t('close')));
+  document.querySelectorAll('[data-journey-copy]').forEach(node=>node.textContent=journeyCopy[lang][node.dataset.journeyCopy]);
   renderTheme();renderCategories();renderProducts();renderCartCount();kioskUI?.refresh();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
@@ -98,7 +101,7 @@ function renderProducts() {
   stopFeedViews();
   const videoSlot=$('dessert-video');
   videoSlot.hidden=!dessertStoryVisible(category,search);
-  videoSlot.innerHTML=videoSlot.hidden?'':videoStory('dessert',lang);
+  videoSlot.innerHTML=videoSlot.hidden?'':videoStory('dessert',lang,{compact:true});
   const list=filterProducts(products,{category,search,favorites:[...favorites],featured});
   const displayList=!search&&!['all','featured','favorites'].includes(category)?diversifyPhotoOrder(list):list;
   const label=category==='featured'?t('featured'):category==='all'?(search?t('searchResults'):t('all')):category==='favorites'?t('favorites'):categories.find(c=>c.id===category)?.name[lang]||t('all');
@@ -108,9 +111,18 @@ function renderProducts() {
   $('feed-stories').hidden=view!=='feed';$('categories').hidden=view==='feed';
   $('empty-state').hidden=list.length>0;$('products').className='product-grid'+(view==='list'?' list-view':view==='feed'?' feed-view':'');
   $('view-feed').setAttribute('aria-pressed',String(view==='feed'));$('view-grid').setAttribute('aria-pressed',String(view==='grid'));$('view-list').setAttribute('aria-pressed',String(view==='list'));$('search-clear').hidden=!search;
-  if(view==='feed'){const ranks=new Map(featured.map((id,i)=>[id,i]));const ordered=category==='all'&&!search?[...displayList].sort((a,b)=>(ranks.get(a.id)??100)-(ranks.get(b.id)??100)):displayList;$('products').innerHTML=ordered.map(feedPost).join('');startFeedViews();enhanceKioskCards();return;}
+  if(view==='feed'){
+    const copy=journeyCopy[lang],sections=desireSections(displayList,{category,search,categories});
+    const index=sections.length>1?`<nav class="journey-index" aria-label="${esc(copy.find)}"><h3>${esc(copy.find)}</h3><p>${esc(copy.all)}</p><div class="journey-links">${sections.map(g=>`<button type="button" data-journey-jump="${g.id}">${esc(localizedJourney(g.title,lang))}<small>${g.items.length}</small></button>`).join('')}</div></nav>`:'';
+    $('products').innerHTML=index+sections.map(g=>{
+      const sources=new Set();
+      const cards=g.items.map(p=>{const source=visualSourceOf(p),variant=hasPhoto(p)&&sources.has(source);sources.add(source);return feedPost(p,variant);}).join('');
+      return `<section class="journey-section" id="collection-${g.id}" data-journey-section="${g.id}"${g.title?` aria-labelledby="collection-title-${g.id}"`:''}>${g.title?`<div class="journey-heading"><h3 id="collection-title-${g.id}">${esc(localizedJourney(g.title,lang))}</h3><span>${g.items.length} ${copy.choices}</span></div>`:''}<div class="journey-cards">${cards}</div></section>`;
+    }).join('')+(category==='featured'?`<button type="button" class="desire-catalog-link" data-category="all">${esc(copy.seeMenu)} →</button>`:'');
+    startFeedViews();enhanceKioskCards();return;
+  }
   $('products').innerHTML=displayList.map(p=>`<article class="product-card" data-product="${p.id}">
-    <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}"><img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}></button>${flavorChip(p)}
+    <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}>`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${flavorChip(p)}
     <div class="product-social"><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}">${icon('share')}</button><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}</button></div></div>
     <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div><div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
   enhanceKioskCards();
@@ -129,6 +141,7 @@ function enhanceKioskCards(){
     b.textContent=kioskMessages[lang].build;row.classList.add('kiosk-has-config');prior.replaceWith(b);
     const priceNode=row.querySelector('.product-price,strong');
     if(kind==='pancake'&&priceNode){priceNode.textContent=money(25000);priceNode.classList.remove('ask');}
+    if(kind==='sandwich'&&priceNode)priceNode.textContent=kioskMessages[lang].from+' '+money(35000);
     if(kind==='breakfast'&&priceNode)priceNode.textContent=kioskMessages[lang].from+' '+money(35000);
   }
 }
@@ -146,15 +159,17 @@ function enhanceKioskDetail(id){
     if(metrics)metrics.insertAdjacentHTML('beforeend','<span class="metric detail-price">'+money(25000)+'</span>');
   }
 }
-function feedPost(p) {
-  const cat=categories.find(c=>c.id===p.cat),qty=cart[p.id]||0;
-  return `<article class="product-card feed-post" data-product="${p.id}" aria-labelledby="post-title-${p.id}">
-    <div class="post-head"><img class="post-avatar" src="assets/logo-source.jpg" width="36" height="36" alt=""><div><b>mioracoffeetr</b><span>${esc(cat.name[lang])}</span></div><button class="icon-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${icon('more')}</button></div>
-    <div class="feed-media"><div class="feed-photo" data-feed-photo="${p.id}"><img class="${hasPhoto(p)?'':'missing-photo'}" src="${photo(p)}" ${photoSet(p,'(max-width: 620px) 100vw, 624px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}"><span class="feed-love" aria-hidden="true">${icon('heart')}</span>${flavorChip(p)}</div></div>
-    <div class="post-actions"><button class="icon-btn feed-heart" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${esc(t('like')+' · '+name(p))}">${icon('heart')}</button><button class="icon-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('ingredients')+' · '+name(p))}">${icon('info')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}">${icon('share')}</button><span class="post-saved" data-saved="${p.id}" ${favorites.has(p.id)?'':'hidden'}>${t('liked')}</span></div>
-    <div class="post-caption"><h3 id="post-title-${p.id}"><button type="button" data-detail="${p.id}">${esc(name(p))}</button></h3><p class="post-original" ${lang==='tr'?'':'lang="tr"'}>${esc(lang==='tr'?(p.description.length>130?p.description.slice(0,127)+'…':p.description):p.name.tr)}</p><div class="post-meta">${meta(p)}</div><span class="post-views" data-views="${p.id}" ${views[p.id]?'':'hidden'}>${icon('eye')}<span>${views[p.id]||0} · ${t('viewOnDevice')}</span></span></div>
-    <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${icon('bag')}<span>${t(qty?'addMore':'addToOrder')}</span></button>`}</div>
-    <p class="feed-hint">${t('feedHint')}</p></article>`;
+function feedPost(p,variant=false) {
+  const copy=journeyCopy[lang],qty=cart[p.id]||0,kind=photoKind(p);
+  const variantLabel=lang==='ru'?'Вариант рецепта':lang==='en'?'Recipe variant':'Tarif seçeneği';
+  const media=kind==='missing'||variant
+    ?`<div class="menu-photo-pending${variant?' recipe-variant':''}"><span>${esc(variant?(identityFor(p,lang)||name(p)):'miora')}</span><small>${esc(variant?variantLabel:copy.noPhoto)}</small></div>`
+    :`<div class="feed-photo ${kind==='original'?'original-photo original-'+p.id:''}" data-feed-photo="${p.id}"><button class="feed-photo-button" type="button" data-detail="${p.id}" aria-label="${esc(copy.details+' · '+name(p))}"><img src="${photo(p)}" ${photoSet(p,'(max-width: 359px) calc(100vw - 24px), (max-width: 620px) calc((100vw - 34px) / 2), 305px')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(name(p))}"></button>${flavorChip(p)}</div>`;
+  return `<article class="product-card feed-post${variant?' variant-post':''}" data-product="${p.id}" aria-labelledby="post-title-${p.id}">
+    <div class="feed-media">${media}<button class="icon-btn feed-save" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${esc(copy.saved+' · '+name(p))}">${icon('heart')}</button></div>
+    ${kind==='missing'||variant?'':`<p class="feed-media-note">${kind==='illustration'?copy.illustration:copy.photo}</p>`}
+    <div class="post-caption"><h3 id="post-title-${p.id}"><button type="button" data-detail="${p.id}">${esc(name(p))}</button></h3>${lang==='tr'?'':`<p class="post-original" lang="tr">${esc(p.name.tr)}</p>`}</div>
+    <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${copy.add}</button>`}</div></article>`;
 }
 function recordView(id) {
   if(!byId.has(id)||viewedThisSession.has(id))return;
@@ -221,8 +236,9 @@ function openDetail(id) {
 }
 function renderDetail() {
   const p=byId.get(detailId),c=categories.find(c=>c.id===p.cat);if(!p)return;
-  $('detail-content').innerHTML=`<div class="detail-top"><img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p)}" ${photoSet(p,'(max-width: 620px) 100vw, 540px')} width="640" height="640" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}"><button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
+  $('detail-content').innerHTML=`<div class="detail-top">${hasPhoto(p)?`<img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p)}" ${photoSet(p,'(max-width: 620px) 100vw, 540px')} width="640" height="640" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}">`:`<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(p))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}<button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
     <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2>${lang!=='tr'?`<p class="original-name" lang="tr">${esc(p.name.tr)}</p>`:''}<div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}${p.price!==null?`<span class="metric detail-price">${money(p.price)}</span>`:''}</div>
+    <p class="photo-provenance">${esc(photoKind(p)==='illustration'?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
     ${p.price===null?`<section class="detail-section"><h3>${t('ask')}</h3><p>${t('priceMissing')}</p></section>`:''}
     ${p.id==='430356'?videoStory('croissant',lang,{compact:true}):p.id==='431203'?videoStory('breakfast',lang,{compact:true}):''}
     <section class="detail-section"><h3>${t('ingredients')}</h3>${p.description?`<p lang="tr">${esc(p.description)}</p>${lang!=='tr'?`<p class="detail-disclaimer">${t('originalRecipe')}</p>`:''}`:`<p>${t('noIngredients')}</p>`}</section>
@@ -234,7 +250,7 @@ function recommend() {
   const items=Object.keys(cart).map(id=>byId.get(id));if(!items.length&&!configuredOrders.length)return null;
   const hasFood=configuredOrders.length>0||items.some(p=>['46818','46885'].includes(p.cat));
   const hasDrink=items.some(p=>!['46818','46885'].includes(p.cat));
-  const id=!hasFood?'430227':!hasDrink?'428743':null;
+  const id=!hasFood?'430226':!hasDrink?'428772':null;
   return id&&!cart[id]?byId.get(id):null;
 }
 function orderText() {
@@ -347,11 +363,11 @@ function showCategoryResults() {
   window.scrollTo({top:Math.max(0,top),behavior:'instant'});
 }
 function selectCategory(id) {
-  category=id;search='';$('search').value='';
+  category=id;search='';$('search').value='';$('builder-discovery').open=false;
   // Keep the navigation nodes, keyboard focus and horizontal position intact.
   document.querySelectorAll('[data-category]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.category===id)));
   $('favorites-filter').setAttribute('aria-pressed',String(id==='favorites'));
-  renderProducts();
+  renderProducts();updateUrl();
   $('category-status').textContent=$('result-title').textContent+' · '+$('result-count').textContent;
   showCategoryResults();
 }
@@ -365,6 +381,7 @@ document.addEventListener('click',async event=>{
   if(d.favorite){toggleFavorite(d.favorite);return;}
   if(d.share){await shareItem(d.share);return;}
   if(button.hasAttribute('data-video-desserts')){selectCategory('46818');$('result-title').setAttribute('tabindex','-1');$('result-title').focus({preventScroll:true});return;}
+  if(d.journeyJump){const section=$('collection-'+d.journeyJump);if(section){const offset=document.querySelector('.header').offsetHeight+(view==='feed'?$('feed-stories').offsetHeight:0)+$('toolbar').offsetHeight+8;window.scrollTo({top:Math.max(0,section.getBoundingClientRect().top+scrollY-offset),behavior:'instant'});section.querySelector('h3')?.setAttribute('tabindex','-1');section.querySelector('h3')?.focus({preventScroll:true});}return;}
   if(d.category){selectCategory(d.category);return;}
   if(d.view){const boundary=$('toolbar').getBoundingClientRect().bottom;const anchor=[...document.querySelectorAll('[data-product]')].find(el=>{const r=el.getBoundingClientRect();return r.bottom>boundary&&r.top<innerHeight;})?.dataset.product;view=resolveView(d.view,null);save('view',view);renderProducts();updateUrl();if(anchor)requestAnimationFrame(()=>{const card=document.querySelector(`[data-product="${anchor}"]`);if(card)window.scrollTo({top:Math.max(0,card.getBoundingClientRect().top+scrollY-document.querySelector('.header').offsetHeight-$('toolbar').offsetHeight-16),behavior:'instant'});});return;}
   if(d.kEdit!==undefined){const lineIndex=Number(d.kEdit),item=configuredOrders[lineIndex];if(item){$('cart-dialog').close();kioskUI?.edit(item,lineIndex);}return;}
@@ -390,15 +407,15 @@ $('theme-toggle').addEventListener('click',()=>{const theme=document.documentEle
 $('copy-link').addEventListener('click',()=>copyText($('share-link').value,t('copied'),()=>{$('share-link').focus();$('share-link').select();notify(t('selectCopy'));}));
 document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}));
 document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('close',()=>{if(!document.querySelector('dialog[open]'))startFeedViews();}));
-document.addEventListener('dblclick',event=>{const button=event.target.closest('[data-feed-photo]');if(button){event.preventDefault();likePhoto(button.dataset.feedPhoto,button);}});
-let lastTouch=null;
-document.addEventListener('pointerup',event=>{if(event.pointerType!=='touch')return;const button=event.target.closest('[data-feed-photo]');if(!button)return;const now=Date.now();if(lastTouch&&lastTouch.id===button.dataset.feedPhoto&&now-lastTouch.at<260&&Math.hypot(event.clientX-lastTouch.x,event.clientY-lastTouch.y)<35){likePhoto(button.dataset.feedPhoto,button);lastTouch=null;}else lastTouch={id:button.dataset.feedPhoto,at:now,x:event.clientX,y:event.clientY};});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stopFeedViews();else if(!document.querySelector('dialog[open]'))startFeedViews();});
 document.addEventListener('error',event=>{
   const image=event.target;if(!(image instanceof HTMLImageElement)||image.src.endsWith('/favicon.svg'))return;
+  const original=(image.currentSrc||image.src).match(/\/originals\/(\d+)-(?:160|360|640|1200)\.webp(?:$|[?#])/);
   const enhanced=(image.currentSrc||image.src).match(/\/enhanced\/(\d+)-(?:160|640|1200)\.webp(?:$|[?#])/);
   image.removeAttribute('srcset');image.removeAttribute('sizes');
+  if(original&&!image.dataset.photoFallback){image.dataset.photoFallback='original';image.src=`assets/products/${original[1]}.jpg`;return;}
   if(enhanced&&!image.dataset.photoFallback){image.dataset.photoFallback='original';image.src=`assets/products/${enhanced[1]}.jpg`;return;}
+  if(image.closest('.feed-photo,.detail-top')){const placeholder=document.createElement('div');placeholder.className='menu-photo-pending';placeholder.textContent=journeyCopy[lang].noPhoto;image.replaceWith(placeholder);return;}
   image.src='favicon.svg';image.classList.add('missing-photo');
 },true);
 window.addEventListener('storage',event=>{
