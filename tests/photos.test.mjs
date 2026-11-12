@@ -4,8 +4,9 @@ import {createHash} from 'node:crypto';
 import {readFileSync,readdirSync} from 'node:fs';
 import {products} from '../dist/menu-data.js';
 import {photoSources,photoPlaceholders} from '../dist/photo-data.js';
-import {hasPhoto,photoUrl,photoSet} from '../dist/photos.js';
+import {hasPhoto,photoUrl,photoSet,photoKind} from '../dist/photos.js';
 import {originalPhotos} from '../dist/original-photo-data.js';
+import {generatedPhotos} from '../dist/generated-photo-data.js';
 const file=p=>new URL(`../${p}`,import.meta.url);
 const manifest=JSON.parse(readFileSync(file('docs/photo-refresh-2026-11-06.json')));
 const byId=new Map(products.map(p=>[p.id,p]));
@@ -15,8 +16,26 @@ test('retouched photos are indexed completely; source logo placeholders remain e
   const ids=Object.values(manifest.photos).flatMap(p=>p.productIds).sort();
   assert.deepEqual(Object.keys(photoSources).sort(),ids);
   if(manifest.complete){assert.equal(ids.length,84);assert.equal(Object.keys(manifest.photos).length,66);}
-  for(const id of photoPlaceholders){assert.equal(hasPhoto(byId.get(id)),false);assert.equal(photoSet(byId.get(id),'100vw'),'');}
-  const missing=byId.get('429448');assert.equal(hasPhoto(missing),false);assert.equal(photoUrl(missing),'favicon.svg');
+  for(const id of photoPlaceholders){assert.equal(hasPhoto(byId.get(id)),true);assert.equal(photoKind(byId.get(id)),'generated');assert.ok(!photoSources[id]);assert.ok(!originalPhotos[id]);}
+  const missing=byId.get('429448');assert.equal(missing.image,null);assert.equal(hasPhoto(missing),true);assert.equal(photoKind(missing),'generated');
+});
+
+test('every catalog item has a packaged image; exactly nine new images are identified as generated',()=>{
+ const expected=['429448','431314','430199','430227','431294','430203','431747','431748','431749'].sort();
+ assert.deepEqual(Object.keys(generatedPhotos).sort(),expected);
+ const manifest=JSON.parse(readFileSync(file('docs/generated-menu-illustrations-2026-11-12.json')));
+ for(const item of products){assert.equal(hasPhoto(item),true,item.id);assert.ok(!photoUrl(item).includes('logo-source')&&!photoUrl(item).includes('favicon'));}
+ for(const [id,record] of Object.entries(manifest.photos)){
+  assert.equal(record.tool,'built-in image_gen');assert.equal(record.visualReview,'accepted');assert.ok(record.prompt.length>100);
+  assert.equal(photoKind(byId.get(id)),'generated');
+  for(const [size,asset] of Object.entries(record.assets)){
+   const bytes=readFileSync(file('dist/'+asset.path));assert.equal(hash(bytes),asset.sha256);assert.equal(bytes.length,asset.bytes);assert.ok(bytes.length<300000);
+   assert.ok(asset.dimensions[0]<=record.sourceDimensions[0]&&asset.dimensions[0]<=Number(size));
+  }
+  assert.match(photoUrl(byId.get(id),160),new RegExp('/'+id+'-160\\.webp$'));
+  assert.match(photoSet(byId.get(id),'100vw'),/360w/);
+ }
+ assert.equal(hasPhoto(null),false);assert.equal(hasPhoto({id:'invalid'}),false);
 });
 test('published responsive photos match reviewed asset hashes and original product identities',()=>{
   const listed=[];

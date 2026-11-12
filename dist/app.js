@@ -1,14 +1,14 @@
-import {desireSections,journeyCopy,localizedJourney} from './desire-journey.js';
+import {desireSections,journeyCopy,localizedJourney} from './desire-journey.js?v=20261112-generated1';
 import {videoStory,dessertStoryVisible} from './video-stories.js';
 import {products,categories,featured,source} from './menu-data.js';
-import {photoUrl as photo,photoSet,hasPhoto,photoKind} from './photos.js?v=20261112-desire1';
+import {photoUrl as photo,photoSet,hasPhoto,photoKind} from './photos.js?v=20261112-generated1';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection} from './sandwich-preview.js';
 import {breakfastVisualForSelection,breakfastCopy} from './breakfast-preview.js';
-import {identityFor,diversifyPhotoOrder,storyCoverIds,visualSourceOf} from './visual-merchandising.js?v=20261112-covers1';
+import {identityFor,diversifyPhotoOrder,storyCoverIds} from './visual-merchandising.js?v=20261112-covers1';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -115,14 +115,13 @@ function renderProducts() {
     const copy=journeyCopy[lang],sections=desireSections(displayList,{category,search,categories});
     const index=sections.length>1?`<nav class="journey-index" aria-label="${esc(copy.find)}"><h3>${esc(copy.find)}</h3><p>${esc(copy.all)}</p><div class="journey-links">${sections.map(g=>`<button type="button" data-journey-jump="${g.id}">${esc(localizedJourney(g.title,lang))}<small>${g.items.length}</small></button>`).join('')}</div></nav>`:'';
     $('products').innerHTML=index+sections.map(g=>{
-      const sources=new Set();
-      const cards=g.items.map(p=>{const source=visualSourceOf(p),variant=hasPhoto(p)&&sources.has(source);sources.add(source);return feedPost(p,variant);}).join('');
+      const cards=g.items.map(p=>feedPost(p)).join('');
       return `<section class="journey-section" id="collection-${g.id}" data-journey-section="${g.id}"${g.title?` aria-labelledby="collection-title-${g.id}"`:''}>${g.title?`<div class="journey-heading"><h3 id="collection-title-${g.id}">${esc(localizedJourney(g.title,lang))}</h3><span>${g.items.length} ${copy.choices}</span></div>`:''}<div class="journey-cards">${cards}</div></section>`;
     }).join('')+(category==='featured'?`<button type="button" class="desire-catalog-link" data-category="all">${esc(copy.seeMenu)} →</button>`:'');
     startFeedViews();enhanceKioskCards();return;
   }
   $('products').innerHTML=displayList.map(p=>`<article class="product-card" data-product="${p.id}">
-    <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}>`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${flavorChip(p)}
+    <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}>`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${photoKind(p)==='generated'?`<span class="generated-media-label">${esc(journeyCopy[lang].generated)}</span>`:''}${flavorChip(p)}
     <div class="product-social"><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}">${icon('share')}</button><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}</button></div></div>
     <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div><div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
   enhanceKioskCards();
@@ -159,15 +158,14 @@ function enhanceKioskDetail(id){
     if(metrics)metrics.insertAdjacentHTML('beforeend','<span class="metric detail-price">'+money(25000)+'</span>');
   }
 }
-function feedPost(p,variant=false) {
+function feedPost(p) {
   const copy=journeyCopy[lang],qty=cart[p.id]||0,kind=photoKind(p);
-  const variantLabel=lang==='ru'?'Вариант рецепта':lang==='en'?'Recipe variant':'Tarif seçeneği';
-  const media=kind==='missing'||variant
-    ?`<div class="menu-photo-pending${variant?' recipe-variant':''}"><span>${esc(variant?(identityFor(p,lang)||name(p)):'miora')}</span><small>${esc(variant?variantLabel:copy.noPhoto)}</small></div>`
-    :`<div class="feed-photo ${kind==='original'?'original-photo original-'+p.id:''}" data-feed-photo="${p.id}"><button class="feed-photo-button" type="button" data-detail="${p.id}" aria-label="${esc(copy.details+' · '+name(p))}"><img src="${photo(p)}" ${photoSet(p,'(max-width: 359px) calc(100vw - 24px), (max-width: 620px) calc((100vw - 34px) / 2), 305px')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(name(p))}"></button>${flavorChip(p)}</div>`;
-  return `<article class="product-card feed-post${variant?' variant-post':''}" data-product="${p.id}" aria-labelledby="post-title-${p.id}">
+  const media=kind==='missing'
+    ?`<div class="menu-photo-pending"><span>miora</span><small>${esc(copy.noPhoto)}</small></div>`
+    :`<div class="feed-photo ${kind==='original'?'original-photo original-'+p.id:kind==='generated'?'generated-photo generated-'+p.id:''}" data-feed-photo="${p.id}"><button class="feed-photo-button" type="button" data-detail="${p.id}" aria-label="${esc(copy.details+' · '+name(p))}"><img src="${photo(p)}" ${photoSet(p,'(max-width: 359px) calc(100vw - 24px), (max-width: 620px) calc((100vw - 34px) / 2), 305px')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(name(p))}"></button>${flavorChip(p)}</div>`;
+  return `<article class="product-card feed-post" data-product="${p.id}" aria-labelledby="post-title-${p.id}">
     <div class="feed-media">${media}<button class="icon-btn feed-save" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${esc(copy.saved+' · '+name(p))}">${icon('heart')}</button></div>
-    ${kind==='missing'||variant?'':`<p class="feed-media-note">${kind==='illustration'?copy.illustration:copy.photo}</p>`}
+    ${kind==='missing'?'':`<p class="feed-media-note">${kind==='generated'?copy.generated:kind==='illustration'?copy.illustration:copy.photo}</p>`}
     <div class="post-caption"><h3 id="post-title-${p.id}"><button type="button" data-detail="${p.id}">${esc(name(p))}</button></h3>${lang==='tr'?'':`<p class="post-original" lang="tr">${esc(p.name.tr)}</p>`}</div>
     <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${copy.add}</button>`}</div></article>`;
 }
@@ -238,7 +236,7 @@ function renderDetail() {
   const p=byId.get(detailId),c=categories.find(c=>c.id===p.cat);if(!p)return;
   $('detail-content').innerHTML=`<div class="detail-top">${hasPhoto(p)?`<img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p)}" ${photoSet(p,'(max-width: 620px) 100vw, 540px')} width="640" height="640" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}">`:`<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(p))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}<button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
     <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2>${lang!=='tr'?`<p class="original-name" lang="tr">${esc(p.name.tr)}</p>`:''}<div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}${p.price!==null?`<span class="metric detail-price">${money(p.price)}</span>`:''}</div>
-    <p class="photo-provenance">${esc(photoKind(p)==='illustration'?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
+    <p class="photo-provenance">${esc(photoKind(p)==='generated'?(lang==='ru'?'AI-пример подачи, созданный по названию и составу меню; это не фотография блюда Miora.':lang==='en'?'AI serving illustration created from the menu name and ingredients; not a photograph of the actual Miora dish.':'Menü adı ve içeriğine göre oluşturulmuş yapay zekâ servis örneğidir; gerçek Miora ürün fotoğrafı değildir.'):photoKind(p)==='illustration'?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
     ${p.price===null?`<section class="detail-section"><h3>${t('ask')}</h3><p>${t('priceMissing')}</p></section>`:''}
     ${p.id==='430356'?videoStory('croissant',lang,{compact:true}):p.id==='431203'?videoStory('breakfast',lang,{compact:true}):''}
     <section class="detail-section"><h3>${t('ingredients')}</h3>${p.description?`<p lang="tr">${esc(p.description)}</p>${lang!=='tr'?`<p class="detail-disclaimer">${t('originalRecipe')}</p>`:''}`:`<p>${t('noIngredients')}</p>`}</section>
@@ -269,7 +267,7 @@ function renderCart() {
   const body=$('cart-content'),top=body.scrollTop,active=document.activeElement,focusId=active?.dataset?.stepId,focusDelta=active?.dataset?.step;
   const sum=orderTotals();$('cart-title').textContent=t(staffMode?'staffTitle':'cart');$('cart-kicker').textContent=t(staffMode?'staffKicker':'cartKicker');
   if(!sum.count){body.innerHTML=`<div class="cart-empty">${icon('bag')}<p>${t('emptyCart')}</p></div>`;$('cart-footer').innerHTML=`<button class="button primary" type="button" data-action="back-menu">${t('backToMenu')}</button>`;return;}
-  const lines=Object.entries(cart).map(([id,qty])=>{const p=byId.get(id);return `<li class="cart-line"><div class="cart-item"><img src="${photo(p,160)}" alt="" width="58" height="62"><div><b ${staffMode?'lang="tr"':''}>${staffMode?qty+' × ':''}${esc(staffMode?p.name.tr:name(p))}</b><small>${money(p.price)} × ${qty}${staffMode?'':' · '+money(p.price*qty)}</small></div></div>${staffMode?`<strong class="order-line-total">${money(p.price*qty)}</strong>`:`<div class="qty"><button type="button" data-step="-1" data-step-id="${id}" aria-label="${esc(t('decrease')+' · '+name(p))}">${icon('minus')}</button><output>${qty}</output><button type="button" data-step="1" data-step-id="${id}" aria-label="${esc(t('increase')+' · '+name(p))}" ${qty>=99?'disabled':''}>${icon('plus')}</button></div>`}</li>`;}).join('');
+  const lines=Object.entries(cart).map(([id,qty])=>{const p=byId.get(id);return `<li class="cart-line"><div class="cart-item"><img src="${photo(p,160)}" alt="" width="58" height="62"><div><b ${staffMode?'lang="tr"':''}>${staffMode?qty+' × ':''}${esc(staffMode?p.name.tr:name(p))}</b><small>${money(p.price)} × ${qty}${staffMode?'':' · '+money(p.price*qty)}</small>${photoKind(p)==='generated'?`<small class="cart-photo-note">${esc(journeyCopy[lang].generated)}</small>`:''}</div></div>${staffMode?`<strong class="order-line-total">${money(p.price*qty)}</strong>`:`<div class="qty"><button type="button" data-step="-1" data-step-id="${id}" aria-label="${esc(t('decrease')+' · '+name(p))}">${icon('minus')}</button><output>${qty}</output><button type="button" data-step="1" data-step-id="${id}" aria-label="${esc(t('increase')+' · '+name(p))}" ${qty>=99?'disabled':''}>${icon('plus')}</button></div>`}</li>`;}).join('');
   const configuredLines=configuredOrders.map((item,i)=>{
     const r=recipes[item.kind];
     const language=staffMode?'tr':lang;
