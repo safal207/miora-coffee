@@ -7,7 +7,7 @@ import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection} from './sandwich-preview.js';
 import {breakfastVisualForSelection,breakfastCopy} from './breakfast-preview.js';
-import {identityFor,diversifyPhotoOrder} from './visual-merchandising.js';
+import {identityFor,diversifyPhotoOrder,storyCoverIds} from './visual-merchandising.js?v=20261112-covers1';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -86,7 +86,7 @@ function renderLanguage() {
 function renderCategories() {
   const all=[{id:'featured',name:t('featured'),icon:'star'},{id:'all',name:t('all'),icon:'grid'},...categories.map(c=>({id:c.id,name:c.name[lang],icon:c.icon}))];
   $('categories').innerHTML=all.map(c=>`<button class="category-btn" type="button" data-category="${c.id}" aria-pressed="${category===c.id}">${icon(c.icon)}${esc(c.name)}</button>`).join('');
-  $('feed-stories').innerHTML=all.map(c=>{const cover=products.find(p=>hasPhoto(p)&&(c.id==='featured'?featured.includes(p.id):c.id==='all'||p.cat===c.id));return `<button class="story-button" type="button" data-category="${c.id}" aria-pressed="${category===c.id}"><span class="story-ring"><img src="${photo(cover,160)}" width="64" height="64" alt="" decoding="async" loading="lazy"></span><span class="story-name">${esc(c.name)}</span></button>`;}).join('');
+  $('feed-stories').innerHTML=all.map(c=>{const cover=products.find(p=>p.id===storyCoverIds[c.id]&&hasPhoto(p))||products.find(p=>hasPhoto(p)&&(c.id==='featured'?featured.includes(p.id):c.id==='all'||p.cat===c.id));return `<button class="story-button" type="button" data-category="${c.id}" aria-pressed="${category===c.id}"><span class="story-ring"><img src="${photo(cover,160)}" width="64" height="64" alt="" decoding="async" loading="lazy"></span><span class="story-name">${esc(c.name)}</span></button>`;}).join('');
   $('favorites-filter').innerHTML=icon('heart');$('favorites-filter').setAttribute('aria-pressed',String(category==='favorites'));
 }
 function meta(item) {return `${item.kcal&&!item.calorieReview?`<span>${icon('flame')}${esc(item.kcal)}</span>`:''}${item.time?`<span>${icon('clock')}${item.time} ${t('minutes')}</span>`:''}`;}
