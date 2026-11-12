@@ -1,0 +1,467 @@
+{
+  "generatedAt": "2026-11-12",
+  "tool": "built-in image_gen",
+  "kind": "AI serving illustration, not an actual restaurant photograph",
+  "visualReview": "accepted",
+  "photos": {
+    "429448": {
+      "name": "İce Chai Tea Latte",
+      "sourceIngredients": "Spiced Chai Şurubu,Süt,Buz",
+      "prompt": "Use case: product-mockup. Create ONE photorealistic serving illustration for a cafe digital menu: Iced Chai Tea Latte. The source recipe is spiced chai syrup, milk and ice. Show a clear straight-sided glass of pale tan milky chai with visible natural ice cubes and subtle tea color, on a warm off-white limestone tabletop, soft window light from upper left, muted olive/beige softly blurred background. Elegant believable food photography, crisp appetizing drink texture, three-quarter eye-level view. Square composition, full glass entirely visible, centered subject in the central 65% with safe space around the rim for a website crop. No coffee beans, espresso, whipped cream, cinnamon-stick garnish, fruit, extra ingredients, people, text, branding or watermark. This is AI serving inspiration, not a documentary image of the restaurant; the website labels it accordingly. Output just one image, not a collage.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-34e08b09-7478-4e48-8c7d-2912483f1653.png",
+      "sourceSha256": "28fb469af90d23ea2b9066157b274d813dfb0412596880fb418ee9ab92cb6add",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/generated-menu/429448-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 2758,
+          "sha256": "6950285fcb946fd1809277813c40f27800e438c3ad3839f1529e65d061822b98"
+        },
+        "360": {
+          "path": "assets/generated-menu/429448-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 11138,
+          "sha256": "d4cb49516cad96a26cdfcfd7e086ed27984a15a1191baf1faa280c9d9c4a49de"
+        },
+        "640": {
+          "path": "assets/generated-menu/429448-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 29024,
+          "sha256": "a641bb2be8f1bfb7c20b7eeb1cc664873df568bf6cceb35131e57ed67c8b2d85"
+        },
+        "1200": {
+          "path": "assets/generated-menu/429448-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 80138,
+          "sha256": "78ea0115b57169d22516d773ff2f22629333ba9c5c20d78b0279c1a6ef5e4cf0"
+        }
+      }
+    },
+    "431314": {
+      "name": "Mini Cheescake",
+      "sourceIngredients": "Tereyağı,Peynir,Beyaz Çikolata,Krema,Şeker,Meyve",
+      "prompt": "Use case: product-mockup. One photorealistic AI serving illustration for a cafe digital menu. Warm off-white limestone tabletop, matte ivory ceramic plate or dish, soft window light from upper left, quiet muted olive/beige blurred background. Crisp believable food texture, appetizing premium editorial photography, three-quarter close-up. Square frame with full serving inside central 65%, ample crop-safe margins. No text, branding, watermark, people or unrelated props. No collage. It will be explicitly labelled AI serving inspiration, not a real restaurant photograph. Subject: one small individual mini cheesecake, ivory cream-cheese and white-chocolate filling on a thin golden butter-crumb base, smooth simple top, modest realistic portion. Source ingredients: butter, cheese, white chocolate, cream, sugar, fruit; fruit type and actual topping are unknown, so use a plain untopped serving. No red berry topping, chocolate drizzle, nuts, mint or extra decorations.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-163c43b3-1028-49f6-af61-d9d7423a6802.png",
+      "sourceSha256": "0bca0709a864c9d83336d6c28f896441f56a34fb398054a02e96e47dd751eba0",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/generated-menu/431314-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 2748,
+          "sha256": "a42cdccf2bd16a5eb74c72e12c191007372d72479ceed2b343046af9fb48b7e0"
+        },
+        "360": {
+          "path": "assets/generated-menu/431314-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 10144,
+          "sha256": "3857598a3474de8f5de04b337895e739f37e2c6f8e37fc9f0a10da7865a1bbe6"
+        },
+        "640": {
+          "path": "assets/generated-menu/431314-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 26112,
+          "sha256": "5d12787f2559bb075484366947a07897cd96aa00a7dca5b39d4cf10dc53bac3b"
+        },
+        "1200": {
+          "path": "assets/generated-menu/431314-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 72422,
+          "sha256": "e437cd27d6a0e921732d1db74c317c6cfbe91d450dcb1134ecc1fb4c2a8c4bac"
+        }
+      }
+    },
+    "430199": {
+      "name": "Muzlu Magnolia",
+      "sourceIngredients": "Bisküvi,Süt,Şeker,Meyve",
+      "prompt": "Use case: product-mockup. One photorealistic AI serving illustration for a cafe digital menu. Warm off-white limestone tabletop, matte ivory ceramic plate or dish, soft window light from upper left, quiet muted olive/beige blurred background. Crisp believable food texture, appetizing premium editorial photography, three-quarter close-up. Square frame with full serving inside central 65%, ample crop-safe margins. No text, branding, watermark, people or unrelated props. No collage. It will be explicitly labelled AI serving inspiration, not a real restaurant photograph. Subject: Banana Magnolia dessert in a single transparent squat dessert cup. Pale milk pudding layered with biscuit crumbs and a few banana slices visible through the glass, fresh banana slices and biscuit crumb on top. Source menu: biscuit, milk, sugar, fruit; banana from product name. No whipped cream tower, chocolate, berries, nuts or mint. A small spoon is optional but no other food.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-c7aa1169-0e01-4726-96a1-80350b84f714.png",
+      "sourceSha256": "571fdc5746308cdcbbf97f151b98ace970c11333ed07c57ed1db56db46f192ae",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/generated-menu/430199-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4772,
+          "sha256": "d8558d74908885bfc6a81e7367add6ee694de21c508a01278d4d72d8fd0b9c19"
+        },
+        "360": {
+          "path": "assets/generated-menu/430199-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 18132,
+          "sha256": "bbd5d0f28416c91d726131f8e9465508b5f2305e8985c7fbfd9b1a42194578d9"
+        },
+        "640": {
+          "path": "assets/generated-menu/430199-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 48494,
+          "sha256": "042a7717017af95ac2b7e1c8d660f240ecd7f3f09cf8246768774102dd6377ca"
+        },
+        "1200": {
+          "path": "assets/generated-menu/430199-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 128678,
+          "sha256": "7673fbde1207f533557ee6fcfeaf7023b40294fdc5cbffa0473a03179ddcf290"
+        }
+      }
+    },
+    "430227": {
+      "name": "Browni Topu",
+      "sourceIngredients": "Şeker,Çikolata",
+      "prompt": "Use case: product-mockup. One photorealistic AI serving illustration for a cafe digital menu. Warm off-white limestone tabletop, matte ivory ceramic plate or dish, soft window light from upper left, quiet muted olive/beige blurred background. Crisp believable food texture, appetizing premium editorial photography, three-quarter close-up. Square frame with full serving inside central 65%, ample crop-safe margins. No text, branding, watermark, people or unrelated props. No collage. It will be explicitly labelled AI serving inspiration, not a real restaurant photograph. Subject: a single small round brownie bite (brownie ball), dark chocolate color with a slightly irregular handmade spherical shape and a few natural brownie crumbs on the plate. Dense moist baked brownie texture rather than a shiny ganache truffle. Source menu identifies sugar and chocolate. No nuts, coconut, sugar coating, icing, berries, sauces or other toppings. Keep realistic bite-sized scale.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-4b879185-66bd-4b17-9e3e-6e0cb0f6a206.png",
+      "sourceSha256": "219e745616d09bfd0322d1f99fa354e34bfa5f4bcdc31c22051bab5a1b9b7664",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/generated-menu/430227-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3952,
+          "sha256": "eebbdd8711dbbd75216f44ae2c7eaa81d6374c7df72b91a85643c24130137639"
+        },
+        "360": {
+          "path": "assets/generated-menu/430227-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 16040,
+          "sha256": "caef89952b16a2e17aba5e84854dc0dd0239447871d794de803fdbd2738daaf1"
+        },
+        "640": {
+          "path": "assets/generated-menu/430227-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 44914,
+          "sha256": "200fba7059de4a2e797278f2bf10df10ab0c40df85f1a405cdb78e2d13a14639"
+        },
+        "1200": {
+          "path": "assets/generated-menu/430227-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 127638,
+          "sha256": "2df3cec2dc88e7d71e68aa26e49b1e1863ff5bb4ef13d0e2b651c519a24403c5"
+        }
+      }
+    },
+    "431294": {
+      "name": "Çikolatalı Muffin",
+      "sourceIngredients": "Kakao,Çikolata,Şeker,Yağ",
+      "prompt": "Use case: product-mockup. One photorealistic AI serving illustration for a cafe digital menu. Warm off-white limestone tabletop, matte ivory ceramic plate, soft window light from upper left, quiet muted olive/beige blurred background. Crisp believable food texture, premium appetizing editorial photography, three-quarter close-up. Square frame, full serving inside central 65% with generous crop-safe margins. No text, branding, watermark, people or unrelated props. No collage. Website will clearly label it as AI serving inspiration, not a real restaurant photograph. Subject: ONE chocolate muffin with a rich dark cocoa dome, a naturally cracked moist chocolate-baked surface and small visible chocolate pieces, in a simple unbranded brown paper baking cup. Source ingredients include cocoa, chocolate, sugar, oil. No frosting, icing, berries, nuts, sprinkles, sauces, chocolate bars or extra food.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-0f7b223a-ad34-4c49-9d7b-7e8cc77feaf4.png",
+      "sourceSha256": "9f13b367bf22bab72eaba80436df4be1c1f83115875716b934735a36ee6df7ec",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/generated-menu/431294-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 5088,
+          "sha256": "74143fd9f31d7ab3a3b99068a60a2702121794bba4db51ba86b11a01672c775b"
+        },
+        "360": {
+          "path": "assets/generated-menu/431294-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 21422,
+          "sha256": "5bc87fb8fdbc56f98d317911ad875d4f298e4556f10396f688d61cc371f3c6bc"
+        },
+        "640": {
+          "path": "assets/generated-menu/431294-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 60062,
+          "sha256": "47696d074036aac4a6aa92be98ed49f38d71e6bff2017deccdfe0f88aad563c4"
+        },
+        "1200": {
+          "path": "assets/generated-menu/431294-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 177208,
+          "sha256": "eacb9aae9c48ab1a1a391ad99190212f20b33353b44216f85b417a39f617950d"
+        }
+      }
+    },
+    "430203": {
+      "name": "Ekler",
+      "sourceIngredients": "Tereyağı,Şeker,",
+      "prompt": "Use case: product-mockup. One photorealistic AI serving illustration for a cafe digital menu. Warm off-white limestone tabletop, matte ivory ceramic plate, soft window light from upper left, quiet muted olive/beige blurred background. Crisp believable food texture, premium appetizing editorial photography, three-quarter close-up. Square frame, full serving inside central 65% with generous crop-safe margins. No text, branding, watermark, people or unrelated props. No collage. Website will clearly label it as AI serving inspiration, not a real restaurant photograph. Subject: ONE classic elongated French éclair, golden choux pastry with a restrained smooth dark chocolate glaze across the top. Cream filling should be a subtle generic classic éclair serving suggestion, not dramatically piped or cut open. The source recipe list is incomplete (butter, sugar), so avoid toppings or specific filling-flavour claims. No pistachios, nuts, berries, gold leaf, sprinkles, extra pastries or decorations.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-8731ee6f-11a0-487c-9de2-91c9e240456f.png",
+      "sourceSha256": "73940824603d9a91a712262637c7e9a16163956f601cbd77ee5480d007c12dd2",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/generated-menu/430203-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4040,
+          "sha256": "3cc8d0235fb2f68454edc7d9ac60f87f62f7a20d27c9b5a44da0ecd9fa61eaec"
+        },
+        "360": {
+          "path": "assets/generated-menu/430203-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 13580,
+          "sha256": "82675591c4f3b7b6a2353e30530d6c7c60db6787b95061b7c3e62f356433b145"
+        },
+        "640": {
+          "path": "assets/generated-menu/430203-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 35464,
+          "sha256": "c00becfbf060cf36d6324efdfca10913073ba9ca34e05b9fde1cb91b30b063b5"
+        },
+        "1200": {
+          "path": "assets/generated-menu/430203-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 101990,
+          "sha256": "47cfcd36a37eda02ce51c7e9df06e164508cad340532305227acae8bcafe4293"
+        }
+      }
+    },
+    "431747": {
+      "name": "Muffin",
+      "sourceIngredients": "",
+      "prompt": "Use case: product-mockup. One photorealistic AI serving illustration for a cafe digital menu. Warm off-white limestone tabletop, matte ivory ceramic plate, soft window light from upper left, quiet muted olive/beige blurred background. Crisp believable food texture, premium appetizing editorial photography, three-quarter close-up. Square frame, full serving inside central 65% with generous crop-safe margins. No text, branding, watermark, people or unrelated props. No collage. Website will clearly label it as AI serving inspiration, not a real restaurant photograph. Subject: ONE plain golden vanilla-colored muffin in a simple unbranded beige paper baking cup, domed top with a delicate natural crack and tender baked texture. Source menu simply names Muffin with no specified ingredients, so keep it plain and unfilled with no visibly named flavour. No chocolate, fruit, berries, nuts, seeds, icing, glaze, sauces or extra food.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-b4175746-df14-4b44-9535-6f63ffac9403.png",
+      "sourceSha256": "9863fda1977113215066bea27dd584beadcdae960de2e9a122facee4f65d81cb",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/generated-menu/431747-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3984,
+          "sha256": "12f97030fa4aee4ae4e5b84ff694ba7057fa0d1a62b2a498de43a1b283a36f82"
+        },
+        "360": {
+          "path": "assets/generated-menu/431747-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 16182,
+          "sha256": "7b5ed0d592ae1f891046ea64fbc719300e3ded54fce4d731fc54c5bd19919a03"
+        },
+        "640": {
+          "path": "assets/generated-menu/431747-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 43286,
+          "sha256": "a4e053afd4a17b6d5835bac20e37788233738559a08abfffa0101ae539d1e122"
+        },
+        "1200": {
+          "path": "assets/generated-menu/431747-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 124780,
+          "sha256": "4414dec00fba7eb9d305a36569b34afdaee8c2760bd91b66f567a7f709ceaa29"
+        }
+      }
+    },
+    "431748": {
+      "name": "Glutensiz Poğaça",
+      "sourceIngredients": "",
+      "prompt": "Use case: product-mockup. One photorealistic AI serving illustration for a cafe digital menu. Warm off-white limestone tabletop, matte ivory ceramic plate, soft window light from upper left, quiet muted olive/beige blurred background. Crisp believable food texture, premium appetizing editorial photography, three-quarter close-up. Square frame, full serving inside central 65%, generous crop-safe margins. No text, branding, watermark, people or unrelated props. No collage. This will be clearly labelled AI serving inspiration, not an actual restaurant photograph. Product names come from the menu and do not certify dietary safety. Subject: one small plain Turkish poğaça-style baked bun, softly rounded with a golden surface and delicate natural cracks. The menu name is Gluten-free Poğaça, but its ingredient list and filling are unspecified. Therefore depict a simple generic unfilled bun only. No wheat stalks, flour props, cheese, meat, nuts, seeds, herbs, fruit, garnishes, gluten-free badges, stamps or dietary text. It must look like an appealing modest single pastry, not bread loaf or croissant.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-73cc39f2-c432-42b7-a67e-57bf6a38c163.png",
+      "sourceSha256": "e82c0791dedc8757434a408847703fd063cca216c7dc070a39e46447623e32b7",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/generated-menu/431748-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4024,
+          "sha256": "d3cce639fd5634f2478d75a87b7e4ea136c0fa753e9b84449607cb6c818b49f4"
+        },
+        "360": {
+          "path": "assets/generated-menu/431748-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 16134,
+          "sha256": "dc26d5ed13f34519219ef251f7269f257e8caac9c8305143954c27bc50c0996b"
+        },
+        "640": {
+          "path": "assets/generated-menu/431748-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 43628,
+          "sha256": "b20dc4d69ba36a1464616a8d47929c86e1d280331d91afa59ef5356f1483a20f"
+        },
+        "1200": {
+          "path": "assets/generated-menu/431748-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 124744,
+          "sha256": "5a27ac177dd03f841780dff5d22b86f61def320f238309bebe40f2c96bf52828"
+        }
+      }
+    },
+    "431749": {
+      "name": "Glutensiz Sebzeli Çörek",
+      "sourceIngredients": "",
+      "prompt": "Use case: product-mockup. One photorealistic AI serving illustration for a cafe digital menu. Warm off-white limestone tabletop, matte ivory ceramic plate, soft window light from upper left, quiet muted olive/beige blurred background. Crisp believable food texture, premium appetizing editorial photography, three-quarter close-up. Square frame, full serving inside central 65%, generous crop-safe margins. No text, branding, watermark, people or unrelated props. No collage. This will be clearly labelled AI serving inspiration, not an actual restaurant photograph. Product names come from the menu and do not certify dietary safety. Subject: one small oval vegetable breakfast bun, warm golden baked surface with subtle finely chopped green vegetable flecks in the dough, a tender rustic baked texture. Menu name is Gluten-free Vegetable Bun; exact vegetables and recipe are unspecified, so keep the greens non-specific and do not show any identifiable filling. No cheese, meat, nuts, seeds, wheat stalks, flour props, garnishes, toppings, gluten-free badges, stamps or dietary text. One bun only, with a natural low oval shape distinct from a domed muffin.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-40cd25b4-4e2d-4d3b-9d90-2c968d8b8d22.png",
+      "sourceSha256": "aeccf530452da1d43c305e6b123f009abd5d967658efd3343aa388103bb31c3f",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/generated-menu/431749-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 3820,
+          "sha256": "8938a35659b6a751871f3980fc73a297924caa4912584998ef25968e3895fe43"
+        },
+        "360": {
+          "path": "assets/generated-menu/431749-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 15316,
+          "sha256": "02683b8e5d02de9318e3a9c47a47dae479214626a8e26809c4f1b72105895e29"
+        },
+        "640": {
+          "path": "assets/generated-menu/431749-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 40398,
+          "sha256": "aa7344ffce5ab5eac91c9d16e12f41c1c4277bb90b810b593970cd287a97f2cf"
+        },
+        "1200": {
+          "path": "assets/generated-menu/431749-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 116426,
+          "sha256": "360ee8c1089953397c39bbb74d189cdb5d79341b2c15f9db0e88599cf50141bb"
+        }
+      }
+    }
+  }
+}

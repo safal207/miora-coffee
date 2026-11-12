@@ -18,3 +18,5 @@
 
 .product-open .menu-photo-pending{width:100%;height:100%}.list-view .menu-photo-pending{aspect-ratio:auto;min-height:135px;padding:8px}.list-view .menu-photo-pending>span{font-size:21px}
 .story-ring img[src*="originals/460119-"],.story-ring img[src*="originals/460120-"]{object-position:50% 90%}
+
+.generated-photo img{object-position:50% 50%}.generated-429448 img{object-fit:contain;background:var(--paper)}.generated-media-label{position:absolute;left:7px;bottom:7px;max-width:calc(100% - 14px);padding:4px 7px;border-radius:5px;background:var(--card);color:var(--ink);font-size:10px;line-height:1.4}.cart-photo-note{color:var(--teal)!important}

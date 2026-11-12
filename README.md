@@ -27,3 +27,7 @@ Retouched photos are served as responsive 160/640/1200 px WebP assets. Original 
 ## Instagram videos
 
 Three source-linked videos support sandwich, Breakfast 2.0 and dessert discovery without embedded players. Covers are explicitly labelled menu photos. See [source verification and UX decisions](docs/instagram-video-placement-2026-11-12.md).
+
+## Complete image coverage
+
+All 93 menu cards now have a packaged visual. Nine newly generated serving illustrations are explicitly labelled in RU/TR/EN; the original menu records and prices are unchanged. See [generation provenance and prompts](docs/generated-menu-illustrations-2026-11-12.md).
