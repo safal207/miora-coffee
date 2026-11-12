@@ -23,3 +23,7 @@ Photos and branding belong to their respective owners and are used from the supp
 ## Photography
 
 Retouched photos are served as responsive 160/640/1200 px WebP assets. Original source files remain available as fallbacks. See [photo refresh](docs/photo-refresh-2026-11-06.md) and its asset manifest for coverage and provenance. Run `python scripts/build-photos.py` after adding reviewed exports.
+
+## Instagram videos
+
+Three source-linked videos support sandwich, Breakfast 2.0 and dessert discovery without embedded players. Covers are explicitly labelled menu photos. See [source verification and UX decisions](docs/instagram-video-placement-2026-11-12.md).

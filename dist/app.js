@@ -1,7 +1,8 @@
+import {videoStory,dessertStoryVisible} from './video-stories.js';
 import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto} from './photos.js?v=20261106-photos2';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
-import {mountKiosk} from './kiosk.js?v=20261111-breakfast5';
+import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection} from './sandwich-preview.js';
@@ -95,6 +96,9 @@ const flavorChip=item=>{
 };
 function renderProducts() {
   stopFeedViews();
+  const videoSlot=$('dessert-video');
+  videoSlot.hidden=!dessertStoryVisible(category,search);
+  videoSlot.innerHTML=videoSlot.hidden?'':videoStory('dessert',lang);
   const list=filterProducts(products,{category,search,favorites:[...favorites],featured});
   const displayList=!search&&!['all','featured','favorites'].includes(category)?diversifyPhotoOrder(list):list;
   const label=category==='featured'?t('featured'):category==='all'?(search?t('searchResults'):t('all')):category==='favorites'?t('favorites'):categories.find(c=>c.id===category)?.name[lang]||t('all');
@@ -220,6 +224,7 @@ function renderDetail() {
   $('detail-content').innerHTML=`<div class="detail-top"><img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p)}" ${photoSet(p,'(max-width: 620px) 100vw, 540px')} width="640" height="640" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}"><button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
     <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2>${lang!=='tr'?`<p class="original-name" lang="tr">${esc(p.name.tr)}</p>`:''}<div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}${p.price!==null?`<span class="metric detail-price">${money(p.price)}</span>`:''}</div>
     ${p.price===null?`<section class="detail-section"><h3>${t('ask')}</h3><p>${t('priceMissing')}</p></section>`:''}
+    ${p.id==='430356'?videoStory('croissant',lang,{compact:true}):p.id==='431203'?videoStory('breakfast',lang,{compact:true}):''}
     <section class="detail-section"><h3>${t('ingredients')}</h3>${p.description?`<p lang="tr">${esc(p.description)}</p>${lang!=='tr'?`<p class="detail-disclaimer">${t('originalRecipe')}</p>`:''}`:`<p>${t('noIngredients')}</p>`}</section>
     <section class="detail-section"><h3>${t('allergens')}</h3>${p.allergens.length?`<div class="allergens">${p.allergens.map(a=>`<span>${t(a)}</span>`).join('')}</div>`:`<p>${t('noAllergens')}</p>`}<p class="detail-disclaimer">${t('allergenNote')}</p>${p.kcal?`<p class="detail-disclaimer">${p.calorieReview?t('reviewCalorie'):t('calorieNote')}</p>`:''}</section><div class="views">${icon('eye')}${views[p.id]||0} · ${t('localViews')}</div></div>
     <div class="detail-actions">${p.price!==null?`<button class="button primary" type="button" data-add="${p.id}">${icon('plus')}${t('addToOrder')} · ${money(p.price)}</button>`:`<button class="button secondary" type="button" data-close="detail-dialog">${t('backToMenu')}</button>`}<button class="icon-btn" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${t('favorites')}">${icon('heart')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${t('share')}">${icon('share')}</button></div>`;
@@ -344,6 +349,7 @@ document.addEventListener('click',async event=>{
   if(d.add){add(d.add);return;}
   if(d.favorite){toggleFavorite(d.favorite);return;}
   if(d.share){await shareItem(d.share);return;}
+  if(button.hasAttribute('data-video-desserts')){search='';$('search').value='';selectCategory('46818');$('result-title').setAttribute('tabindex','-1');$('result-title').focus({preventScroll:true});$('result-title').scrollIntoView({block:'start'});return;}
   if(d.category){selectCategory(d.category);return;}
   if(d.view){const boundary=$('toolbar').getBoundingClientRect().bottom;const anchor=[...document.querySelectorAll('[data-product]')].find(el=>{const r=el.getBoundingClientRect();return r.bottom>boundary&&r.top<innerHeight;})?.dataset.product;view=resolveView(d.view,null);save('view',view);renderProducts();updateUrl();if(anchor)requestAnimationFrame(()=>{const card=document.querySelector(`[data-product="${anchor}"]`);if(card)window.scrollTo({top:Math.max(0,card.getBoundingClientRect().top+scrollY-document.querySelector('.header').offsetHeight-$('toolbar').offsetHeight-16),behavior:'instant'});});return;}
   if(d.kEdit!==undefined){const lineIndex=Number(d.kEdit),item=configuredOrders[lineIndex];if(item){$('cart-dialog').close();kioskUI?.edit(item,lineIndex);}return;}

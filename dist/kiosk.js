@@ -1,3 +1,4 @@
+import {videoStory} from './video-stories.js';
 import {recipes,ui,localized} from './kiosk-data.js';
 import {initialSelection,choose,validSelection,orderPrice} from './kiosk-core.js';
 import {sandwichIdeas,previewForSelection,ideaSelection,localizedIdea,selectedIngredients} from './sandwich-preview.js';
@@ -99,7 +100,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
     const other=Object.entries(recipes).filter(([kind])=>kind!=='sandwich'&&kind!=='breakfast').map(([kind,r])=>'<button type="button" class="kiosk-entry" data-k-start="'+kind+'">'+
       '<span class="kiosk-entry-image">'+recipeImg(r)+'</span><span class="kiosk-entry-copy"><b>'+esc(title(r.name))+'</b><small>'+esc(title(r.short))+'</small><strong>'+esc(t('from'))+' '+esc(label(r.steps.length?orderPrice(kind,initialSelection(kind)):r.price))+'</strong></span>'+
       '<span class="kiosk-entry-arrow" aria-hidden="true">↗</span></button>').join('');
-    strip.innerHTML=hero+ideas+'<p class="kiosk-feature-disclosure">'+esc(v('photoNote'))+'</p>'+breakfastHero+breakfastIdeasHtml+
+    strip.innerHTML=hero+videoStory('croissant',lang())+ideas+'<p class="kiosk-feature-disclosure">'+esc(v('photoNote'))+'</p>'+breakfastHero+videoStory('breakfast',lang())+breakfastIdeasHtml+
       '<div class="kiosk-intro"><div><p class="eyebrow">'+esc(t('kicker'))+'</p><h3>'+esc(t('title'))+'</h3><p>'+esc(t('subtitle'))+'</p></div></div>'+
       '<div class="kiosk-entry-list">'+other+'</div>';
   }
@@ -189,7 +190,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
         '<span class="kiosk-check" aria-hidden="true">'+(withDrink?'✓':'+')+'</span></button>':'')+
       '<p class="kiosk-allergens">'+esc(t('allergens'))+'</p></div>':'';
     const stepPage=review?'':'<div class="kiosk-step-heading"><span class="kiosk-step-photo">'+photo+'</span><div><h2>'+esc(title(step.title))+'</h2><p>'+esc((lang()==='ru'?'Выбрано ':lang()==='en'?'Selected ':'Seçilen ')+selection[step.id].length+' / '+step.max+' · '+(step.min===0?t('optional'):t('selectOne')))+'</p></div></div>'+
-      livePreview+choices+
+      livePreview+(isBreakfast&&index===0?videoStory('breakfast',lang(),{compact:true}):'')+choices+
       (step.items.some(item=>visualSource(step.id,item.id)==='ai')?'<p class="kiosk-ai-note">'+esc(p('aiNote'))+'</p>':'')+
       (index===0&&r.estimated?'<p class="kiosk-note">'+esc(title(r.note))+'</p>':'');
     content.innerHTML='<div class="kiosk-dialog-head"><div><span class="kiosk-wordmark">miora <small>COFFEE · FOOD · PLAY</small></span><p>'+esc(stepLabel)+'</p></div>'+
