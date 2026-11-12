@@ -22,7 +22,7 @@ jobs:
         run: |
           python3 scripts/build-data.py
           python3 scripts/build-photos.py
-          git diff --exit-code -- dist/menu-data.js dist/photo-data.js
+          git diff --exit-code -- dist/menu-data.js dist/photo-data.js dist/original-photo-data.js
           node --check dist/app.js
           node --check dist/core.js
           node --check dist/photos.js
@@ -33,6 +33,8 @@ jobs:
           node --check dist/kiosk.js
           node --check dist/sandwich-preview.js
           node --check dist/video-stories.js
+          node --check dist/desire-journey.js
+          node --check dist/original-photo-data.js
       - name: Verify catalog, assets and order integrity
         run: npm test
       - name: Upload website

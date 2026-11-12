@@ -5,6 +5,7 @@ import {readFileSync,readdirSync} from 'node:fs';
 import {products} from '../dist/menu-data.js';
 import {photoSources,photoPlaceholders} from '../dist/photo-data.js';
 import {hasPhoto,photoUrl,photoSet} from '../dist/photos.js';
+import {originalPhotos} from '../dist/original-photo-data.js';
 const file=p=>new URL(`../${p}`,import.meta.url);
 const manifest=JSON.parse(readFileSync(file('docs/photo-refresh-2026-11-06.json')));
 const byId=new Map(products.map(p=>[p.id,p]));
@@ -39,5 +40,22 @@ test('shared source photos reuse the same retouch and small surfaces use thumbna
   assert.equal(photoUrl(latte,999),'assets/enhanced/428748-640.webp');
   assert.match(photoSet(latte,'100vw'),/428748-1200.webp 1200w/);
   const original=products.find(p=>hasPhoto(p)&&!photoSources[p.id]);
-  if(original)assert.equal(photoUrl(original),`assets/products/${original.id}.jpg`);
+  if(original)assert.equal(photoUrl(original),originalPhotos[original.id].assets['640'].src);
+});
+
+test('higher-resolution original menu photography is local, hashed and never upscaled',()=>{
+ const manifest=JSON.parse(readFileSync(file('docs/original-photo-refresh-2026-11-12.json')));
+ assert.equal(Object.keys(originalPhotos).length,30);
+ for(const [id,p] of Object.entries(manifest.photos)){
+  assert.ok(hasPhoto(byId.get(id)));assert.ok(!photoSources[id]);
+  assert.match(p.sourceUrl,/^https:\/\/ekn1jmkybpa8\.merlincdn\.net\/qrmenu-storage\//);
+  for(const [size,a] of Object.entries(p.assets)){
+   const bytes=readFileSync(file('dist/'+a.path));assert.equal(hash(bytes),a.sha256);
+   assert.ok(a.dimensions[0]<=p.sourceDimensions[0]);assert.ok(a.dimensions[1]<=p.sourceDimensions[1]);
+   assert.ok(a.dimensions[0]<=Number(size));assert.ok(bytes.length<350000);
+  }
+  assert.equal(photoUrl(byId.get(id),160),p.assets['160'].path);
+  const descriptors=[...photoSet(byId.get(id),'100vw').matchAll(/ (\d+)w/g)].map(m=>m[1]);
+  assert.equal(new Set(descriptors).size,descriptors.length,'no duplicate srcset sizes');
+ }
 });

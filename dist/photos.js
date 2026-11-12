@@ -1,12 +1,17 @@
 import {photoSources,photoPlaceholders} from './photo-data.js?v=20261106-photos2';
+import {originalPhotos} from './original-photo-data.js';
 const placeholders=new Set(photoPlaceholders),widths=new Set([160,640,1200]);
 export const hasPhoto=item=>Boolean(item?.image)&&!placeholders.has(item.id);
 export function photoUrl(item,width=640) {
   if(!hasPhoto(item))return item?.image?'assets/logo-source.jpg':'favicon.svg';
+  if(originalPhotos[item.id])return originalPhotos[item.id].assets[widths.has(width)?width:640].src;
   const source=photoSources[item.id];
   return source?`assets/enhanced/${source}-${widths.has(width)?width:640}.webp`:`assets/products/${item.id}.jpg`;
 }
 export function photoSet(item,sizes) {
+  const original=hasPhoto(item)&&originalPhotos[item.id];
+  if(original){const unique=new Map();for(const a of Object.values(original.assets))if(!unique.has(a.width))unique.set(a.width,a.src);return `srcset="${[...unique].map(([w,src])=>`${src} ${w}w`).join(', ')}" sizes="${sizes}"`;}
   const source=hasPhoto(item)&&photoSources[item.id];
   return source?`srcset="assets/enhanced/${source}-160.webp 160w, assets/enhanced/${source}-640.webp 640w, assets/enhanced/${source}-1200.webp 1200w" sizes="${sizes}"`:'';
 }
+export const photoKind=item=>!hasPhoto(item)?'missing':originalPhotos[item.id]?'original':photoSources[item.id]?'illustration':'original';

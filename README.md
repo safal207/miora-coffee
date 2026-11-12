@@ -8,7 +8,7 @@ The local order list supports quantity changes, a single optional companion item
 
 ## Photo feed
 
-The default for new visitors is a single-column photo feed with category circles, double-tap saving, an accessible heart button, sharing, ingredients and an add-to-order button in each post. Grid and compact list modes remain available; switching modes preserves the search, category, favourites and shared order list. Photos are the original menu assets. View counts are local to the device and only count a photo after it is at least 65% visible for one second, or its details are opened. No global engagement totals are invented.
+The default is a mobile-first, grouped photo menu. Category circles lead to real products; taste collections jump within the complete catalog without hiding the other choices. Compact photo cards expose the name, price and one add/build action. A photo opens composition and the heart saves a favorite. Search, grid/list modes, shared orders and saved items remain available. Source photos, serving illustrations and positions awaiting photography are distinguished. Thirty source-menu originals now have responsive local WebP variants; no new food photography was invented.
 
 [Mobile preview](docs/feed-mobile-preview.jpg) · [Feed QA](docs/feed-2026-11-06.md)
 
