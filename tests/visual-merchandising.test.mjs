@@ -1,9 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {products} from '../dist/menu-data.js';
+import {products,categories,featured} from '../dist/menu-data.js';
+import {hasPhoto,photoUrl} from '../dist/photos.js';
 import {photoSources,photoPlaceholders} from '../dist/photo-data.js';
-import {identityFor,isSharedPhotoVariant,diversifyPhotoOrder,visualSourceOf} from '../dist/visual-merchandising.js';
+import {identityFor,isSharedPhotoVariant,diversifyPhotoOrder,visualSourceOf,storyCoverIds} from '../dist/visual-merchandising.js';
+
+test('every story circle has a distinct real photo matching its category',()=>{
+ const categoryIds=['featured','all',...categories.map(c=>c.id)];
+ const urls=categoryIds.map(category=>{
+  const item=products.find(p=>p.id===storyCoverIds[category]);
+  assert.ok(item&&hasPhoto(item),category);
+  if(category==='featured')assert.ok(featured.includes(item.id));
+  else if(category!=='all')assert.equal(item.cat,category);
+  return photoUrl(item,160);
+ });
+ assert.equal(new Set(urls).size,categoryIds.length,'no reused source photos between circles');
+});
 
 test('only verified reused product photo sources have truthful multilingual flavor tags',()=>{
  const groups={};
