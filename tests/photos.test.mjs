@@ -73,7 +73,7 @@ test('higher-resolution original menu photography is local, hashed and never ups
    assert.ok(a.dimensions[0]<=p.sourceDimensions[0]);assert.ok(a.dimensions[1]<=p.sourceDimensions[1]);
    assert.ok(a.dimensions[0]<=Number(size));assert.ok(bytes.length<350000);
   }
-  assert.equal(photoUrl(byId.get(id),160),p.assets['160'].path);
+  assert.equal(photoUrl(byId.get(id),160,'original'),p.assets['160'].path);
   const descriptors=[...photoSet(byId.get(id),'100vw').matchAll(/ (\d+)w/g)].map(m=>m[1]);
   assert.equal(new Set(descriptors).size,descriptors.length,'no duplicate srcset sizes');
  }

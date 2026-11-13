@@ -1,0 +1,326 @@
+{
+  "generatedAt": "2026-11-13",
+  "tool": "built-in image_gen",
+  "kind": "AI serving illustration, not an actual restaurant photograph",
+  "visualReview": "accepted",
+  "photos": {
+    "460119": {
+      "referenceAsset": "assets/originals/460119-1200.webp",
+      "referenceSha256": "5bf8781ee96859de13458e57b0e45270286682ca5506fb469f568761c33dffaa",
+      "name": "Fresh Tropic",
+      "sourceIngredients": "Ananas,Çarkıfelek,Mango,Lime,Buz",
+      "prompt": "Edit the supplied product reference for an AI-labelled cafe menu serving image. Keep the actual food/drink identity, color, ingredients and recognizable vessel/plating from the reference. Make the sold product the only hero. Remove ALL flowers, plants, vases, bows, other foods/drinks, branding and distracting decor. Warm off-white stone table, quiet softly blurred beige cafe background, soft natural light, premium crisp food photography. Square image composed for a 4:3 card crop: subject fills about 70% of the frame, with the entire rim/base or plate inside generous safe margins. No new garnishes, no text, no collage. It is a disclosed AI restaging, not documentary restaurant photography. Primary subject: the SAME faceted glass of yellow Fresh Tropic from the bottom of the reference. Preserve its yellow drink, crushed ice and visible citrus slice. Enlarge and center the glass, remove the bouquet and vase completely. Camera at a natural 3/4 angle slightly above glass height; entire glass clearly visible.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-5784a1c9-a707-4e3e-ad83-db6b7e9824fd.png",
+      "sourceSha256": "aec71020d064f35d87a49815c9abb8ca47515da605cd7bd8014940bfa3f3a23b",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/focused-menu/460119-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 2500,
+          "sha256": "54de48b480875d6e433ba78ae0e8236e441b25a0fb5b04b44ca312967705081a"
+        },
+        "360": {
+          "path": "assets/focused-menu/460119-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 10520,
+          "sha256": "904cf0d37bafec9e084fb4d423ea5b77b16e3726b4bf06c59833ac85300ac823"
+        },
+        "640": {
+          "path": "assets/focused-menu/460119-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 29300,
+          "sha256": "6bb5bfeae130c3c0e90a55ee79c647c281d137ee33c228a6254218a347001157"
+        },
+        "1200": {
+          "path": "assets/focused-menu/460119-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 82770,
+          "sha256": "85161dbe27b0cbd749b46bd19e7443a361b5aa8b6d3015f498eb5ba7097dbd83"
+        }
+      }
+    },
+    "460120": {
+      "referenceAsset": "assets/originals/460120-1200.webp",
+      "referenceSha256": "5ee47cb4f1f72af30794010699b63bc30b3bbe6b3f186c3e1ee97c2e6c894baf",
+      "name": "Berry Mojito",
+      "sourceIngredients": "Böğürtlen,Lime,Nane,Buz",
+      "prompt": "Edit the supplied product reference for an AI-labelled cafe menu serving image. Keep the actual food/drink identity, color, ingredients and recognizable vessel/plating from the reference. Make the sold product the only hero. Remove ALL flowers, plants, vases, bows, other foods/drinks, branding and distracting decor. Warm off-white stone table, quiet softly blurred beige cafe background, soft natural light, premium crisp food photography. Square image composed for a 4:3 card crop: subject fills about 70% of the frame, with the entire rim/base or plate inside generous safe margins. No new garnishes, no text, no collage. It is a disclosed AI restaging, not documentary restaurant photography. Primary subject: the SAME faceted Berry Mojito glass from the left of the reference, with deep berry-purple syrup at the bottom, pale lime liquid above and crushed ice. Preserve its actual drink colors and glass. Remove the flower, vase and pink bow entirely. Center a generously framed full glass, 3/4 slightly elevated angle, no additional berries or mint props.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-8ea3524f-5bef-4bee-a073-1e4da2008457.png",
+      "sourceSha256": "5b9e25265295bd0f90331d43da61dbe2da62fca6e29551168715d83795a93f8b",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/focused-menu/460120-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 2990,
+          "sha256": "cd145148aeb42d3fe742ded1ccdaf679220d5403d93c0763e67ef11135a621c0"
+        },
+        "360": {
+          "path": "assets/focused-menu/460120-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 12760,
+          "sha256": "8fec8dd7c37e818a79958dda6c653ce5cee72af77af386a4e4f1379b3450c1fe"
+        },
+        "640": {
+          "path": "assets/focused-menu/460120-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 36488,
+          "sha256": "ab20f186c2949077f0c7701fcaf09bd8444e40a51e25914b31d27216be1af106"
+        },
+        "1200": {
+          "path": "assets/focused-menu/460120-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 108140,
+          "sha256": "b7ab06582d44189f0c7367b4ee90c86bf6ef9498403d3be226b9008bdb39f104"
+        }
+      }
+    },
+    "429921": {
+      "referenceAsset": "assets/enhanced/429921-1200.webp",
+      "referenceSha256": "8da336638f5bfd4c51191188b817d254425eac9e1aff2f6c62fa42737aa2ea94",
+      "name": "Hindistan Cevizli Cheescake",
+      "sourceIngredients": "Bisküvi,Süt,Fındık,Krema,Labne,Hindistan Cevizi,Beyaz Çikolata",
+      "prompt": "Edit the supplied product reference for an AI-labelled cafe menu serving image. Keep the actual food/drink identity, color, ingredients and recognizable vessel/plating from the reference. Make the sold product the only hero. Remove ALL flowers, plants, vases, bows, other foods/drinks, branding and distracting decor. Warm off-white stone table, quiet softly blurred beige cafe background, soft natural light, premium crisp food photography. Square image composed for a 4:3 card crop: subject fills about 70% of the frame, with the entire rim/base or plate inside generous safe margins. No new garnishes, no text, no collage. It is a disclosed AI restaging, not documentary restaurant photography. Primary subject: the SAME entire round white coconut cheesecake from the reference, with its coconut flakes, existing coconut ball decorations and original cut lines. Preserve the cake; do not turn it into a slice or change portion. Center the full cake and plate in a balanced slightly elevated 3/4 view. Remove the large flower vase and background coffee cup; no replacement decorations.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-11e21cea-ba0a-4adf-b489-21c55c613620.png",
+      "sourceSha256": "3620a7e49ca40cc1b1611036f5b445ec5d4480c4d7cff74e4988a6b058b40cba",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/focused-menu/429921-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4194,
+          "sha256": "cbe96a78ca1dd55e87a37188729dc86b3a6b9ec981153548f20462c6b6414f4b"
+        },
+        "360": {
+          "path": "assets/focused-menu/429921-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 19078,
+          "sha256": "1f891e51e22b70710801cfdda1ae86db6e871789e7eccd3c1379f6fda4ab92bf"
+        },
+        "640": {
+          "path": "assets/focused-menu/429921-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 51750,
+          "sha256": "5b8082aec2192c492c6c27f05559df35fb2fc20f79ee574675edcacc033b8603"
+        },
+        "1200": {
+          "path": "assets/focused-menu/429921-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 138130,
+          "sha256": "8c3917f5e1da979ff5da327856678b2e04fc2c4cad533e832a0ea231a0d61a52"
+        }
+      }
+    },
+    "429808": {
+      "referenceAsset": "assets/originals/429808-1200.webp",
+      "referenceSha256": "bc0d864051dd0a4d272954afba191d599dd71d727f84f85a314f36f229c57c79",
+      "name": "Frambuazlı Cheesecake",
+      "sourceIngredients": "Bisküvi,Tereyağı,Labne,Krema,Çikolata,Meyve,Şeker,Frambuaz",
+      "prompt": "Edit the supplied food reference into a product-first AI-labelled cafe serving image. Preserve the referenced dish identity, actual visible food, colors and topping style. Remove flowers, plants, vases, other unrelated products, branding and busy cafe furniture from the scene. Warm off-white stone tabletop, quiet softly blurred neutral beige background, soft natural side light, crisp appetizing textures. Balanced slightly elevated 3/4 angle. Square composition for a 4:3 website crop, with the full plate and main food in the central 70%, safe margins. No text, watermark, extra garnishes, collage or new ingredients. It will be explicitly labelled AI restaging rather than an actual restaurant photograph. Subject: the SAME entire round raspberry cheesecake, red raspberry glaze, real visible raspberry decorations, pale cheesecake sides and crumb base from the reference. Preserve whole-cake form and existing cut lines, not an invented individual slice. Make the cake dominant and centered; remove the towering plant and tall empty background entirely.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-72892217-352b-48d7-a7cf-72c68da5c4e7.png",
+      "sourceSha256": "8c75ac2011918d5052744d96f9cd8495c1112975052b77df80e46292d5863cd8",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/focused-menu/429808-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 5014,
+          "sha256": "40ad250516457fed66a01032446912a3d778d32a92be1464f2b93213a8e8cf8e"
+        },
+        "360": {
+          "path": "assets/focused-menu/429808-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 22034,
+          "sha256": "2e7a2e3b9c4121737d3915ddc679e4ea6e7bd5649469f158465d7e9bf774eff5"
+        },
+        "640": {
+          "path": "assets/focused-menu/429808-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 62650,
+          "sha256": "d4dec85c37ea6a1015b97a88f59fcdfa6d707f6305bda1a3a63e2b736a52c6c4"
+        },
+        "1200": {
+          "path": "assets/focused-menu/429808-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 174254,
+          "sha256": "6fce6420722588f0cd267bb3d70a3857369be43b31e2e4cb48003ce95fed2b7a"
+        }
+      }
+    },
+    "429822": {
+      "referenceAsset": "assets/originals/429822-1200.webp",
+      "referenceSha256": "cacf3c7ddd910a460e4ccf5f118303e34da529ddf489e2a5d6ec1f9a7c55bbc2",
+      "name": "Oreolu Cheescake",
+      "sourceIngredients": "Oreo Bisküvi,Tereyağı,Labne,Krema,Çikolata,Şeker,",
+      "prompt": "Edit the supplied food reference into a product-first AI-labelled cafe serving image. Preserve the referenced dish identity, actual visible food, colors and topping style. Remove flowers, plants, vases, other unrelated products, branding and busy cafe furniture from the scene. Warm off-white stone tabletop, quiet softly blurred neutral beige background, soft natural side light, crisp appetizing textures. Balanced slightly elevated 3/4 angle. Square composition for a 4:3 website crop, with the full plate and main food in the central 70%, safe margins. No text, watermark, extra garnishes, collage or new ingredients. It will be explicitly labelled AI restaging rather than an actual restaurant photograph. Subject: the SAME entire round Oreo cheesecake in the reference, with its chocolate top, existing dark sandwich-cookie ring and pale cream piping around the rim. Preserve the cake and its topping structure, no extra cookie brands/logos beyond the natural referenced cookie embossing. Keep the complete cake and plate in frame; remove the tall empty cafe background and center food at a comparable visual scale to other cake cards.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-fe684c17-f2b4-4f82-a31b-9a53d5210eaa.png",
+      "sourceSha256": "91ac0a91467ddb508adeb20918ea8789ef429eead5801afc9ee6e355fd38d22f",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/focused-menu/429822-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 4764,
+          "sha256": "24f65ded52b208766c25f13e2e8c8a3eb27ff07a3d73866e093fee0effb6bb6e"
+        },
+        "360": {
+          "path": "assets/focused-menu/429822-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 18502,
+          "sha256": "6b71aff0e888b649a169b532302ac41fa96aa233b7b094b742a0a3a63e1e7875"
+        },
+        "640": {
+          "path": "assets/focused-menu/429822-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 49986,
+          "sha256": "3de24f567014ffffdcd51da5d3918ebbd95a95e9c4dba4c3e5830aff1235521a"
+        },
+        "1200": {
+          "path": "assets/focused-menu/429822-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 140030,
+          "sha256": "310425b5b1e8ce4dc1bdbb937e34ceb7ecd959e77574df1d8c2457c3f1e7dc66"
+        }
+      }
+    },
+    "429833": {
+      "referenceAsset": "assets/originals/429833-1200.webp",
+      "referenceSha256": "091f9a7463cf4e60a8bd3f66910d327d3cd584cc69e1f319a30c8e4778cf27fe",
+      "name": "Meyveli Tart",
+      "sourceIngredients": "",
+      "prompt": "Edit the supplied food reference into a product-first AI-labelled cafe serving image. Preserve the referenced dish identity, actual visible food, colors and topping style. Remove flowers, plants, vases, other unrelated products, branding and busy cafe furniture from the scene. Warm off-white stone tabletop, quiet softly blurred neutral beige background, soft natural side light, crisp appetizing textures. Balanced slightly elevated 3/4 angle. Square composition for a 4:3 website crop, with the full plate and main food in the central 70%, safe margins. No text, watermark, extra garnishes, collage or new ingredients. It will be explicitly labelled AI restaging rather than an actual restaurant photograph. Subject: isolate ONE of the round strawberry-and-cream tarts visible in the lower-left/front of the reference. Preserve its golden tart shell, white cream rosette and upright strawberry slices, with only the small existing green leaf visible on the referenced tart. Place that single tart on a small plain ivory plate, center it at an appetizing 3/4 angle. Remove all other tarts, elongated berry pastries, trays and branded paper. Do not invent another pastry or add ingredients.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-12e9bcb0-ce5a-4715-9fb0-fae27c4ece25.png",
+      "sourceSha256": "34e825b712cd5fdf75c210062e434d865920baf9fc6ff5503e30288dc0ec472d",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/focused-menu/429833-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3480,
+          "sha256": "350d28a9cf218cc08c3c60a25f4d87e778d51f694f7c375b8e703dbac2054f1e"
+        },
+        "360": {
+          "path": "assets/focused-menu/429833-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 11296,
+          "sha256": "d87f1a04006faa989a58e10650f7e9420e291d78d90a227cb467a01a075087de"
+        },
+        "640": {
+          "path": "assets/focused-menu/429833-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 26802,
+          "sha256": "c2aba068c275b607e8c6002b3fbac88e77427feac180474d65b91e39f16d5d8c"
+        },
+        "1200": {
+          "path": "assets/focused-menu/429833-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 71758,
+          "sha256": "ae26059809c5d3930e005b1f7d0cc1dd017c8d0c6f170080342126c125d7e166"
+        }
+      }
+    }
+  }
+}

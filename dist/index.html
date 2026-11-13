@@ -18,9 +18,10 @@
   <link rel="stylesheet" href="kiosk.css?v=20261111-visual6">
   <link rel="stylesheet" href="video-stories.css?v=20261112-videos1">
   <link rel="stylesheet" href="desire-journey.css?v=20261112-generated1">
+  <link rel="stylesheet" href="menu-motion.css?v=20261113-focus1">
   <script src="theme.js"></script>
   <script src="assets/qr.js" defer></script>
-  <script type="module" src="app.js?v=20261112-generated1"></script>
+  <script type="module" src="app.js?v=20261113-focus1"></script>
 </head>
 <body>
   <a class="skip" href="#menu">Menüye geç / Skip to menu</a>
@@ -62,6 +63,7 @@
       </div>
       <p id="category-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="result-heading"><h3 id="result-title">Miora seçkisi</h3><span id="result-count" role="status"></span></div>
+      <div id="menu-spotlight" hidden></div>
       <div id="products" class="product-grid"></div>
       <div id="dessert-video" hidden></div>
       <div class="empty-state" id="empty-state" hidden><span aria-hidden="true">⌕</span><h3 data-i18n="noResults">Burada henüz bir şey yok.</h3><p data-i18n="tryAgain">Başka bir lezzet ara veya tüm menüyü aç.</p><button type="button" class="button secondary" data-action="reset" data-i18n="seeAll">Tüm menüyü gör</button></div>
