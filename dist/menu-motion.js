@@ -59,7 +59,7 @@ export function mountSpotlight(root,items,{lang,name,money}){
   section.dataset.paused=String(paused);section.dataset.index=String(index);schedule();
  };
  const stop=()=>{paused=true;update();};
- function change(delta,manual=true){if(manual)paused=true;const next=(index+delta+selected.length)%selected.length;const image=slides[next].querySelector('img');if(image?.complete&&image.naturalWidth>0)index=next;update();}
+ function change(delta,manual=true){if(manual)paused=true;const next=(index+delta+selected.length)%selected.length;const image=slides[next].querySelector('img');if(manual||(image?.complete&&image.naturalWidth>0))index=next;update();}
  listen(rotation,'click',()=>{paused=!paused;update();});
  listen(root.querySelector('[data-prev]'),'click',()=>change(-1));listen(root.querySelector('[data-next]'),'click',()=>change(1));
  listen(section,'focusin',stop);listen(section,'pointerdown',e=>{if(!e.target.closest('[data-rotation]'))stop();});
