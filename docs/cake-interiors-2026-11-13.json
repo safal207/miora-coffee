@@ -1,0 +1,485 @@
+{
+  "generatedAt": "2026-11-13",
+  "tool": "built-in image_gen",
+  "kind": "AI cutaway illustration, not a photographed serving; layer arrangement and portion are illustrative",
+  "visualReview": "accepted",
+  "photos": {
+    "430226": {
+      "referenceAsset": "assets/enhanced/430226-1200.webp",
+      "referenceSha256": "3444b82fb8db42e9de251caa5618ae882093d2e395b2cfaf159d085c7fd178ac",
+      "name": "San Sebastian",
+      "sourceIngredients": "Peynir,Şeker,Çikolata,Krema",
+      "prompt": "Create an ADDITIONAL AI-labelled menu image showing the dessert's interior, using the supplied image as the product identity reference. This is an illustrative serving suggestion, never a claim of a real photographed Miora portion. Photoreal premium editorial food image, landscape 4:3. ONE portion on a simple small off-white plate, clean warm beige cafe background, soft window light. Three-quarter side angle at about 20 degrees above the table so the clean cut face and texture dominate. Product occupies the UPPER TWO THIRDS, fully visible within the frame; reserve the BOTTOM QUARTER as plain softly lit table for an accessible localized ingredient overlay added by the website later. No text, labels, arrows, branding, flowers, cups, cutlery, floating/exploded layers, extra props or ingredient piles. Preserve product colors/identity; no new recipe layers beyond the visible reference and listed ingredients. San Sebastian cheesecake: retain the reference's single pale golden creamy wedge with browned outer edge and glossy chocolate sauce on its upper surface. Make the exposed creamy cut face the focus. It is a single homogeneous cheesecake body; NO invented biscuit base or extra stacked layers. Menu lists cheese, sugar, chocolate, cream.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-9716d76c-e7cf-4b8a-acce-ce5f6ec2fb70.png",
+      "sourceSha256": "54dc045af10f44eaf3f9bef7340242b63ae6b2386d2c3a80ad0866dfb2a874f2",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/cake-interiors/430226-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3082,
+          "sha256": "89d0397cf49c7cf81ee181aa754ea10eb564dbe2ee8b82063aebeba7e4246ec0"
+        },
+        "360": {
+          "path": "assets/cake-interiors/430226-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 9964,
+          "sha256": "9d4a7ef0cbb8ed4ffa9e94d35eee06488f6b11b6cd3f7b99a28ca38661fa3f85"
+        },
+        "640": {
+          "path": "assets/cake-interiors/430226-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 24530,
+          "sha256": "cd919361e56b6ff29d92893dceeb254131f0e051d06731e888bd1f836b168bbb"
+        },
+        "1200": {
+          "path": "assets/cake-interiors/430226-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 66920,
+          "sha256": "1eba5afd2dab0c92c16de2085155d93d12a54afac34395f4efff0782b83023ea"
+        }
+      }
+    },
+    "430222": {
+      "referenceAsset": "assets/enhanced/430222-1200.webp",
+      "referenceSha256": "8c6837bb4b861d84ab3d023e387eb99d02b6c973cedd0a6a50b4c9ecb2183a3c",
+      "name": "Antep Fıstıklı San Sebastian",
+      "sourceIngredients": "Peynir,Şeker,Çikolata,Krema,Antep Fıstığı",
+      "prompt": "Create an ADDITIONAL AI-labelled menu image showing the dessert's interior, using the supplied image as the product identity reference. This is an illustrative serving suggestion, never a claim of a real photographed Miora portion. Photoreal premium editorial food image, landscape 4:3. ONE portion on a simple small off-white plate, clean warm beige cafe background, soft window light. Three-quarter side angle at about 20 degrees above the table so the clean cut face and texture dominate. Product occupies the UPPER TWO THIRDS, fully visible within the frame; reserve the BOTTOM QUARTER as plain softly lit table for an accessible localized ingredient overlay added by the website later. No text, labels, arrows, branding, flowers, cups, cutlery, floating/exploded layers, extra props or ingredient piles. Preserve product colors/identity; no new recipe layers beyond the visible reference and listed ingredients. Pistachio San Sebastian: same pale creamy wedge with natural browned outer skin and pistachio-colored sauce from reference. Show a large, clean creamy cut face with subtle pistachio flecks, not a green sponge. NO biscuit base or invented extra layers. Menu lists cheese, sugar, chocolate, cream, pistachio; the visible sauce should remain the reference's green pistachio serving.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-63aa1a61-1d3a-472b-aba5-3060aa7e280e.png",
+      "sourceSha256": "bd172c855bb564d71a3a0b81b342345714f8c919f01fc2309b0924bb375e1655",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/cake-interiors/430222-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3232,
+          "sha256": "3c929a8f0d3358299b8259cadbb095cd5fa5e5a7aac27e5979044d2cfb9df2c1"
+        },
+        "360": {
+          "path": "assets/cake-interiors/430222-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 12774,
+          "sha256": "b8b5b102d741cab79f2f5aa24db1b2e785af52b1c29afaa4652569c97b129638"
+        },
+        "640": {
+          "path": "assets/cake-interiors/430222-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 33806,
+          "sha256": "fef454e2e6427af7a31a7d7754eea0fb636de68c50c1c06c2feff7765c8d4b78"
+        },
+        "1200": {
+          "path": "assets/cake-interiors/430222-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 92282,
+          "sha256": "10607f5abe1b835888bfc6102dc600c41d6b81df55192202a5e0abe3713d6c2c"
+        }
+      }
+    },
+    "429826": {
+      "referenceAsset": "assets/enhanced/429826-1200.webp",
+      "referenceSha256": "80f7eac323a9a6418afc75b945fc710dd351bb237d7cdabe64a73c68ffdbdee2",
+      "name": "Fransız Beyaz Çikolatalı Cheescake",
+      "sourceIngredients": "Bisküvi,Tereyağı,Labne,Krema,Beyaz Çikolata,Orman Meyveleri",
+      "prompt": "Create an ADDITIONAL AI-labelled menu image showing the dessert's interior, using the supplied image as the product identity reference. This is an illustrative serving suggestion, never a claim of a real photographed Miora portion. Photoreal premium editorial food image, landscape 4:3. ONE portion on a simple small off-white plate, clean warm beige cafe background, soft window light. Three-quarter side angle at about 20 degrees above the table so the clean cut face and texture dominate. Product occupies the UPPER TWO THIRDS, fully visible within the frame; reserve the BOTTOM QUARTER as plain softly lit table for an accessible localized ingredient overlay added by the website later. No text, labels, arrows, branding, flowers, cups, cutlery, floating/exploded layers, extra props or ingredient piles. Preserve product colors/identity; no new recipe layers beyond the visible reference and listed ingredients. French white chocolate cheesecake with forest berries: isolate one wedge from the reference round cake. Preserve visible thin golden crumb base, pale cheesecake body, narrow dark berry ribbon and pale white-chocolate topping with a few of the same dark berries. Menu lists biscuit, butter, labneh, cream, white chocolate, forest berries. Show the reference's cut-face structure without adding other fillings.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-bc45e111-c8ec-4abc-9671-f01abd7ceaba.png",
+      "sourceSha256": "ec1abce3fbec7d98e6211b3cdcd4997b49ef51cefa97a76e06928d54e2a3adca",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/cake-interiors/429826-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3216,
+          "sha256": "4356f71e1321d45f1e25081d9b3a2da29e3b1eae21cd28081092feb27fb5b7a4"
+        },
+        "360": {
+          "path": "assets/cake-interiors/429826-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 11698,
+          "sha256": "a4340e161b8a259bb8af8166bed14b2063a145a170b2692abb3b869d4b20217d"
+        },
+        "640": {
+          "path": "assets/cake-interiors/429826-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 29910,
+          "sha256": "5c58e0f4309d43036141869bb3b110458176f899405bdfc7d9463fd9db83ea98"
+        },
+        "1200": {
+          "path": "assets/cake-interiors/429826-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 80644,
+          "sha256": "81014a51cbb7606eb103e631b51fdd03ec8ac4148be5c26c14508ca9bd2c470c"
+        }
+      }
+    },
+    "429828": {
+      "referenceAsset": "assets/enhanced/429828-1200.webp",
+      "referenceSha256": "5ad17f8883f751f2857538a791d4e70f307fe716fe05d908a3a119fee6f57f7a",
+      "name": "Çikolatalı Cheescake",
+      "sourceIngredients": "",
+      "prompt": "Create an ADDITIONAL AI-labelled menu image showing the dessert's interior, using the supplied image as the product identity reference. This is an illustrative serving suggestion, never a claim of a real photographed Miora portion. Photoreal premium editorial food image, landscape 4:3. ONE portion on a simple small off-white plate, clean warm beige cafe background, soft window light. Three-quarter side angle at about 20 degrees above the table so the clean cut face and texture dominate. Product occupies the UPPER TWO THIRDS, fully visible within the frame; reserve the BOTTOM QUARTER as plain softly lit table for an accessible localized ingredient overlay added by the website later. No text, labels, arrows, branding, flowers, cups, cutlery, floating/exploded layers, extra props or ingredient piles. Preserve product colors/identity; no new recipe layers beyond the visible reference and listed ingredients. Chocolate cheesecake: isolate one wedge from the reference cake. Preserve ONLY its visible dark crumb base, light-brown chocolate body, glossy chocolate top and a modest amount of its same berry decoration. This menu item has NO ingredient list, so do not invent additional ingredients, fillings or an exact recipe. This is expressly an AI visual hypothesis based on the reference, not a factual interior reconstruction.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-539cdceb-eb83-4adf-8805-b518df4841db.png",
+      "sourceSha256": "ed0f0a4c468f0e5bb088ae176b166d432db02ee2d22af869628d1dadcf441530",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/cake-interiors/429828-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3272,
+          "sha256": "ce08778f71f1cfea94185d8f37cfa0960cdd35de978665e7dd1155f783d95d99"
+        },
+        "360": {
+          "path": "assets/cake-interiors/429828-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 11844,
+          "sha256": "5b1d0519bae647401bebbb8aeb7ded80db7a667517220c9c999643f38bf3948f"
+        },
+        "640": {
+          "path": "assets/cake-interiors/429828-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 31756,
+          "sha256": "0ef6d3bb29b60d332645a34103d4fb59d5e38c1732edab0bac3dd65b723e187e"
+        },
+        "1200": {
+          "path": "assets/cake-interiors/429828-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 89432,
+          "sha256": "7f8f77160e9769f67c2bfa121571d18cce11bbacb477dac5aab76410f9e2d8df"
+        }
+      }
+    },
+    "429921": {
+      "referenceAsset": "assets/enhanced/429921-1200.webp",
+      "referenceSha256": "8da336638f5bfd4c51191188b817d254425eac9e1aff2f6c62fa42737aa2ea94",
+      "name": "Hindistan Cevizli Cheescake",
+      "sourceIngredients": "Bisküvi,Süt,Fındık,Krema,Labne,Hindistan Cevizi,Beyaz Çikolata",
+      "prompt": "Create an ADDITIONAL AI-labelled menu image showing the dessert's interior, using the supplied image as the product identity reference. This is an illustrative serving suggestion, never a claim of a real photographed Miora portion. Photoreal premium editorial food image, landscape 4:3. ONE portion on a simple small off-white plate, clean warm beige cafe background, soft window light. Three-quarter side angle at about 20 degrees above the table so the clean cut face and texture dominate. Product occupies the UPPER TWO THIRDS, fully visible within the frame; reserve the BOTTOM QUARTER as plain softly lit table for an accessible localized ingredient overlay added by the website later. No text, labels, arrows, branding, flowers, cups, cutlery, floating/exploded layers, extra props or ingredient piles. Preserve product colors/identity; no new recipe layers beyond the visible reference and listed ingredients. Coconut cheesecake: one wedge with broad clean cross-section, keeping the reference's golden crumb bottom, pale creamy cheese body and white coconut-flake coating. Keep one small coconut ball already visible in reference, do not add tropical fruit. Menu: biscuit, milk, hazelnut, cream, labneh, coconut, white chocolate. Do not invent an extra nut layer; nuts need not be visible.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-8924dfac-d395-4bfa-bd5d-08b36b5551f7.png",
+      "sourceSha256": "3edfaddf112468ed3fea6651907d225fc9b8b5a374f154f2b8409f7925b00a7e",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/cake-interiors/429921-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3150,
+          "sha256": "b066619489b3619cc884d74b46061d3506bee2e91d78df95af3e736b8c76e331"
+        },
+        "360": {
+          "path": "assets/cake-interiors/429921-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 12264,
+          "sha256": "cbe2d7f3e7c87a32ec14efa11181142b92a7ee07f9568c7d723e5f20f54ae397"
+        },
+        "640": {
+          "path": "assets/cake-interiors/429921-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 31496,
+          "sha256": "c3f177593db089d553cef1fd1af608bf92721ba14e8c4351767eb47520154381"
+        },
+        "1200": {
+          "path": "assets/cake-interiors/429921-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 83976,
+          "sha256": "eaa0301c24439772bdb8055f9526054088d16aa3fe194d3ed12413c803391a92"
+        }
+      }
+    },
+    "429808": {
+      "referenceAsset": "assets/originals/429808-1200.webp",
+      "referenceSha256": "bc0d864051dd0a4d272954afba191d599dd71d727f84f85a314f36f229c57c79",
+      "name": "Frambuazlı Cheesecake",
+      "sourceIngredients": "Bisküvi,Tereyağı,Labne,Krema,Çikolata,Meyve,Şeker,Frambuaz",
+      "prompt": "Create an ADDITIONAL AI-labelled menu image showing the dessert's interior, using the supplied image as the product identity reference. This is an illustrative serving suggestion, never a claim of a real photographed Miora portion. Photoreal premium editorial food image, landscape 4:3. ONE portion on a simple small off-white plate, clean warm beige cafe background, soft window light. Three-quarter side angle at about 20 degrees above the table so the clean cut face and texture dominate. Product occupies the UPPER TWO THIRDS, fully visible within the frame; reserve the BOTTOM QUARTER as plain softly lit table for an accessible localized ingredient overlay added by the website later. No text, labels, arrows, branding, flowers, cups, cutlery, floating/exploded layers, extra props or ingredient piles. Preserve product colors/identity; no new recipe layers beyond the visible reference and listed ingredients. Raspberry cheesecake: isolate one elegant wedge matching the same golden biscuit base, thick white cheesecake body and thin glossy raspberry-red topping, with one raspberry from the reference. Make the cut face crisp and naturally creamy. Menu: biscuit, butter, labneh, cream, chocolate, fruit, sugar, raspberry. Do not invent an additional chocolate layer: its location is not established.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-34f1638f-982c-40c0-915d-cbcaa0a56e5f.png",
+      "sourceSha256": "35c39094f517d9f5d37d16969fe66455eabcb60e99830367abc5ae1aad624b11",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/cake-interiors/429808-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3378,
+          "sha256": "6bf07bf78b2fa221e74c2b4a46b179c935cbc7414b85b622999cf06f4fcf45a8"
+        },
+        "360": {
+          "path": "assets/cake-interiors/429808-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 12636,
+          "sha256": "82668fa278cf0f8228bcf5368fad21fb0d3d2e687fd09ed2540a9a5bda435b2c"
+        },
+        "640": {
+          "path": "assets/cake-interiors/429808-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 31842,
+          "sha256": "bd6d03c3b4ca1cd5a3061f65956eac94439e44693e681a3e19364ca34a0af7c3"
+        },
+        "1200": {
+          "path": "assets/cake-interiors/429808-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 82216,
+          "sha256": "d5447cf350c331c2c2f80d8b539f340ddc347e3b3e0a9448b4af2c17bf19f182"
+        }
+      }
+    },
+    "429822": {
+      "referenceAsset": "assets/originals/429822-1200.webp",
+      "referenceSha256": "cacf3c7ddd910a460e4ccf5f118303e34da529ddf489e2a5d6ec1f9a7c55bbc2",
+      "name": "Oreolu Cheescake",
+      "sourceIngredients": "Oreo Bisküvi,Tereyağı,Labne,Krema,Çikolata,Şeker,",
+      "prompt": "Create an ADDITIONAL AI-labelled menu image showing the dessert's interior, using the supplied image as the product identity reference. This is an illustrative serving suggestion, never a claim of a real photographed Miora portion. Photoreal premium editorial food image, landscape 4:3. ONE portion on a simple small off-white plate, clean warm beige cafe background, soft window light. Three-quarter side angle at about 20 degrees above the table so the clean cut face and texture dominate. Product occupies the UPPER TWO THIRDS, fully visible within the frame; reserve the BOTTOM QUARTER as plain softly lit table for an accessible localized ingredient overlay added by the website later. No text, labels, arrows, branding, flowers, cups, cutlery, floating/exploded layers, extra props or ingredient piles. Preserve product colors/identity; no new recipe layers beyond the visible reference and listed ingredients. Oreo cheesecake: isolate one wedge matching the reference's dark cookie base, creamy light cheese body and glossy chocolate cap. Keep one recognizable sandwich cookie and small pale cream piping from reference. Show crumb and creamy texture. Menu: Oreo biscuits, butter, labneh, cream, chocolate, sugar. No invented hidden cookie or ganache layers.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-4ca44bce-896b-47aa-8778-3cb55c9c9729.png",
+      "sourceSha256": "a0cda42670cc0d2cedc9d30e594934d6abd906843207b6ad308196f0aa5d36e6",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/cake-interiors/429822-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3186,
+          "sha256": "6a7172c85010a57e9027fa043fe4b86d4519b10c73b47f783b70e7991c1cf439"
+        },
+        "360": {
+          "path": "assets/cake-interiors/429822-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 11518,
+          "sha256": "bfd9a00eacaf0172ff32cd9d112d95393563b31d818736ee59c25b7b06438e52"
+        },
+        "640": {
+          "path": "assets/cake-interiors/429822-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 28576,
+          "sha256": "2b410916defcf3b713ebe80b8011dd4ab8d2d68b9d0e410ec8713a32c9f0a004"
+        },
+        "1200": {
+          "path": "assets/cake-interiors/429822-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 76714,
+          "sha256": "96848fd26e8d04535c9e23002b231a15ed97cd72c5d0037483a274b00b0af139"
+        }
+      }
+    },
+    "431314": {
+      "referenceAsset": "assets/generated-menu/431314-1200.webp",
+      "referenceSha256": "e437cd27d6a0e921732d1db74c317c6cfbe91d450dcb1134ecc1fb4c2a8c4bac",
+      "name": "Mini Cheescake",
+      "sourceIngredients": "Tereyağı,Peynir,Beyaz Çikolata,Krema,Şeker,Meyve",
+      "prompt": "Create an ADDITIONAL AI-labelled menu image showing the dessert's interior, using the supplied image as the product identity reference. This is an illustrative serving suggestion, never a claim of a real photographed Miora portion. Photoreal premium editorial food image, landscape 4:3. ONE portion on a simple small off-white plate, clean warm beige cafe background, soft window light. Three-quarter side angle at about 20 degrees above the table so the clean cut face and texture dominate. Product occupies the UPPER TWO THIRDS, fully visible within the frame; reserve the BOTTOM QUARTER as plain softly lit table for an accessible localized ingredient overlay added by the website later. No text, labels, arrows, branding, flowers, cups, cutlery, floating/exploded layers, extra props or ingredient piles. Preserve product colors/identity; no new recipe layers beyond the visible reference and listed ingredients. Mini cheesecake: keep the same small round pale mini cheesecake, separate a small wedge just enough to show a clean interior. Preserve its modest golden crumb-looking bottom and pale white-chocolate upper surface, simple unadorned reference appearance. Menu lists butter, cheese, white chocolate, cream, sugar, fruit. Do not add fruit that is absent from the reference. No invented multi-layer fillings.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-98e8aae9-f01a-4af5-9f6e-b4ba89ca22ee.png",
+      "sourceSha256": "08e87333121723d74da091b13bbac3f9a2492934afe3bfdf36069bfae028dcd5",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/cake-interiors/431314-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 2738,
+          "sha256": "eccbcb2668f5999d1b0f669a4ed74f4aba9af2100be8f5c9ebaacf2b0235d77b"
+        },
+        "360": {
+          "path": "assets/cake-interiors/431314-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 9728,
+          "sha256": "e74a3087570e12d4a8c6655dc9e107723a1ae5c303a33e6f84f63e9b2a00b7a4"
+        },
+        "640": {
+          "path": "assets/cake-interiors/431314-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 25502,
+          "sha256": "4e4e6495851410a82ff33e0c1515b55f0498805592393460ade1adddda65f0c9"
+        },
+        "1200": {
+          "path": "assets/cake-interiors/431314-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 71824,
+          "sha256": "678439d37338c2965d723ec7c911dd6b39a0cc5cbc54bf9e405daa428e9fcb34"
+        }
+      }
+    },
+    "429834": {
+      "referenceAsset": "assets/originals/429834-1200.webp",
+      "referenceSha256": "7fc795b99cc16333a01e5dfbe63ee58c877dcdd8f9130049d06ff688cb132e44",
+      "name": "Malaga Pasta",
+      "sourceIngredients": "Şeker,Yağ,Süt,Kakao,Nişasta,Kuruyemiş,Muz,Krem Şanti,Çikolata",
+      "prompt": "Create an ADDITIONAL AI-labelled menu image showing the dessert's interior, using the supplied image as the product identity reference. This is an illustrative serving suggestion, never a claim of a real photographed Miora portion. Photoreal premium editorial food image, landscape 4:3. ONE portion on a simple small off-white plate, clean warm beige cafe background, soft window light. Three-quarter side angle at about 20 degrees above the table so the clean cut face and texture dominate. Product occupies the UPPER TWO THIRDS, fully visible within the frame; reserve the BOTTOM QUARTER as plain softly lit table for an accessible localized ingredient overlay added by the website later. No text, labels, arrows, branding, flowers, cups, cutlery, floating/exploded layers, extra props or ingredient piles. Preserve product colors/identity; no new recipe layers beyond the visible reference and listed ingredients. Malaga cake: isolate ONE of the oblong chocolate-covered individual cakes from the reference. Neatly cut the same bar into two adjacent halves, the cut face toward camera. A plausible illustrative interior shows cocoa cake, pale whipped cream and a banana center consistent with menu ingredients. Preserve reference glossy chocolate coating and sparse nut garnish, and retain oblong bar identity rather than inventing a triangular layer cake. Menu lists sugar, oil, milk, cocoa, starch, nuts, banana, whipped cream, chocolate. Exact layer thickness/order is unknown: no scientific exploded diagram or exact recipe claims.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-c95e1253-2b06-40b5-9e64-bc57a4529e48.png",
+      "sourceSha256": "be8d3bc72b0949fc243e072da8d330ca1fc75ddf0487f9bcb6de4ab6bbba42f1",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/cake-interiors/429834-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3670,
+          "sha256": "69a3ab9681e1f76e25c5034f9cf465197c3b14bfb16f40f080848cf3a4a0ee7e"
+        },
+        "360": {
+          "path": "assets/cake-interiors/429834-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 13084,
+          "sha256": "ba285d8d99d0666b434cc593a7aaf7ba30157ae4d313cc8214bafb46614851fb"
+        },
+        "640": {
+          "path": "assets/cake-interiors/429834-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 31876,
+          "sha256": "74e24820f40786a8699cdfce7db644244bee4bd3a448d704cf7863346f4f3176"
+        },
+        "1200": {
+          "path": "assets/cake-interiors/429834-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 79540,
+          "sha256": "73f94e6a0d0635a4d4454dbeb912912a7700a9892555d37463bab5916f8ad0d0"
+        }
+      }
+    }
+  }
+}
