@@ -1,5 +1,5 @@
-import {hasCakeInterior,cakeCopy,cakeIngredientInfo} from './cake-interiors.js?v=20261113-cakes1';
-import {photoUrl,photoSet,photoKind,photoVariants} from './photos.js?v=20261113-cakes1';
+import {hasCakeInterior,cakeCopy,cakeIngredientInfo} from './cake-interiors.js?v=20261115-angles1';
+import {photoUrl,photoSet,photoKind,photoVariants} from './photos.js?v=20261115-angles1';
 export const DWELL_MS=7000,TRANSITION_MS=650;
 export const motionCopy={
  ru:{title:'Присмотрись к вкусу',pause:'Пауза',play:'Продолжить',prev:'Предыдущее',next:'Следующее',details:'Подробнее',swipe:'Листни фото ↔',ai:'AI-пример подачи',original:'Кадр из меню',restyled:'AI-обработка кадра меню',source:'Посмотреть исходный кадр',cover:'Посмотреть обложку'},
