@@ -1,5 +1,5 @@
 import {cakePhotos} from './cake-photo-data.js';
-import {photoUrl,photoSet} from './photos.js?v=20261113-cakes1';
+import {photoUrl,photoSet} from './photos.js?v=20261115-angles1';
 export const hasCakeInterior=p=>Boolean(cakePhotos[p?.id]);
 const ingredients={
  'Peynir':['Cheese','Сыр'],'Şeker':['Sugar','Сахар'],'Çikolata':['Chocolate','Шоколад'],'Krema':['Cream','Сливки'],'Antep Fıstığı':['Pistachio','Фисташки'],

@@ -1,0 +1,379 @@
+{
+  "generatedAt": "2026-11-15",
+  "tool": "built-in image_gen",
+  "kind": "AI serving illustration, not an actual restaurant photograph",
+  "visualReview": "accepted",
+  "photos": {
+    "430198": {
+      "referenceAsset": "assets/originals/430198-1200.webp",
+      "referenceSha256": "3ea851f9dd791b5928096e06ba30567f0d53dba9f19fa86e7d08877e00c0a0ee",
+      "name": "Çilekli Magnolia",
+      "sourceIngredients": "Bisküvi,Süt,Şeker,Meyve",
+      "prompt": "Edit the supplied reference into a disclosed AI-restaged cafe menu cover with a better camera angle. Preserve the actual product identity, recognizable serving vessel, visible colors and visible food structure. This is an AI serving illustration, not an actual new photograph of Miora's serving. Landscape 4:3, professional crisp product food photography. Camera natural three-quarter side view about 20 to 25 degrees above table level (NOT overhead). One sold dessert only, fully visible and centered, subject approx 65% of frame width and 75% height, consistent hero scale with safe margins for 4:3 and square crops. Quiet warm off-white table and gently blurred beige cafe background, soft bright neutral daylight, natural contrast and accurate food color. No flowers, cups of coffee, spoons, branded paper, lettering, text, hands, collage or unrelated decor. No invented cutaways or additional fillings. Strawberry Magnolia: retain the same clear square serving cup, white creamy layers, pale biscuit crumbs, sliced strawberries visible through its front wall and one strawberry slice on top. Same small mint leaf if visible; no new fruit. Make BOTH front layer structure and a little of the crumb topping visible. Source lists biscuit, milk, sugar, fruit.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-69b41fd0-5122-40f5-93f2-20297bb825f2.png",
+      "sourceSha256": "996c42af5471d394ac3e765098b5892cdb304c2a763cb83e67fdb0f03582640b",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/dessert-angles/430198-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3550,
+          "sha256": "cf22aa2b118062abd73461dd1f8df4b85d409879a7de74d224abcb11cbfe5b4f"
+        },
+        "360": {
+          "path": "assets/dessert-angles/430198-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 14454,
+          "sha256": "3a021cc241f88020877c691972c4bf57c9b86087171deae4343d20f94e6adbb9"
+        },
+        "640": {
+          "path": "assets/dessert-angles/430198-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 39486,
+          "sha256": "783da74a96fc14818a9f3560d5ea7f398d17415cacae79375a30082ac314d3de"
+        },
+        "1200": {
+          "path": "assets/dessert-angles/430198-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 105982,
+          "sha256": "6797f1d823306cec3b669fa58582e89870c1792db546758e494a671eb503301c"
+        }
+      }
+    },
+    "429872": {
+      "referenceAsset": "assets/originals/429872-1200.webp",
+      "referenceSha256": "57d6e7fb446620d6441fc5d406eb49e4f8103af2aae3483136dcf1b21fa96e8d",
+      "name": "Dubai Cup",
+      "sourceIngredients": "Kadayıf,Antep Fıstığı,Süt,Krema,Tahin,Çikolata",
+      "prompt": "Edit the supplied reference into a disclosed AI-restaged cafe menu cover with a better camera angle. Preserve the actual product identity, recognizable serving vessel, visible colors and visible food structure. This is an AI serving illustration, not an actual new photograph of Miora's serving. Landscape 4:3, professional crisp product food photography. Camera natural three-quarter side view about 20 to 25 degrees above table level (NOT overhead). One sold dessert only, fully visible and centered, subject approx 65% of frame width and 75% height, consistent hero scale with safe margins for 4:3 and square crops. Quiet warm off-white table and gently blurred beige cafe background, soft bright neutral daylight, natural contrast and accurate food color. No flowers, cups of coffee, spoons, branded paper, lettering, text, hands, collage or unrelated decor. No invented cutaways or additional fillings. Dubai Cup: retain the SAME clear short-stemmed goblet, creamy pale layers with a coarse green-brown shredded-pastry/pistachio middle and a thin dark chocolate top with the reference's few pistachio pieces. Raise brightness without bleaching food. Do NOT change this into a plastic square cup. Source lists kadayif, pistachio, milk, cream, tahini, chocolate; exact recipe proportions unknown.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-19b6d3b5-1e43-4390-9a7e-f98ecb151799.png",
+      "sourceSha256": "c3f377181755f450fe1bceb8261eacca3da713e3bd14417e6e9aa50c9336583f",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/dessert-angles/429872-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3146,
+          "sha256": "e9fec6d2ffdcb52e8a7eabb54b156f332f2b2b287779a679816d6e9d09f4d1ca"
+        },
+        "360": {
+          "path": "assets/dessert-angles/429872-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 10754,
+          "sha256": "627fd73831fa237c2ee1f9c5fbd7af07996b007ec1fcecfc5d508949484ff239"
+        },
+        "640": {
+          "path": "assets/dessert-angles/429872-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 25600,
+          "sha256": "1d439174107cd34a1e5aa1887a81c2d6c0199bcfa83a2c736551266319c5914a"
+        },
+        "1200": {
+          "path": "assets/dessert-angles/429872-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 67528,
+          "sha256": "b2d603c00198925eb1365f0af0491e4be40d262a7f72e6be1d4fdc1f3a73a716"
+        }
+      }
+    },
+    "430207": {
+      "referenceAsset": "assets/originals/430207-1200.webp",
+      "referenceSha256": "574bf8adc2c429562581bdab4abd2396e42848ff54f813e54399ae65f6c9b916",
+      "name": "Bromisu",
+      "sourceIngredients": "Şeker,Yağ,Haşhaş,Peynir,Kahve",
+      "prompt": "Edit the supplied reference into a disclosed AI-restaged cafe menu cover with a better camera angle. Preserve the actual product identity, recognizable serving vessel, visible colors and visible food structure. This is an AI serving illustration, not an actual new photograph of Miora's serving. Landscape 4:3, professional crisp product food photography. Camera natural three-quarter side view about 20 to 25 degrees above table level (NOT overhead). One sold dessert only, fully visible and centered, subject approx 65% of frame width and 75% height, consistent hero scale with safe margins for 4:3 and square crops. Quiet warm off-white table and gently blurred beige cafe background, soft bright neutral daylight, natural contrast and accurate food color. No flowers, cups of coffee, spoons, branded paper, lettering, text, hands, collage or unrelated decor. No invented cutaways or additional fillings. Bromisu: retain the same transparent square container with alternating dark cake-looking and pale cream layers, fine cocoa-colored topping and the small existing green/yellow nut-looking garnish. Do not add new toppings, ingredients, coffee beans or cut sections. Source lists sugar, oil/fat, poppy, cheese, coffee; reference appearance, not a guessed standard tiramisu recipe, controls its visual identity.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-1ae823d5-4b50-4886-9b92-a48b2fdf44a2.png",
+      "sourceSha256": "f3c26af29c8e41f2451652ccfa6f6414b501cf83a0ebf26a1ccad35349c871d3",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/dessert-angles/430207-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 4112,
+          "sha256": "07ee7638c6d6c817c1b7ce37321f1dab4776b53847d67b361baab966e047853a"
+        },
+        "360": {
+          "path": "assets/dessert-angles/430207-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 15794,
+          "sha256": "2f4007baee7fa677218623a442d11927f4dcc63e59b1c4a0f3b5f4ed1226fa82"
+        },
+        "640": {
+          "path": "assets/dessert-angles/430207-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 45076,
+          "sha256": "b094b3e3643e529d58cd41e5c1561334ad71e9b5022f8a4dbf65375858b96e26"
+        },
+        "1200": {
+          "path": "assets/dessert-angles/430207-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 126140,
+          "sha256": "b2a00f6d761bb799d3bfd3f610e2ec3b3f205b682c810553f49e145c02912a16"
+        }
+      }
+    },
+    "431299": {
+      "referenceAsset": "assets/originals/431299-1200.webp",
+      "referenceSha256": "1e8d838f85fc4d91dcc5e629d9daecd6cf3c8af6a3440f607654a1960770f1e6",
+      "name": "Bal Kabaklı Magnolia",
+      "sourceIngredients": "Süt,Şeker,Meyve,",
+      "prompt": "Edit the supplied reference into a disclosed AI-restaged cafe menu cover with a better camera angle. Preserve the actual product identity, recognizable serving vessel, visible colors and visible food structure. This is an AI serving illustration, not an actual new photograph of Miora's serving. Landscape 4:3, professional crisp product food photography. Camera natural three-quarter side view about 20 to 25 degrees above table level (NOT overhead). One sold dessert only, fully visible and centered, subject approx 65% of frame width and 75% height, consistent hero scale with safe margins for 4:3 and square crops. Quiet warm off-white table and gently blurred beige cafe background, soft bright neutral daylight, natural contrast and accurate food color. No flowers, cups of coffee, spoons, branded paper, lettering, text, hands, collage or unrelated decor. No invented cutaways or additional fillings. Pumpkin Magnolia: retain the SAME faceted clear squat tumbler, white cream, visible orange pumpkin-colored layer, pale crumbs and the small existing walnut-looking top pieces. Render the layers crisp, soft natural light. Do NOT swap the distinctive diamond-cut tumbler for another vessel. Source description only lists milk, sugar, fruit; do not invent ingredient names or more toppings.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-c34194fa-e94b-450c-9622-e84ad2e3a2b7.png",
+      "sourceSha256": "983738b4c2ed563fda01ca658b48f82f115ed74696654a3af4c23ae9c0030407",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/dessert-angles/431299-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3752,
+          "sha256": "b90411d257628471028b9b6c72bbd6f68f59adf4b78d09109ceb84febc340838"
+        },
+        "360": {
+          "path": "assets/dessert-angles/431299-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 13858,
+          "sha256": "df2431caacb5205c7f0af78ba6a01b4b171ef075f582796b1b5459702d5bcd79"
+        },
+        "640": {
+          "path": "assets/dessert-angles/431299-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 33950,
+          "sha256": "51b6a246432303c8c114cb34fe81cff0604e44bdc4e13790ff046af84cec4571"
+        },
+        "1200": {
+          "path": "assets/dessert-angles/431299-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 90032,
+          "sha256": "95e5575023a3a949be0c13ebe68cb52efb1a5f3f1bd612fbfdafcda004efd08c"
+        }
+      }
+    },
+    "430214": {
+      "referenceAsset": "assets/originals/430214-1200.webp",
+      "referenceSha256": "8d6edabfdee0bc9754c99a591591132a457f085565d8ae8bfb16c7ae273e28d8",
+      "name": "Limonlu Tiramisu",
+      "sourceIngredients": "Limon,Şeker,Peynir,Krema",
+      "prompt": "Edit the supplied reference into a disclosed AI-restaged cafe menu cover with a better camera angle. Preserve the actual product identity, recognizable serving vessel, visible colors and visible food structure. This is an AI serving illustration, not an actual new photograph of Miora's serving. Landscape 4:3, professional crisp product food photography. Camera natural three-quarter side view about 20 to 25 degrees above table level (NOT overhead). One sold dessert only, fully visible and centered, subject approx 65% of frame width and 75% height, consistent hero scale with safe margins for 4:3 and square crops. Quiet warm off-white table and gently blurred beige cafe background, soft bright neutral daylight, natural contrast and accurate food color. No flowers, cups of coffee, spoons, branded paper, lettering, text, hands, collage or unrelated decor. No invented cutaways or additional fillings. Lemon Tiramisu: retain the SAME elongated rectangular transparent serving tub, pale creamy dessert and thin pale-yellow top. Keep the same ONE raspberry, ONE blueberry and modest mint leaf from the reference with sparse zest-like flecks. Angle across the long side so its pale layered side is clearly visible, not a top-down tray shot. No extra lemons, fruit, new sponge layers, or cutouts. Source lists lemon, sugar, cheese, cream.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-4d62f5d0-9698-4136-8fd8-38f48fc9950c.png",
+      "sourceSha256": "1af6f55427732e66002fc42da015d623ded5bb9e907783907651f6bf63c9e0a9",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/dessert-angles/430214-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 2602,
+          "sha256": "e722f51a588e5c7bb8b59a572ba2144ebc1d4e65d80caeec2cf17e2a6367bdcc"
+        },
+        "360": {
+          "path": "assets/dessert-angles/430214-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 9044,
+          "sha256": "2b6cf914d8922e970cc31c957ddd32a727c560a6a46222390aba7b71d6c55b1d"
+        },
+        "640": {
+          "path": "assets/dessert-angles/430214-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 21980,
+          "sha256": "65f874a51c3bc34ef8ac50fbb511dc3b6f08132a6649849be0ffe9b72f4bcd93"
+        },
+        "1200": {
+          "path": "assets/dessert-angles/430214-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 56578,
+          "sha256": "ae1b95fc21e76bcb9dee6775e8994532f33a432648f8c9aa1ebf88cd0284cf1c"
+        }
+      }
+    },
+    "431304": {
+      "referenceAsset": "assets/originals/431304-1200.webp",
+      "referenceSha256": "d6e6015b323b92617b3bcb1b4996fe73e6574fe6c1fe6b0c4ac2b8ea4e688b23",
+      "name": "Magnum Browni (Küçük)",
+      "sourceIngredients": "",
+      "prompt": "Edit the supplied reference into a disclosed AI-restaged cafe menu cover with a better camera angle. Preserve the actual product identity, recognizable serving vessel, visible colors and visible food structure. This is an AI serving illustration, not an actual new photograph of Miora's serving. Landscape 4:3, professional crisp product food photography. Camera natural three-quarter side view about 20 to 25 degrees above table level (NOT overhead). One sold dessert only, fully visible and centered, subject approx 65% of frame width and 75% height, consistent hero scale with safe margins for 4:3 and square crops. Quiet warm off-white table and gently blurred beige cafe background, soft bright neutral daylight, natural contrast and accurate food color. No flowers, cups of coffee, spoons, branded paper, lettering, text, hands, collage or unrelated decor. No invented cutaways or additional fillings. Small Magnum Brownie: retain the same single compact oblong dessert on a wooden stick, dark chocolate-colored full coating and sparse WHITE drizzle concentrated across part of the top. Both wooden stick and full dessert body must be inside the frame. Dessert on plain small ivory plate, diagonal composition with an attractive side angle showing thickness. Do not cut it, do not invent filling or add berries. Source has no recipe or weight; never imply a measured size comparison.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-1d34febb-291e-48e1-aaa2-55aee25a1107.png",
+      "sourceSha256": "de5367f1269070de7b94d6ad317acab1861bd4cb648e0020128ec00da7ab8026",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/dessert-angles/431304-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 3330,
+          "sha256": "4190ebd9d83f6bf5751a9a8e569e6a5376f8ea564e19373ab5078ed5bd23de68"
+        },
+        "360": {
+          "path": "assets/dessert-angles/431304-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 10412,
+          "sha256": "8176964aebdf5550c4ee95012ba2a4c67801fedc1bc588be69a310d747624c65"
+        },
+        "640": {
+          "path": "assets/dessert-angles/431304-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 26742,
+          "sha256": "48ecf629400bbf918ffa1b086e1431d873f1aafc2e15a1e92b86e3013ca1e858"
+        },
+        "1200": {
+          "path": "assets/dessert-angles/431304-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 83258,
+          "sha256": "966fcfac78ef9be9bbbe7f08a2cdc0fe85a02c6c8ad62a0c319e7868118f9368"
+        }
+      }
+    },
+    "431302": {
+      "referenceAsset": "assets/originals/431302-1200.webp",
+      "referenceSha256": "83edff48514346d5adb5897034b663b45ae123e242a2cd31994e5e9199761f79",
+      "name": "Magnum Browni (Büyük)",
+      "sourceIngredients": "",
+      "prompt": "Edit the supplied reference into a disclosed AI-restaged cafe menu cover with a better camera angle. Preserve the actual product identity, recognizable serving vessel, visible colors and visible food structure. This is an AI serving illustration, not an actual new photograph of Miora's serving. Landscape 4:3, professional crisp product food photography. Camera natural three-quarter side view about 20 to 25 degrees above table level (NOT overhead). One sold dessert only, fully visible and centered, subject approx 65% of frame width and 75% height, consistent hero scale with safe margins for 4:3 and square crops. Quiet warm off-white table and gently blurred beige cafe background, soft bright neutral daylight, natural contrast and accurate food color. No flowers, cups of coffee, spoons, branded paper, lettering, text, hands, collage or unrelated decor. No invented cutaways or additional fillings. Large Magnum Brownie: retain the reference's SAME pink-coated oblong dessert on a wooden stick, with its natural small surface speckles. REMOVE the large decorative flower entirely so it does not hide the sold dessert. Preserve pink coating, overall silhouette and wooden stick. Place it diagonally on a plain small ivory plate; show the thickness and rounded edge from a low three-quarter angle, full stick visible. It must NOT become the small dark chocolate variant. Do not cut open, add toppings, guess pink flavor or invent filling: the source has no recipe or weight.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-e6946604-f110-4d4a-b367-1c689af82834.png",
+      "sourceSha256": "fbf76cca48449082649e5aabebf99d561c0adb2f09f6288eb5bb05d7f64df856",
+      "sourceDimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/dessert-angles/431302-160.webp",
+          "dimensions": [
+            160,
+            120
+          ],
+          "bytes": 2144,
+          "sha256": "69a1f7f9363adeaf401d318b50e5ce3f900628ecc952aa1589d03a0126786be6"
+        },
+        "360": {
+          "path": "assets/dessert-angles/431302-360.webp",
+          "dimensions": [
+            360,
+            270
+          ],
+          "bytes": 6642,
+          "sha256": "20f7fd0d446e5058d7569c81f721250309650cdf8316afc1e74c2a2473148696"
+        },
+        "640": {
+          "path": "assets/dessert-angles/431302-640.webp",
+          "dimensions": [
+            640,
+            480
+          ],
+          "bytes": 15526,
+          "sha256": "9cb944d1ba6b6c1cecd7bc67d157c7255046ce88f09de138ef7307d45658fee7"
+        },
+        "1200": {
+          "path": "assets/dessert-angles/431302-1200.webp",
+          "dimensions": [
+            1200,
+            900
+          ],
+          "bytes": 48016,
+          "sha256": "f3e5e0d4ef8050ee6caf905de635ca42ad73a834abfa1f570c88416a82b7fc16"
+        }
+      }
+    }
+  }
+}

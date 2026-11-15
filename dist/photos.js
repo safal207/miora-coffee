@@ -1,8 +1,11 @@
 import {photoSources,photoPlaceholders} from './photo-data.js?v=20261106-photos2';
 import {originalPhotos} from './original-photo-data.js';
 import {generatedPhotos} from './generated-photo-data.js';
-import {focusedPhotos} from './focus-photo-data.js';
+import {focusedPhotos as previousFocusedPhotos} from './focus-photo-data.js';
+import {dessertPhotos} from './dessert-photo-data.js';
 import {cakePhotos} from './cake-photo-data.js';
+const focusedPhotos=Object.freeze({...previousFocusedPhotos,...dessertPhotos});
+export const hasRestagedPhoto=item=>Boolean(focusedPhotos[item?.id]);
 export const hasAlternatePhoto=item=>Boolean(focusedPhotos[item?.id]||cakePhotos[item?.id]);
 export const photoVariants=item=>cakePhotos[item?.id]?(focusedPhotos[item.id]?['focus','inside','original']:['focus','inside']):focusedPhotos[item?.id]?['focus','original']:['focus'];
 const placeholders=new Set(photoPlaceholders),widths=new Set([160,640,1200]);
