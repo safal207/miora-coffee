@@ -1,5 +1,6 @@
+import {hasTurntable,turntableMarkup,mountTurntable,spinCopy} from './turntable.js?v=20261116-spin1';
 import {hasCakeInterior,cakeViewerMarkup,mountCakeViewer,cakeCopy} from './cake-interiors.js?v=20261115-angles1';
-import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261115-angles1';
+import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261116-spin1';
 import {desireSections,journeyCopy,localizedJourney} from './desire-journey.js?v=20261112-generated1';
 import {videoStory,dessertStoryVisible} from './video-stories.js';
 import {products,categories,featured,source} from './menu-data.js';
@@ -70,7 +71,7 @@ views=Object.fromEntries(Object.entries(views).filter(([id,n])=>byId.has(id)&&Nu
 const viewedThisSession=new Set();
 let feedObserver=null;
 const feedViewTimers=new Map();
-let toastTimer,disposeSpotlight=()=>{},disposeGalleries=()=>{},disposeCakeViewer=()=>{},detailVariant='focus';
+let toastTimer,disposeSpotlight=()=>{},disposeGalleries=()=>{},disposeCakeViewer=()=>{},disposeTurntable=()=>{},detailVariant='focus';
 const t = key => messages[lang][key]||messages.tr[key]||key;
 const name = item => item.name[lang]||item.name.tr;
 const money = value => new Intl.NumberFormat(lang==='tr'?'tr-TR':lang==='ru'?'ru-RU':'en-GB',{maximumFractionDigits:2}).format(value/100)+' ₺';
@@ -232,25 +233,26 @@ function toggleFavorite(id) {
   if(category==='favorites')renderProducts();
 }
 function openDetail(id,variant='focus') {
+  const previousVariant=detailVariant;
   const switching=detailId===id&&$('detail-dialog').open;
-  if(!byId.has(id))return;detailId=id;detailVariant=['original','inside'].includes(variant)?variant:'focus';
+  if(!byId.has(id))return;detailId=id;detailVariant=['original','inside','spin'].includes(variant)?variant:'focus';if(detailVariant==='spin'&&!hasTurntable(byId.get(id)))detailVariant='focus';
   stopFeedViews();recordView(id);
   renderDetail();if(!$('detail-dialog').open)$('detail-dialog').showModal();$('detail-dialog').scrollTop=0;
-  if(switching)$('detail-content').querySelector('.detail-source-toggle')?.focus({preventScroll:true});
+  if(switching)$('detail-content').querySelector(detailVariant==='spin'?'.spin-back':previousVariant==='spin'?'.spin-detail-launch':'.detail-source-toggle')?.focus({preventScroll:true});
 }
 function renderDetail() {
-  disposeCakeViewer();
+  disposeCakeViewer();disposeTurntable();
   const p=byId.get(detailId),c=categories.find(c=>c.id===p.cat);if(!p)return;
-  $('detail-content').innerHTML=`<div class="detail-top">${hasCakeInterior(p)&&detailVariant!=='original'?cakeViewerMarkup(p,lang,name(p),detailVariant):hasPhoto(p)?`<img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p,640,detailVariant)}" ${photoSet(p,'(max-width: 620px) 100vw, 540px',detailVariant)} width="640" height="640" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}">`:`<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(p))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}<button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
+  $('detail-content').innerHTML=`<div class="detail-top">${detailVariant==='spin'?turntableMarkup(p,lang,name(p),money):hasCakeInterior(p)&&detailVariant!=='original'?cakeViewerMarkup(p,lang,name(p),detailVariant):hasPhoto(p)?`<img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p,640,detailVariant)}" ${photoSet(p,'(max-width: 620px) 100vw, 540px',detailVariant)} width="640" height="640" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}">`:`<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(p))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}${hasTurntable(p)&&detailVariant!=='spin'&&detailVariant!=='original'?`<button type="button" class="spin-detail-launch" data-spin="${p.id}">${spinCopy[lang].open}</button>`:''}<button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
     <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2>${lang!=='tr'?`<p class="original-name" lang="tr">${esc(p.name.tr)}</p>`:''}<div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}${p.price!==null?`<span class="metric detail-price">${money(p.price)}</span>`:''}</div>
-    <p class="photo-provenance"${hasCakeInterior(p)&&detailVariant!=='original'?' hidden':''}>${esc(hasCakeInterior(p)&&detailVariant!=='original'?cakeCopy[lang].art:photoKind(p,detailVariant)==='generated'&&!hasRestagedPhoto(p)?(lang==='ru'?'AI-пример подачи, созданный по названию и составу меню; это не фотография блюда Miora.':lang==='en'?'AI serving illustration created from the menu name and ingredients; not a photograph of the actual Miora dish.':'Menü adı ve içeriğine göre oluşturulmuş yapay zekâ servis örneğidir; gerçek Miora ürün fotoğrafı değildir.'):(photoKind(p,detailVariant)==='illustration'||hasRestagedPhoto(p)&&detailVariant!=='original')?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
+    <p class="photo-provenance"${(hasCakeInterior(p)&&detailVariant!=='original')||detailVariant==='spin'?' hidden':''}>${esc(hasCakeInterior(p)&&detailVariant!=='original'?cakeCopy[lang].art:photoKind(p,detailVariant)==='generated'&&!hasRestagedPhoto(p)?(lang==='ru'?'AI-пример подачи, созданный по названию и составу меню; это не фотография блюда Miora.':lang==='en'?'AI serving illustration created from the menu name and ingredients; not a photograph of the actual Miora dish.':'Menü adı ve içeriğine göre oluşturulmuş yapay zekâ servis örneğidir; gerçek Miora ürün fotoğrafı değildir.'):(photoKind(p,detailVariant)==='illustration'||hasRestagedPhoto(p)&&detailVariant!=='original')?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
     ${photoVariants(p).includes('original')?`<button type="button" class="detail-source-toggle" data-detail="${p.id}" data-source-view="${detailVariant==='original'?'focus':'original'}">${motionCopy[lang][detailVariant==='original'?'cover':'source']}</button>`:''}
     ${p.price===null?`<section class="detail-section"><h3>${t('ask')}</h3><p>${t('priceMissing')}</p></section>`:''}
     ${p.id==='430356'?videoStory('croissant',lang,{compact:true}):p.id==='431203'?videoStory('breakfast',lang,{compact:true}):''}
     <section class="detail-section"><h3>${t('ingredients')}</h3>${p.description?`<p lang="tr">${esc(p.description)}</p>${lang!=='tr'?`<p class="detail-disclaimer">${t('originalRecipe')}</p>`:''}`:`<p>${t('noIngredients')}</p>`}</section>
     <section class="detail-section"><h3>${t('allergens')}</h3>${p.allergens.length?`<div class="allergens">${p.allergens.map(a=>`<span>${t(a)}</span>`).join('')}</div>`:`<p>${t('noAllergens')}</p>`}<p class="detail-disclaimer">${t('allergenNote')}</p>${p.kcal?`<p class="detail-disclaimer">${p.calorieReview?t('reviewCalorie'):t('calorieNote')}</p>`:''}</section><div class="views">${icon('eye')}${views[p.id]||0} · ${t('localViews')}</div></div>
-    <div class="detail-actions">${p.price!==null?`<button class="button primary" type="button" data-add="${p.id}">${icon('plus')}${t('addToOrder')} · ${money(p.price)}</button>`:`<button class="button secondary" type="button" data-close="detail-dialog">${t('backToMenu')}</button>`}<button class="icon-btn" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${t('favorites')}">${icon('heart')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${t('share')}">${icon('share')}</button></div>`;
-  disposeCakeViewer=mountCakeViewer($('detail-content'),lang);enhanceKioskDetail(detailId);
+    <div class="detail-actions">${p.price!==null?(detailVariant==='spin'?'':`<button class="button primary" type="button" data-add="${p.id}">${icon('plus')}${t('addToOrder')} · ${money(p.price)}</button>`):`<button class="button secondary" type="button" data-close="detail-dialog">${t('backToMenu')}</button>`}<button class="icon-btn" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${t('favorites')}">${icon('heart')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${t('share')}">${icon('share')}</button></div>`;
+  disposeTurntable=mountTurntable($('detail-content'),{lang,name:name(p)});disposeCakeViewer=mountCakeViewer($('detail-content'),lang);enhanceKioskDetail(detailId);
 }
 function recommend() {
   const items=Object.keys(cart).map(id=>byId.get(id));if(!items.length&&!configuredOrders.length)return null;
@@ -382,6 +384,7 @@ document.addEventListener('click',async event=>{
   const button=event.target.closest('button,a[data-action]');if(!button)return;
   const d=button.dataset;
   if(d.close){$(d.close).close();return;}
+  if(d.spin){openDetail(d.spin,'spin');return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
   if(d.add){add(d.add);return;}
   if(d.favorite){toggleFavorite(d.favorite);return;}
@@ -437,4 +440,5 @@ const storySizeObserver=new ResizeObserver(()=>{
 storySizeObserver.observe($('feed-stories'));
 kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null});
 renderLanguage();updateUrl();
-const linked=params.get('item');if(byId.has(linked))openDetail(linked);
+const linked=params.get('item');if(byId.has(linked))openDetail(linked,params.get('photo'));
+$('detail-dialog').addEventListener('close',()=>disposeTurntable());

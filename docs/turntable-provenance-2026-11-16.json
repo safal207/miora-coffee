@@ -1,0 +1,144 @@
+{
+  "generatedAt": "2026-11-16",
+  "tool": "built-in image_gen",
+  "kind": "AI-estimated 12-view turntable; not actual 3D photography or a measured model",
+  "columns": 4,
+  "rows": 3,
+  "frames": 12,
+  "inset": 2,
+  "photos": {
+    "430198": {
+      "id": "430198",
+      "prompt": "Create ONE production sprite-sheet asset for a disclosed AI 360-degree food turntable. EXACTLY 12 equal SQUARE tiles in an aligned 4-column by 3-row grid; total image landscape 4:3. NO gaps, gutters, margins, borders, text, captions or labels. Each tile contains the SAME one product in the same state. Fixed camera, fixed soft natural lighting, fixed scale, fixed perspective and a quiet warm off-white studio background; same contact shadow. Camera elevation about 20 degrees above table. Product is completely inside every square tile with generous safe margins, full rim/base/wooden stick never cropped. Rotate the object around a VERTICAL turntable axis in 12 successive perspectives, not a flat photo rotating around its own plane. Left to right, top to bottom: 0,30,60,90 / 120,150,180,210 / 240,270,300,330 degree viewpoints. Show front, right, back and left over the full loop with genuine changing perspective and foreshortening. Keep recognizable vessel, surface colors, garnish and shape consistent; no morphing, shape swaps, repeated front view or invented cuts. Use its existing plate if present; add no extra props, flowers, hands, cutlery or ingredients. Photoreal food catalog quality. It is an AI reconstruction of unphotographed views, NOT documentary photography or a verified recipe. Identity reference: Same clear SQUARE cup of Strawberry Magnolia, pale creamy and biscuit-crumb layers, strawberry slices against the wall, one strawberry slice and modest mint on the crumb top. Maintain the cup geometry, layer heights and garnish through the full orbit. Back views are AI estimates, not new recipe information.",
+      "reference": "assets/dessert-angles/430198-1200.webp",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-7e5b7a0a-1d76-431a-8a4c-1adcdc91f9a2.png",
+      "referenceSha256": "6797f1d823306cec3b669fa58582e89870c1792db546758e494a671eb503301c",
+      "sourceSha256": "257eae754949bdb618264ef0025e35f384001f7302ed844ca3ce5c026c001b9a",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "asset": {
+        "path": "assets/turntables/430198.webp",
+        "bytes": 206948,
+        "sha256": "bb29833d22be1d239d6be9dbef7201e61fcbed107aa7ae64d144f83624d136f6"
+      }
+    },
+    "429872": {
+      "id": "429872",
+      "prompt": "Create ONE production sprite-sheet asset for a disclosed AI 360-degree food turntable. EXACTLY 12 equal SQUARE tiles in an aligned 4-column by 3-row grid; total image landscape 4:3. NO gaps, gutters, margins, borders, text, captions or labels. Each tile contains the SAME one product in the same state. Fixed camera, fixed soft natural lighting, fixed scale, fixed perspective and a quiet warm off-white studio background; same contact shadow. Camera elevation about 20 degrees above table. Product is completely inside every square tile with generous safe margins, full rim/base/wooden stick never cropped. Rotate the object around a VERTICAL turntable axis in 12 successive perspectives, not a flat photo rotating around its own plane. Left to right, top to bottom: 0,30,60,90 / 120,150,180,210 / 240,270,300,330 degree viewpoints. Show front, right, back and left over the full loop with genuine changing perspective and foreshortening. Keep recognizable vessel, surface colors, garnish and shape consistent; no morphing, shape swaps, repeated front view or invented cuts. Use its existing plate if present; add no extra props, flowers, hands, cutlery or ingredients. Photoreal food catalog quality. It is an AI reconstruction of unphotographed views, NOT documentary photography or a verified recipe. Identity reference: Same clear short-stemmed round goblet of Dubai Cup. Creamy pale layers, coarse green-brown shredded pastry/pistachio middle, thin dark chocolate top and modest pistachio garnish. Preserve the goblet rim, short stem and circular base in EVERY view, not a square cup. No new ingredients or cutaways.",
+      "reference": "assets/dessert-angles/429872-1200.webp",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-755d9d92-10d5-4010-869b-a8208e0e20b6.png",
+      "referenceSha256": "b2d603c00198925eb1365f0af0491e4be40d262a7f72e6be1d4fdc1f3a73a716",
+      "sourceSha256": "b01176ad962be9738c6caecf9d57f88b18e8ce5afcaf5cd65c0343a18a5ef22b",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "asset": {
+        "path": "assets/turntables/429872.webp",
+        "bytes": 132084,
+        "sha256": "93767581de26525bae1b22b6c9c7d994a25c45f603c3509ad00ec6bbb02c74f6"
+      }
+    },
+    "430207": {
+      "id": "430207",
+      "prompt": "Create ONE production sprite-sheet asset for a disclosed AI 360-degree food turntable. EXACTLY 12 equal SQUARE tiles in an aligned 4-column by 3-row grid; total image landscape 4:3. NO gaps, gutters, margins, borders, text, captions or labels. Each tile contains the SAME one product in the same state. Fixed camera, fixed soft natural lighting, fixed scale, fixed perspective and a quiet warm off-white studio background; same contact shadow. Camera elevation about 20 degrees above table. Product is completely inside every square tile with generous safe margins, full rim/base/wooden stick never cropped. Rotate the object around a VERTICAL turntable axis in 12 successive perspectives, not a flat photo rotating around its own plane. Left to right, top to bottom: 0,30,60,90 / 120,150,180,210 / 240,270,300,330 degree viewpoints. Show front, right, back and left over the full loop with genuine changing perspective and foreshortening. Keep recognizable vessel, surface colors, garnish and shape consistent; no morphing, shape swaps, repeated front view or invented cuts. Use its existing plate if present; add no extra props, flowers, hands, cutlery or ingredients. Photoreal food catalog quality. It is an AI reconstruction of unphotographed views, NOT documentary photography or a verified recipe. Identity reference: Same transparent SQUARE cup of Bromisu with alternating dark cake-looking and pale cream layers, fine brown cocoa-colored top and modest green/yellow existing nut-looking garnish. Preserve container geometry, layer count and garnish. Do not invent new fillings or add coffee beans.",
+      "reference": "assets/dessert-angles/430207-1200.webp",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-7aa540e0-4e19-4dde-8b61-6a216ae4cd50.png",
+      "referenceSha256": "b2a00f6d761bb799d3bfd3f610e2ec3b3f205b682c810553f49e145c02912a16",
+      "sourceSha256": "472f78a40e1768c43ff4d3cdd7507ef3a42f3a1293df6fdb4452dc05bb5a3dce",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "asset": {
+        "path": "assets/turntables/430207.webp",
+        "bytes": 216430,
+        "sha256": "8d655651703c33eb305c1c7ddfd058fd75335acc41e6fc3f600b40ef88a06431"
+      }
+    },
+    "431299": {
+      "id": "431299",
+      "prompt": "Create ONE production sprite-sheet asset for a disclosed AI 360-degree food turntable. EXACTLY 12 equal SQUARE tiles in an aligned 4-column by 3-row grid; total image landscape 4:3. NO gaps, gutters, margins, borders, text, captions or labels. Each tile contains the SAME one product in the same state. Fixed camera, fixed soft natural lighting, fixed scale, fixed perspective and a quiet warm off-white studio background; same contact shadow. Camera elevation about 20 degrees above table. Product is completely inside every square tile with generous safe margins, full rim/base/wooden stick never cropped. Rotate the object around a VERTICAL turntable axis in 12 successive perspectives, not a flat photo rotating around its own plane. Left to right, top to bottom: 0,30,60,90 / 120,150,180,210 / 240,270,300,330 degree viewpoints. Show front, right, back and left over the full loop with genuine changing perspective and foreshortening. Keep recognizable vessel, surface colors, garnish and shape consistent; no morphing, shape swaps, repeated front view or invented cuts. Use its existing plate if present; add no extra props, flowers, hands, cutlery or ingredients. Photoreal food catalog quality. It is an AI reconstruction of unphotographed views, NOT documentary photography or a verified recipe. Identity reference: Same distinctive diamond-faceted squat clear tumbler of Pumpkin Magnolia. Pale cream, orange pumpkin-colored visible middle, crumb top and small existing walnut-looking pieces. Preserve faceted glass and contents consistently, no new ingredients.",
+      "reference": "assets/dessert-angles/431299-1200.webp",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-3f39e9ac-d1bd-4d39-af6f-78df66086030.png",
+      "referenceSha256": "95e5575023a3a949be0c13ebe68cb52efb1a5f3f1bd612fbfdafcda004efd08c",
+      "sourceSha256": "2c15cf1d3810df82f7cf88baa3a77b1e2f46d835af45f5ca0334399f238df675",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "asset": {
+        "path": "assets/turntables/431299.webp",
+        "bytes": 173280,
+        "sha256": "7e07d2b7923cb0afe8512aff14cbcf97aa3a45b54293237ff331d13364aceff8"
+      }
+    },
+    "430214": {
+      "id": "430214",
+      "prompt": "Create ONE production sprite-sheet asset for a disclosed AI 360-degree food turntable. EXACTLY 12 equal SQUARE tiles in an aligned 4-column by 3-row grid; total image landscape 4:3. NO gaps, gutters, margins, borders, text, captions or labels. Each tile contains the SAME one product in the same state. Fixed camera, fixed soft natural lighting, fixed scale, fixed perspective and a quiet warm off-white studio background; same contact shadow. Camera elevation about 20 degrees above table. Product is completely inside every square tile with generous safe margins, full rim/base/wooden stick never cropped. Rotate the object around a VERTICAL turntable axis in 12 successive perspectives, not a flat photo rotating around its own plane. Left to right, top to bottom: 0,30,60,90 / 120,150,180,210 / 240,270,300,330 degree viewpoints. Show front, right, back and left over the full loop with genuine changing perspective and foreshortening. Keep recognizable vessel, surface colors, garnish and shape consistent; no morphing, shape swaps, repeated front view or invented cuts. Use its existing plate if present; add no extra props, flowers, hands, cutlery or ingredients. Photoreal food catalog quality. It is an AI reconstruction of unphotographed views, NOT documentary photography or a verified recipe. Identity reference: Same elongated RECTANGULAR transparent tub of Lemon Tiramisu, pale creamy sides and thin pale-yellow top. One raspberry, one blueberry and modest mint leaf with sparse zest-like flecks. Preserve long/short side proportions; the tub must turn and foreshorten correctly, never become a square cup or slice.",
+      "reference": "assets/dessert-angles/430214-1200.webp",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-7b4fd44d-6b47-4f80-beb8-9de8678d63c0.png",
+      "referenceSha256": "ae1b95fc21e76bcb9dee6775e8994532f33a432648f8c9aa1ebf88cd0284cf1c",
+      "sourceSha256": "cd8dbac770195ba4ceb8acc2b397458688d6290c363f0cc1f8c0a60d89a369d9",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "asset": {
+        "path": "assets/turntables/430214.webp",
+        "bytes": 85598,
+        "sha256": "83e088b79b9b0712206bb2b9fc95eb2904837be4b6e4124f6f1910160c8403ad"
+      }
+    },
+    "431304": {
+      "id": "431304",
+      "prompt": "Create ONE production sprite-sheet asset for a disclosed AI 360-degree food turntable. EXACTLY 12 equal SQUARE tiles in an aligned 4-column by 3-row grid; total image landscape 4:3. NO gaps, gutters, margins, borders, text, captions or labels. Each tile contains the SAME one product in the same state. Fixed camera, fixed soft natural lighting, fixed scale, fixed perspective and a quiet warm off-white studio background; same contact shadow. Camera elevation about 20 degrees above table. Product is completely inside every square tile with generous safe margins, full rim/base/wooden stick never cropped. Rotate the object around a VERTICAL turntable axis in 12 successive perspectives, not a flat photo rotating around its own plane. Left to right, top to bottom: 0,30,60,90 / 120,150,180,210 / 240,270,300,330 degree viewpoints. Show front, right, back and left over the full loop with genuine changing perspective and foreshortening. Keep recognizable vessel, surface colors, garnish and shape consistent; no morphing, shape swaps, repeated front view or invented cuts. Use its existing plate if present; add no extra props, flowers, hands, cutlery or ingredients. Photoreal food catalog quality. It is an AI reconstruction of unphotographed views, NOT documentary photography or a verified recipe. Identity reference: Same compact oblong dark chocolate-coated Magnum brownie on its wooden stick and plain ivory round plate. Sparse white drizzle across part of the top. The stick must swing around and be occluded/foreshortened correctly. No flower, no cut, no exposed filling, no new toppings.",
+      "reference": "assets/dessert-angles/431304-1200.webp",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-c4b4d1fc-00f9-4c58-b763-97d06c962ae6.png",
+      "referenceSha256": "966fcfac78ef9be9bbbe7f08a2cdc0fe85a02c6c8ad62a0c319e7868118f9368",
+      "sourceSha256": "f9e6904bc9854b8d3a75d1a3f16fc2407f552c89fc29844d775441060f38553f",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "asset": {
+        "path": "assets/turntables/431304.webp",
+        "bytes": 103814,
+        "sha256": "bbd0e43c533762b39937d3a6d847a3fe4c16cede71cca7737a1c648fb46849d8"
+      }
+    },
+    "431302": {
+      "id": "431302",
+      "prompt": "Create ONE production contact sheet for an interactive AI 360-degree product turntable, using the supplied image as the identity reference. EXACTLY 12 equal square frames in a perfectly aligned 4-column by 3-row grid. Landscape 4:3 total canvas, edge-to-edge tiles, NO gutters, margins, borders, labels or text. This is one sprite-sheet asset, not a collage advertisement. Every tile must show the SAME intact pink-coated oblong Magnum brownie on its SAME wooden stick on the SAME small plain ivory round plate. No flower, no new decoration, no filling, no cut or bite. Product scale, plate size, camera elevation, lens and lighting are IDENTICAL in all 12 tiles. Fixed camera at a low three-quarter side view about 20 degrees above table, centered turntable axis. Quiet seamless warm off-white studio background. Rotate the PRODUCT AROUND THE VERTICAL TURNTABLE AXIS, not around the camera image plane. Keep the plate centered and level. Frame order is left-to-right then top-to-bottom: azimuths 0,30,60,90 / 120,150,180,210 / 240,270,300,330 degrees. The wooden stick must swing around the plate from front toward side/back and back again, including foreshortening and occlusion; the back of the intact pink coating remains closed and opaque. Each tile shows the full plate and full wooden stick with safe margins; never crop. Naturally changing perspective, consistent shape/material, no object morphing, no repeated identical angle. Photoreal food catalog quality, clearly recognizable same product throughout. This is disclosed AI visual reconstruction of unphotographed angles, NOT evidence of real unseen details.",
+      "reference": "assets/dessert-angles/431302-1200.webp",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-3f5ab9a6-6e69-400e-97d7-d6c3a2728d6d.png",
+      "referenceSha256": "f3e5e0d4ef8050ee6caf905de635ca42ad73a834abfa1f570c88416a82b7fc16",
+      "sourceSha256": "c0bcfab69c64d67e357e51baa4717ca6be2161b33c87001f7c26454c6a11d34a",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "visualReview": "accepted",
+      "asset": {
+        "path": "assets/turntables/431302.webp",
+        "bytes": 95046,
+        "sha256": "8fbaf701df953f77d1eb2345c4e3cb372fc6ea2454ad1edbf6c5c47f1e6f4979"
+      }
+    }
+  }
+}
