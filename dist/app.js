@@ -238,7 +238,7 @@ function openDetail(id,variant='focus') {
   if(!byId.has(id))return;detailId=id;detailVariant=['original','inside','spin'].includes(variant)?variant:'focus';if(detailVariant==='spin'&&!hasTurntable(byId.get(id)))detailVariant='focus';
   stopFeedViews();recordView(id);
   renderDetail();if(!$('detail-dialog').open)$('detail-dialog').showModal();$('detail-dialog').scrollTop=0;
-  if(switching)$('detail-content').querySelector(detailVariant==='spin'?'.spin-back':previousVariant==='spin'?'.spin-detail-launch':'.detail-source-toggle')?.focus({preventScroll:true});
+  if(switching)$('detail-content').querySelector(detailVariant==='spin'?'.spin-back':previousVariant==='spin'&&detailVariant!=='original'?'.spin-detail-launch':'.detail-source-toggle')?.focus({preventScroll:true});
 }
 function renderDetail() {
   disposeCakeViewer();disposeTurntable();
