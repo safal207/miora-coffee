@@ -262,7 +262,21 @@ function renderCartCount() {
 }
 function refreshCart() {cart=normalizeCart(load('cart',cart),byId);}
 function commitCart(next) {cart=next;save('cart',cart);if(!orderTotals().count)staffMode=false;renderCartCount();if($('cart-dialog').open)renderCart();}
-function add(id) {if(byId.get(id)?.price==null)return;refreshCart();if((cart[id]||0)>=99){notify(t('limit'));return;}commitCart(updateCart(cart,id,1,byId));notify(`${t('added')} · ${name(byId.get(id))}`);}
+function add(id) {
+  if(byId.get(id)?.price==null)return false;
+  refreshCart();
+  if((cart[id]||0)>=99){notify(t('limit'));return false;}
+  commitCart(updateCart(cart,id,1,byId));
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const cartButton=$('cart-open');
+    cartButton.classList.remove('miora-cart-pulse');
+    void cartButton.offsetWidth;
+    cartButton.classList.add('miora-cart-pulse');
+    cartButton.addEventListener('animationend',()=>cartButton.classList.remove('miora-cart-pulse'),{once:true});
+  }
+  notify(`${t('added')} · ${name(byId.get(id))}`);
+  return true;
+}
 function toggleFavorite(id) {
   if(!byId.has(id))return;
   if(favorites.has(id)){favorites.delete(id);notify(t('favoriteRemoved'));}else{favorites.add(id);notify(t('favoriteAdded'));}
@@ -284,10 +298,10 @@ const detailCopy = {
   tr:{more:'İçindekiler, alerjenler ve ayrıntılar',allergen:'Menüdeki alerjenler',check:'içeriği personele doğrulayın',unknown:'Alerjenler: personele danışın'}
 };
 function renderDetail() {
-  const keepDetailsOpen=$('detail-content').querySelector('.detail-more')?.open===true;
+  const keepDetailsOpen=$('detail-dialog').open && $('detail-content').querySelector('.detail-more')?.open===true;
   disposeCakeViewer();disposeTurntable();
   const p=byId.get(detailId),c=categories.find(c=>c.id===p.cat);if(!p)return;
-  $('detail-content').innerHTML=`<div class="detail-top">${detailVariant==='spin'?turntableMarkup(p,lang,name(p),money):hasCakeInterior(p)&&detailVariant!=='original'?cakeViewerMarkup(p,lang,name(p),detailVariant):hasPhoto(p)?`<img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p,480,detailVariant)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 32px), 480px',detailVariant)} width="640" height="640" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}">`:`<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(p))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}${hasTurntable(p)&&detailVariant!=='spin'&&detailVariant!=='original'?`<button type="button" class="spin-detail-launch" data-spin="${p.id}">${spinCopy[lang].open}</button>`:''}<button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
+  $('detail-content').innerHTML=`<div class="detail-top">${detailVariant==='spin'?turntableMarkup(p,lang,name(p),money):hasCakeInterior(p)&&detailVariant!=='original'?cakeViewerMarkup(p,lang,name(p),detailVariant):hasPhoto(p)?`<img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p,480,detailVariant)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 32px), 480px',detailVariant)} width="640" height="640" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}">`:`<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(p))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}${hasTurntable(p)&&detailVariant!=='spin'&&detailVariant!=='original'?`<button type="button" class="spin-detail-launch" data-spin="${p.id}">${spinCopy[lang].open}</button>`:''}<button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
     <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2><div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}${p.price!==null?`<span class="metric detail-price">${money(p.price)}</span>`:''}</div>
     <p class="photo-provenance"${(hasCakeInterior(p)&&detailVariant!=='original')||detailVariant==='spin'?' hidden':''}>${esc(hasCakeInterior(p)&&detailVariant!=='original'?cakeCopy[lang].art:photoKind(p,detailVariant)==='generated'&&!hasRestagedPhoto(p)?(lang==='ru'?'AI-пример подачи, созданный по названию и составу меню; это не фотография блюда Miora.':lang==='en'?'AI serving illustration created from the menu name and ingredients; not a photograph of the actual Miora dish.':'Menü adı ve içeriğine göre oluşturulmuş yapay zekâ servis örneğidir; gerçek Miora ürün fotoğrafı değildir.'):(photoKind(p,detailVariant)==='illustration'||hasRestagedPhoto(p)&&detailVariant!=='original')?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
     <p class="detail-allergen-quick">${p.allergens.length?`${esc(detailCopy[lang].allergen)}: ${esc(p.allergens.map(a=>t(a)).join(", "))} · ${esc(detailCopy[lang].check)}`:esc(detailCopy[lang].unknown)}</p>
@@ -436,8 +450,16 @@ document.addEventListener('click',async event=>{
   if(d.close){$(d.close).close();return;}
   if(d.spin){openDetail(d.spin,'spin');return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
-  if(d.add){add(d.add);if(button.closest('#detail-dialog')&&$('detail-dialog').open)$('detail-dialog').close();return;}
-  if(d.favorite){toggleFavorite(d.favorite);return;}
+  if(d.add){const added=add(d.add);if(added&&button.closest('#detail-dialog')&&$('detail-dialog').open)$('detail-dialog').close();return;}
+  if(d.favorite){
+    const wasLiked=favorites.has(d.favorite);
+    toggleFavorite(d.favorite);
+    if(!wasLiked&&favorites.has(d.favorite)&&button.isConnected&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+      button.classList.add('miora-tapped');
+      button.addEventListener('animationend',()=>button.classList.remove('miora-tapped'),{once:true});
+    }
+    return;
+  }
   if(d.share){await shareItem(d.share);return;}
   if(button.hasAttribute('data-video-desserts')){selectCategory('46818');$('result-title').setAttribute('tabindex','-1');$('result-title').focus({preventScroll:true});return;}
   if(d.journeyJump){const section=$('collection-'+d.journeyJump);if(section){const offset=document.querySelector('.header').offsetHeight+(view==='feed'?$('feed-stories').offsetHeight:0)+$('toolbar').offsetHeight+8;window.scrollTo({top:Math.max(0,section.getBoundingClientRect().top+scrollY-offset),behavior:'instant'});section.querySelector('h3')?.setAttribute('tabindex','-1');section.querySelector('h3')?.focus({preventScroll:true});}return;}
