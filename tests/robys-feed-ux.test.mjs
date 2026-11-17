@@ -25,7 +25,7 @@ test('one-column feed and mobile social controls do not replace the grid, galler
   assert.match(css, /@media \(max-width: 620px\)/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(html, /robys-feed-ux\.css\?v=20261117-counts1/);
-  assert.match(html, /app\.js\?v=20261117-counts1/);
+  assert.match(html, /app\.js\?v=20261117-premium1/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
   assert.ok(app.includes('if(d.favorite){toggleFavorite(d.favorite);return;}'));
@@ -66,4 +66,24 @@ test('per-device counters are explicit, and each card mode includes likes, share
   assert.match(app, /navigator\.share\(\{title:[\s\S]*?\}\);recordShare\(id\)/);
   assert.match(app, /syncSocialStats\(\)/);
   assert.match(css, /\.social-stats-scope/);
+});
+
+
+test('conversion-first product detail uses optional specifications, sticky CTA and progressive media', () => {
+  const detail = app.slice(app.indexOf('function renderDetail() {'), app.indexOf('\nfunction recommend()'));
+  const polish = readFileSync(new URL('../dist/interaction-polish.css', import.meta.url), 'utf8');
+  assert.match(html, /interaction-polish\.css\?v=20261117-premium1/);
+  assert.match(detail, /<details class="detail-more">/);
+  assert.match(detail, /<summary>\$\{esc\(detailCopy\[lang\]\.more\)\}<\/summary>/);
+  assert.match(detail, /<p class="detail-allergen-quick"/);
+  assert.match(detail, /<p class="photo-provenance"/);
+  assert.match(detail, /hasCakeInterior\(p\)/);
+  assert.match(detail, /turntableMarkup\(p,lang,name\(p\),money\)/);
+  assert.match(detail, /enhanceKioskDetail\(detailId\)/);
+  assert.match(detail, /keepDetailsOpen/);
+  assert.match(polish, /#detail-dialog \.detail-actions\s*\{[\s\S]*?position: sticky/);
+  assert.match(polish, /#detail-dialog \.detail-photo\s*\{[\s\S]*?height: min\(41dvh, 355px\)/);
+  assert.match(polish, /@media\(prefers-reduced-motion:reduce\)/);
+  assert.match(polish, /dialog\[open\]\s*\{[\s\S]*?animation:miora-dialog-in/);
+  assert.match(app, /if\(added&&button\.closest\('#detail-dialog'\)/);
 });
