@@ -110,14 +110,19 @@ function renderProducts() {
   const label=category==='featured'?t('featured'):category==='all'?(search?t('searchResults'):t('all')):category==='favorites'?t('favorites'):categories.find(c=>c.id===category)?.name[lang]||t('all');
   $('result-title').textContent=label;$('result-count').textContent=`${list.length} ${t('count')}`;
   document.body.dataset.view=view;
+  const builderMenu=$('builder-menu');
+  if(builderMenu.dataset.lastView!==view){builderMenu.open=view!=='feed';builderMenu.dataset.lastView=view;}
+  $('spotlight-disclosure-label').textContent=motionCopy[lang].title;
+  $('spotlight-disclosure').hidden=view!=='feed';
   $('menu-title').textContent=t(view==='feed'?'feedTitle':'menuTitle');document.querySelector('[data-i18n="menuKicker"]').textContent=t(view==='feed'?'feedKicker':'menuKicker');
   $('feed-stories').hidden=view!=='feed';$('categories').hidden=view==='feed';
   $('empty-state').hidden=list.length>0;$('products').className='product-grid'+(view==='list'?' list-view':view==='feed'?' feed-view':'');
   $('view-feed').setAttribute('aria-pressed',String(view==='feed'));$('view-grid').setAttribute('aria-pressed',String(view==='grid'));$('view-list').setAttribute('aria-pressed',String(view==='list'));$('search-clear').hidden=!search;
   if(view==='feed'){
     if(!search&&category!=='favorites')disposeSpotlight=mountSpotlight($('menu-spotlight'),displayList,{lang,name,money});
+    $('spotlight-disclosure').hidden=$('menu-spotlight').hidden;
     const copy=journeyCopy[lang],sections=desireSections(displayList,{category,search,categories});
-    const index=sections.length>1?`<nav class="journey-index" aria-label="${esc(copy.find)}"><h3>${esc(copy.find)}</h3><p>${esc(copy.all)}</p><div class="journey-links">${sections.map(g=>`<button type="button" data-journey-jump="${g.id}">${esc(localizedJourney(g.title,lang))}<small>${g.items.length}</small></button>`).join('')}</div></nav>`:'';
+    const index=sections.length>1?`<details class="journey-index"><summary>${esc(copy.find)}</summary><div class="journey-links">${sections.map(g=>`<button type="button" data-journey-jump="${g.id}">${esc(localizedJourney(g.title,lang))}<small>${g.items.length}</small></button>`).join('')}</div></details>`:'';
     $('products').innerHTML=index+sections.map(g=>{
       const cards=g.items.map(p=>feedPost(p)).join('');
       return `<section class="journey-section" id="collection-${g.id}" data-journey-section="${g.id}"${g.title?` aria-labelledby="collection-title-${g.id}"`:''}>${g.title?`<div class="journey-heading"><h3 id="collection-title-${g.id}">${esc(localizedJourney(g.title,lang))}</h3><span>${g.items.length} ${copy.choices}</span></div>`:''}<div class="journey-cards">${cards}</div></section>`;
