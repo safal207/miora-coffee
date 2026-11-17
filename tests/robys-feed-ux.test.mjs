@@ -72,13 +72,13 @@ test('per-device counters are explicit, and each card mode includes likes, share
 test('conversion-first product detail uses optional specifications, sticky CTA and progressive media', () => {
   const detail = app.slice(app.indexOf('function renderDetail() {'), app.indexOf('\nfunction recommend()'));
   const polish = readFileSync(new URL('../dist/interaction-polish.css', import.meta.url), 'utf8');
-  assert.match(html, /interaction-polish\.css\?v=20261117-premium1/);
+  assert.match(html, /interaction-polish\.css\?v=20261117-curated1/);
   assert.match(detail, /<details class="detail-more">/);
   assert.match(detail, /<summary>\$\{esc\(detailCopy\[lang\]\.more\)\}<\/summary>/);
   assert.match(detail, /<p class="detail-allergen-quick"/);
   assert.match(detail, /<p class="photo-provenance"/);
-  assert.match(detail, /hasCakeInterior\(p\)/);
-  assert.match(detail, /turntableMarkup\(p,lang,name\(p\),money\)/);
+  assert.match(detail, /hasCuratedCutaway\(p\)/);
+  assert.doesNotMatch(detail, /turntableMarkup|cakeViewerMarkup|spin-detail-launch/);
   assert.match(detail, /enhanceKioskDetail\(detailId\)/);
   assert.match(detail, /keepDetailsOpen/);
   assert.match(polish, /#detail-dialog \.detail-actions\s*\{[\s\S]*?position: sticky/);
@@ -86,4 +86,24 @@ test('conversion-first product detail uses optional specifications, sticky CTA a
   assert.match(polish, /@media\(prefers-reduced-motion:reduce\)/);
   assert.match(polish, /dialog\[open\]\s*\{[\s\S]*?animation:miora-dialog-in/);
   assert.match(app, /if\(added&&button\.closest\('#detail-dialog'\)/);
+});
+
+
+test('the customer-facing menu has no AI 360 controls and only curated static cutaways',()=>{
+  const appDetail=app.slice(app.indexOf('function renderDetail() {'), app.indexOf('\nfunction recommend()'));
+  const motion=readFileSync(new URL('../dist/menu-motion.js',import.meta.url),'utf8');
+  const photos=readFileSync(new URL('../dist/photos.js',import.meta.url),'utf8');
+  const policy=readFileSync(new URL('../dist/media-merchandising.js',import.meta.url),'utf8');
+  assert.ok(app.includes('hasCuratedCutaway'));
+  assert.ok(appDetail.includes('detail-cutaway'));
+  assert.ok(appDetail.includes("photo(p,640,'inside')"));
+  assert.ok(appDetail.includes('loading="lazy"'));
+  assert.ok(appDetail.includes('cutawayCopy[lang].note'));
+  assert.doesNotMatch(app,/from '\.\/turntable\.js|from '\.\/cake-interiors\.js|data-spin=|turntableMarkup|cakeViewerMarkup/);
+  assert.doesNotMatch(motion,/from '\.\/turntable\.js|from '\.\/cake-interiors\.js|spin-card-launch|data-spin=|cake-feed-hint/);
+  assert.doesNotMatch(html,/href="turntable\.css|href="cake-interiors\.css/);
+  assert.match(policy,/new Set\(\['430226','429808'\]\)/);
+  assert.match(policy,/customer360Enabled = false/);
+  assert.match(photos,/export const photoVariants=item=>focusedPhotos/);
+  assert.doesNotMatch(photos.split('export const photoVariants=')[1].split(';')[0],/inside/);
 });
