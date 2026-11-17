@@ -45,6 +45,22 @@ jobs:
           node --check dist/generated-photo-data.js
       - name: Verify catalog, assets and order integrity
         run: npm test
+      - name: Install Chromium for real browser smoke
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Verify Miora feed on mobile and desktop
+        run: |
+          python3 -m http.server 8123 --directory dist >/tmp/miora-smoke.log 2>&1 &
+          sleep 2
+          node tests/feed-smoke.mjs
+      - name: Upload feed screenshots for visual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: miora-feed-browser-captures
+          path: artifacts/*.png
+          if-no-files-found: ignore
       - name: Upload website
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v4
