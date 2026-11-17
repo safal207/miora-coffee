@@ -24,9 +24,21 @@ test('one-column feed and mobile social controls do not replace the grid, galler
   assert.match(css, /\.feed-action-rail\s*\{[\s\S]*?flex-direction: column/);
   assert.match(css, /@media \(max-width: 620px\)/);
   assert.match(css, /prefers-reduced-motion/);
-  assert.match(html, /robys-feed-ux\.css\?v=20261117-robys1/);
+  assert.match(html, /robys-feed-ux\.css\?v=20261117-robys2/);
   assert.match(html, /app\.js\?v=20261117-robys1/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
   assert.ok(app.includes('if(d.favorite){toggleFavorite(d.favorite);return;}'));
+});
+
+test('optional discovery modules are accessible and do not conceal the ordering paths', () => {
+  assert.match(html, /<details class="builder-entry" id="builder-menu">/);
+  assert.match(html, /<summary data-journey-copy="made">/);
+  assert.match(html, /<details class="spotlight-disclosure" id="spotlight-disclosure" hidden>/);
+  assert.match(app, /builderMenu\.open=view!=='feed'/);
+  assert.match(app, /\$\('spotlight-disclosure'\)\.hidden=\$\('menu-spotlight'\)\.hidden/);
+  assert.match(app, /<details class="journey-index"><summary>/);
+  assert.match(css, /\.gallery-footer/);
+  assert.ok(html.includes('data-k-start="sandwich"'));
+  assert.ok(html.includes('data-k-start="breakfast"'));
 });
