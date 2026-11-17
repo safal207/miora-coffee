@@ -110,14 +110,19 @@ function renderProducts() {
   const label=category==='featured'?t('featured'):category==='all'?(search?t('searchResults'):t('all')):category==='favorites'?t('favorites'):categories.find(c=>c.id===category)?.name[lang]||t('all');
   $('result-title').textContent=label;$('result-count').textContent=`${list.length} ${t('count')}`;
   document.body.dataset.view=view;
+  const builderMenu=$('builder-menu');
+  if(builderMenu.dataset.lastView!==view){builderMenu.open=view!=='feed';builderMenu.dataset.lastView=view;}
+  $('spotlight-disclosure-label').textContent=motionCopy[lang].title;
+  $('spotlight-disclosure').hidden=view!=='feed';
   $('menu-title').textContent=t(view==='feed'?'feedTitle':'menuTitle');document.querySelector('[data-i18n="menuKicker"]').textContent=t(view==='feed'?'feedKicker':'menuKicker');
   $('feed-stories').hidden=view!=='feed';$('categories').hidden=view==='feed';
   $('empty-state').hidden=list.length>0;$('products').className='product-grid'+(view==='list'?' list-view':view==='feed'?' feed-view':'');
   $('view-feed').setAttribute('aria-pressed',String(view==='feed'));$('view-grid').setAttribute('aria-pressed',String(view==='grid'));$('view-list').setAttribute('aria-pressed',String(view==='list'));$('search-clear').hidden=!search;
   if(view==='feed'){
     if(!search&&category!=='favorites')disposeSpotlight=mountSpotlight($('menu-spotlight'),displayList,{lang,name,money});
+    $('spotlight-disclosure').hidden=$('menu-spotlight').hidden;
     const copy=journeyCopy[lang],sections=desireSections(displayList,{category,search,categories});
-    const index=sections.length>1?`<nav class="journey-index" aria-label="${esc(copy.find)}"><h3>${esc(copy.find)}</h3><p>${esc(copy.all)}</p><div class="journey-links">${sections.map(g=>`<button type="button" data-journey-jump="${g.id}">${esc(localizedJourney(g.title,lang))}<small>${g.items.length}</small></button>`).join('')}</div></nav>`:'';
+    const index=sections.length>1?`<details class="journey-index"><summary>${esc(copy.find)}</summary><div class="journey-links">${sections.map(g=>`<button type="button" data-journey-jump="${g.id}">${esc(localizedJourney(g.title,lang))}<small>${g.items.length}</small></button>`).join('')}</div></details>`:'';
     $('products').innerHTML=index+sections.map(g=>{
       const cards=g.items.map(p=>feedPost(p)).join('');
       return `<section class="journey-section" id="collection-${g.id}" data-journey-section="${g.id}"${g.title?` aria-labelledby="collection-title-${g.id}"`:''}>${g.title?`<div class="journey-heading"><h3 id="collection-title-${g.id}">${esc(localizedJourney(g.title,lang))}</h3><span>${g.items.length} ${copy.choices}</span></div>`:''}<div class="journey-cards">${cards}</div></section>`;
@@ -167,9 +172,13 @@ function feedPost(p) {
   const media=kind==='missing'
     ?`<div class="menu-photo-pending"><span>miora</span><small>${esc(copy.noPhoto)}</small></div>`
     :hasAlternatePhoto(p)?`<div class="feed-photo generated-photo" data-feed-photo="${p.id}">${galleryMarkup(p,lang,name(p),copy.details)}</div>`
-    :`<div class="feed-photo ${kind==='original'?'original-photo original-'+p.id:kind==='generated'?'generated-photo generated-'+p.id:''}" data-feed-photo="${p.id}"><button class="feed-photo-button" type="button" data-detail="${p.id}" aria-label="${esc(copy.details+' · '+name(p))}"><img src="${photo(p)}" ${photoSet(p,'(max-width: 359px) calc(100vw - 24px), (max-width: 620px) calc((100vw - 34px) / 2), 305px')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(name(p))}"></button>${flavorChip(p)}</div>`;
+    :`<div class="feed-photo ${kind==='original'?'original-photo original-'+p.id:kind==='generated'?'generated-photo generated-'+p.id:''}" data-feed-photo="${p.id}"><button class="feed-photo-button" type="button" data-detail="${p.id}" aria-label="${esc(copy.details+' · '+name(p))}"><img src="${photo(p)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 24px), (max-width: 960px) 660px, 640px')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(name(p))}"></button>${flavorChip(p)}</div>`;
   return `<article class="product-card feed-post" data-product="${p.id}" aria-labelledby="post-title-${p.id}">
-    <div class="feed-media">${media}<button class="icon-btn feed-save" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${esc(copy.saved+' · '+name(p))}">${icon('heart')}</button></div>
+    <div class="feed-media">${media}<div class="feed-action-rail" role="group" aria-label="${esc(name(p))}">
+      <button class="icon-btn feed-save feed-rail-button" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${esc(t('favorites')+' · '+name(p))}" title="${esc(t('favorites'))}">${icon('heart')}<span class="feed-rail-label" aria-hidden="true">${esc(t('favorites'))}</span></button>
+      <button class="icon-btn feed-rail-button" type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}" title="${esc(t('share'))}">${icon('share')}<span class="feed-rail-label" aria-hidden="true">${esc(t('share'))}</span></button>
+      <button class="icon-btn feed-rail-button" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}" title="${esc(t('detail'))}">${icon('info')}<span class="feed-rail-label" aria-hidden="true">${esc(t('detail'))}</span></button>
+    </div></div>
     ${kind==='missing'||hasAlternatePhoto(p)?'':`<p class="feed-media-note">${kind==='generated'?copy.generated:kind==='illustration'?copy.illustration:copy.photo}</p>`}
     <div class="post-caption"><h3 id="post-title-${p.id}"><button type="button" data-detail="${p.id}">${esc(name(p))}</button></h3>${lang==='tr'?'':`<p class="post-original" lang="tr">${esc(p.name.tr)}</p>`}</div>
     <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${copy.add}</button>`}</div></article>`;
