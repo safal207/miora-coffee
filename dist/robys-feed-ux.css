@@ -161,3 +161,105 @@ body[data-view="feed"] .builder-entry summary {
 @media (prefers-reduced-motion: reduce) {
   body[data-view="feed"] .feed-action-rail .feed-rail-button {transition: none;}
 }
+/* Discovery stays available, but the photograph is the first protagonist. */
+body[data-view="feed"] .builder-entry,
+body[data-view="feed"] .spotlight-disclosure,
+body[data-view="feed"] .journey-index {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: none;
+}
+body[data-view="feed"] .builder-entry {margin-block: 8px 10px;padding:0 13px;}
+body[data-view="feed"] .builder-entry > summary,
+body[data-view="feed"] .spotlight-disclosure > summary,
+body[data-view="feed"] .journey-index > summary {
+  list-style: none;
+  position: relative;
+  padding: 12px 35px 12px 12px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+body[data-view="feed"] .builder-entry > summary {padding-inline: 0 25px;}
+body[data-view="feed"] .builder-entry > summary::-webkit-details-marker,
+body[data-view="feed"] .spotlight-disclosure > summary::-webkit-details-marker,
+body[data-view="feed"] .journey-index > summary::-webkit-details-marker {display:none;}
+body[data-view="feed"] .builder-entry > summary::after,
+body[data-view="feed"] .spotlight-disclosure > summary::after,
+body[data-view="feed"] .journey-index > summary::after {
+  content: "+";
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--teal);
+}
+body[data-view="feed"] .builder-entry > summary::after {right:0;}
+body[data-view="feed"] .builder-entry[open] > summary::after,
+body[data-view="feed"] .spotlight-disclosure[open] > summary::after,
+body[data-view="feed"] .journey-index[open] > summary::after {content:"−";}
+body[data-view="feed"] .builder-entry > summary:focus-visible,
+body[data-view="feed"] .spotlight-disclosure > summary:focus-visible,
+body[data-view="feed"] .journey-index > summary:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+body[data-view="feed"] .builder-entry .builder-shortcuts {padding-bottom:12px;}
+body[data-view="feed"] .spotlight-disclosure {margin:0 0 8px; padding:0 7px;}
+body[data-view="feed"] .spotlight-disclosure > summary {padding-left:8px;}
+body[data-view="feed"] .spotlight-disclosure #menu-spotlight {margin:0;}
+body[data-view="feed"] .spotlight-disclosure .menu-spotlight {border:0;box-shadow:none;margin:0;padding:9px 6px 15px;}
+body[data-view="feed"] .journey-index {margin:0 0 12px;padding:0 8px;}
+body[data-view="feed"] .journey-index > summary {padding-left:8px;}
+body[data-view="feed"] .journey-index .journey-links {margin:0;padding:0 6px 12px;gap:7px;}
+body[data-view="feed"] .journey-heading {margin-block:12px 14px;}
+body[data-view="feed"] .result-heading {padding-bottom:10px;}
+body[data-view="feed"] .feed-stories {margin-bottom:0;}
+/* Subtle interior/exterior image treatment: do not cover the original photo. */
+body[data-view="feed"] .gallery-frame .gallery-label {
+  bottom: 10px;
+  left: 10px;
+  max-width: calc(100% - 80px);
+  padding: 6px 9px;
+  border-radius: 8px;
+  font-size: 10px;
+  background: color-mix(in srgb,var(--card) 95%, transparent);
+  box-shadow: 0 2px 14px #00000014;
+}
+body[data-view="feed"] .gallery-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 10px 7px;
+  border-top: 1px solid var(--line);
+  background: var(--card);
+}
+body[data-view="feed"] .gallery-next {
+  flex: 1;
+  min-width: 0;
+  justify-content: space-between;
+  border-radius: 8px;
+  padding-inline: 10px;
+  font-weight: 600;
+  color: var(--teal);
+}
+body[data-view="feed"] .spin-card-launch {
+  flex: 0 0 auto;
+  min-width: 54px;
+  border-radius: 8px;
+}
+@media(max-width:620px){
+  body[data-view="feed"] .journey-index {margin:0 12px 12px;}
+  body[data-view="feed"] .spotlight-disclosure {margin:0 12px 8px;}
+  body[data-view="feed"] .gallery-frame .gallery-label {font-size:9px;}
+}
