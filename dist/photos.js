@@ -6,8 +6,10 @@ import {dessertPhotos} from './dessert-photo-data.js';
 import {cakePhotos} from './cake-photo-data.js';
 const focusedPhotos=Object.freeze({...previousFocusedPhotos,...dessertPhotos});
 export const hasRestagedPhoto=item=>Boolean(focusedPhotos[item?.id]);
-export const hasAlternatePhoto=item=>Boolean(focusedPhotos[item?.id]||cakePhotos[item?.id]);
-export const photoVariants=item=>cakePhotos[item?.id]?(focusedPhotos[item.id]?['focus','inside','original']:['focus','inside']):focusedPhotos[item?.id]?['focus','original']:['focus'];
+// The discovery feed shows real menu photos and useful alternate covers, never AI cutaway comparisons.
+// Optional curated cutaway images remain available only inside expanded product information.
+export const photoVariants=item=>focusedPhotos[item?.id]?['focus','original']:['focus'];
+export const hasAlternatePhoto=item=>photoVariants(item).length>1;
 const placeholders=new Set(photoPlaceholders),widths=new Set([160,640,1200]);
 export const hasPhoto=item=>Boolean(generatedPhotos[item?.id])||Boolean(item?.image)&&!placeholders.has(item.id);
 export function photoUrl(item,width=640,variant='focus') {

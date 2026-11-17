@@ -51,8 +51,11 @@ try {
     await page.locator('.feed-post').first().waitFor();
     assert(await page.locator('.feed-post').count() >= 10, 'dessert category should retain products');
     const gallery = page.locator('.product-gallery').first();
-    assert(await gallery.count() > 0, 'interior gallery must remain accessible');
+    assert(await gallery.count() > 0, 'alternate source photo gallery must remain accessible');
     await gallery.locator('.gallery-next').click();
+    assert.equal(await page.locator('#products [data-source-view="inside"]').count(),0,'synthetic cuts must not appear in dessert feed');
+    assert.equal(await page.locator('#products [data-spin]').count(),0,'360 must be absent from all dessert cards');
+
     // Grid and compact list must both provide accessible right-side favorite and paper-plane share.
     await page.locator('#view-grid').click();
     assert(await page.locator('#products.product-grid:not(.feed-view)').count() === 1);
@@ -89,6 +92,13 @@ try {
     assert.equal(gridRes.status(),200);
     await gridPage.locator('#products .product-card').first().waitFor();
     assert.equal(await gridPage.locator('body').getAttribute('data-view'),'grid');
+    const ordinaryCake=gridPage.locator('#products .product-card[data-product="429828"]');
+    await ordinaryCake.locator('.product-open').click();
+    await gridPage.locator('#detail-dialog[open]').waitFor();
+    assert.equal(await gridPage.locator('#detail-dialog .detail-cutaway').count(),0,'non-curated cheesecake must not show imagined cuts');
+    assert.equal(await gridPage.locator('#detail-dialog .spin-viewer').count(),0);
+    await gridPage.locator('#detail-dialog [data-close]').first().click();
+
     assert.equal(await gridPage.locator('.product-card').count(),93,'direct all-products grid should contain all 93 items');
     const product=gridPage.locator('#products .product-card').first();
     assert.equal(await product.locator('.social-stats .social-stat').count(),3,'three social counters must be visible');
@@ -124,10 +134,20 @@ try {
     assert(purchaseRect && purchaseRect.y>=-1 && purchaseRect.y+purchaseRect.height<=850,
       'product add action must fit inside the initial mobile viewport');
     await gridPage.screenshot({path:'artifacts/quick-detail-'+lang+'-'+width+'.png'});
-    await specs.locator('summary').click();
+    await specs.locator(':scope > summary').click();
     assert.equal(await specs.evaluate(el=>el.open),true,'full specifications must remain accessible');
     assert(await dialog.locator('.detail-more-body .detail-section').first().isVisible());
-    await specs.locator('summary').click();
+    assert.equal(await dialog.locator('.detail-cutaway').count(),1,'only curated cheesecake has an optional cutaway');
+    assert.equal(await dialog.locator('.cake-viewer').count(),0,'no comparison slider in quick view');
+    assert.equal(await dialog.locator('.spin-viewer').count(),0,'no 360 overlay in quick view');
+    const cutaway=dialog.locator('.detail-cutaway');
+    assert.equal(await cutaway.evaluate(el=>el.open),false);
+    await cutaway.locator('summary').click();
+    assert(await cutaway.locator('img').isVisible(),'cutaway is available only on deliberate expansion');
+    assert.match(await cutaway.locator('p').textContent(),/AI|yapay zekâ|ИИ|иллюстрац/i);
+    await cutaway.locator('summary').click();
+
+    await specs.locator(':scope > summary').click();
     assert.equal(await specs.evaluate(el=>el.open),false);
     const countBefore=Number(await gridPage.locator('#cart-open .cart-count').textContent());
     await action.click();

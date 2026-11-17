@@ -1,6 +1,4 @@
-import {hasTurntable,spinCopy} from './turntable.js?v=20261116-spin1';
-import {hasCakeInterior,cakeCopy,cakeIngredientInfo} from './cake-interiors.js?v=20261115-angles1';
-import {photoUrl,photoSet,photoKind,photoVariants} from './photos.js?v=20261115-angles1';
+import {photoUrl,photoSet,photoKind,photoVariants} from './photos.js?v=20261117-curated1';
 export const DWELL_MS=7000,TRANSITION_MS=650;
 export const motionCopy={
  ru:{title:'Присмотрись к вкусу',pause:'Пауза',play:'Продолжить',prev:'Предыдущее',next:'Следующее',details:'Подробнее',swipe:'Листни фото ↔',ai:'AI-пример подачи',original:'Кадр из меню',restyled:'AI-обработка кадра меню',source:'Посмотреть исходный кадр',cover:'Посмотреть обложку'},
@@ -8,7 +6,7 @@ export const motionCopy={
  en:{title:'Take a closer look',pause:'Pause',play:'Resume',prev:'Previous',next:'Next',details:'View details',swipe:'Swipe photos ↔',ai:'AI serving illustration',original:'Source menu photo',restyled:'AI-restyled menu image',source:'View source image',cover:'View cover image'}
 };
 const escape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export const imageLabel=(item,lang,variant='focus')=>{if(variant==='inside')return cakeCopy[lang].photo;const c=motionCopy[lang];return c[({generated:'ai',illustration:'restyled',original:'original'})[photoKind(item,variant)]];};
+export const imageLabel=(item,lang,variant='focus')=>{const c=motionCopy[lang];return c[({generated:'ai',illustration:'restyled',original:'original'})[photoKind(item,variant)]];};
 export function spotlightItems(items){
  // Curated contrasts are a browsing suggestion, not a popularity or discount claim.
  const preferred=['460119','429808','428772','460120','429822','430356','431203'];
@@ -18,18 +16,15 @@ export function spotlightItems(items){
  return chosen;
 }
 export function galleryMarkup(p,lang,name,detailLabel){
- const c=motionCopy[lang],variants=photoVariants(p),info=hasCakeInterior(p)?cakeIngredientInfo(p,lang):null;
- return `<div class="product-gallery" data-gallery="${p.id}"><div class="gallery-track" role="group" aria-label="${escape(name)}">${variants.map((variant,i)=>`<div class="gallery-frame"><button type="button" class="feed-photo-button" data-detail="${p.id}" data-source-view="${variant}" aria-label="${escape(detailLabel+' · '+name+' · '+imageLabel(p,lang,variant))}"><img src="${photoUrl(p,640,variant)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 40px), (max-width: 960px) 660px, 640px',variant)} width="640" height="480" loading="lazy" decoding="async" alt="${escape(name)}"><span class="gallery-label">${escape(imageLabel(p,lang,variant))} · ${i+1}/${variants.length}</span>${variant==='inside'?`<span class="cake-feed-hint">${escape(info.preview.slice(0,2).join(' · ')||cakeCopy[lang].missing)}</span>`:''}</button></div>`).join('')}</div><div class="gallery-footer"><button type="button" class="gallery-next" aria-label="${escape(c.next+' · '+name)}">${escape(info?cakeCopy[lang].inside+' ↔':hasTurntable(p)?spinCopy[lang].photos:c.swipe)} <span aria-hidden="true">1/${variants.length}</span></button>${hasTurntable(p)?`<button type="button" class="spin-card-launch" data-spin="${p.id}" aria-label="${escape(spinCopy[lang].open+' · '+name)}">360°</button>`:''}</div></div>`;
+ const c=motionCopy[lang],variants=photoVariants(p);
+ // A second, genuine source image can help the customer verify the product.
+ // Decorative cuts and fabricated 360 animations never appear in the feed.
+ return `<div class="product-gallery" data-gallery="${p.id}"><div class="gallery-track" role="group" aria-label="${escape(name)}">${variants.map((variant,i)=>`<div class="gallery-frame"><button type="button" class="feed-photo-button" data-detail="${p.id}" data-source-view="${variant}" aria-label="${escape(detailLabel+' · '+name+' · '+imageLabel(p,lang,variant))}"><img src="${photoUrl(p,640,variant)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 40px), (max-width: 960px) 660px, 640px',variant)} width="640" height="480" loading="lazy" decoding="async" alt="${escape(name)}"><span class="gallery-label">${escape(imageLabel(p,lang,variant))} · ${i+1}/${variants.length}</span></button></div>`).join('')}</div><div class="gallery-footer"><button type="button" class="gallery-next" aria-label="${escape(c.next+' · '+name)}">${escape(c.swipe)} <span aria-hidden="true">1/${variants.length}</span></button></div></div>`;
 }
 export function mountGalleries(root){
  const cleanups=[];
- let nudged=false;
- const cue=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.intersectionRatio>=.8&&!nudged&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!root.contains(document.activeElement)){
-  nudged=true;const animation=entry.target.querySelector('.gallery-frame').animate([{transform:'translateX(0)'},{transform:'translateX(-7px)'},{transform:'translateX(0)'}],{duration:650,iterations:1});cleanups.push(()=>animation.cancel());cue.disconnect();break;
- }},{threshold:[0,.8]});
  for(const gallery of root.querySelectorAll('[data-gallery]')){
   const track=gallery.querySelector('.gallery-track'),button=gallery.querySelector('.gallery-next'),frames=[...track.children];
-  cue.observe(gallery);
   let index=0,startX=0,startY=0,dragged=false;
   const positions=()=>frames.map(frame=>Math.min(frame.offsetLeft-frames[0].offsetLeft,track.scrollWidth-track.clientWidth));
   const move=()=>{const points=positions();index=points.reduce((best,x,i)=>Math.abs(track.scrollLeft-x)<Math.abs(track.scrollLeft-points[best])?i:best,0);button.querySelector('span').textContent=`${index+1}/${frames.length}`;};
@@ -41,7 +36,7 @@ export function mountGalleries(root){
   track.addEventListener('pointerdown',down);track.addEventListener('pointermove',pointerMove);track.addEventListener('click',guard,true);
   cleanups.push(()=>{track.removeEventListener('scroll',move);button.removeEventListener('click',click);track.removeEventListener('pointerdown',down);track.removeEventListener('pointermove',pointerMove);track.removeEventListener('click',guard,true);});
  }
- return ()=>{cue.disconnect();cleanups.forEach(fn=>fn());};
+ return ()=>{cleanups.forEach(fn=>fn());};
 }
 export function mountSpotlight(root,items,{lang,name,money}){
  const selected=spotlightItems(items),c=motionCopy[lang];root.hidden=selected.length<2;
