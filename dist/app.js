@@ -1,5 +1,4 @@
-import {hasTurntable,turntableMarkup,mountTurntable,spinCopy} from './turntable.js?v=20261116-spin1';
-import {hasCakeInterior,cakeViewerMarkup,mountCakeViewer,cakeCopy} from './cake-interiors.js?v=20261115-angles1';
+import {hasCuratedCutaway} from './media-merchandising.js?v=20261117-curated1';
 import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261116-spin1';
 import {desireSections,journeyCopy,localizedJourney} from './desire-journey.js?v=20261112-generated1';
 import {videoStory,dessertStoryVisible} from './video-stories.js';
@@ -75,7 +74,7 @@ let pendingShareId=null;
 const viewedThisSession=new Set();
 let feedObserver=null;
 const feedViewTimers=new Map();
-let toastTimer,disposeSpotlight=()=>{},disposeGalleries=()=>{},disposeCakeViewer=()=>{},disposeTurntable=()=>{},detailVariant='focus';
+let toastTimer,disposeSpotlight=()=>{},disposeGalleries=()=>{},detailVariant='focus';
 const t = key => messages[lang][key]||messages.tr[key]||key;
 const name = item => item.name[lang]||item.name.tr;
 const money = value => new Intl.NumberFormat(lang==='tr'?'tr-TR':lang==='ru'?'ru-RU':'en-GB',{maximumFractionDigits:2}).format(value/100)+' ₺';
@@ -285,30 +284,40 @@ function toggleFavorite(id) {
   if(category==='favorites')renderProducts();
 }
 function openDetail(id,variant='focus') {
-  const previousVariant=detailVariant;
+  if(!byId.has(id))return;
   const switching=detailId===id&&$('detail-dialog').open;
-  if(!byId.has(id))return;detailId=id;detailVariant=['original','inside','spin'].includes(variant)?variant:'focus';if(detailVariant==='spin'&&!hasTurntable(byId.get(id)))detailVariant='focus';
+  detailId=id;
+  // Curated front image first: no unsolicited reconstructed 360 or synthetic cutaway.
+  detailVariant=variant==='original'?'original':'focus';
   stopFeedViews();recordView(id);
-  renderDetail();if(!$('detail-dialog').open)$('detail-dialog').showModal();$('detail-dialog').scrollTop=0;
-  if(switching)$('detail-content').querySelector(detailVariant==='spin'?'.spin-back':previousVariant==='spin'&&detailVariant!=='original'?'.spin-detail-launch':'.detail-source-toggle')?.focus({preventScroll:true});
+  renderDetail();
+  if(!$('detail-dialog').open)$('detail-dialog').showModal();
+  $('detail-dialog').scrollTop=0;
+  if(switching)$('detail-content').querySelector('.detail-source-toggle')?.focus({preventScroll:true});
 }
+
 const detailCopy = {
   ru:{more:'Состав, аллергены и дополнительная информация',allergen:'Аллергены по меню',check:'уточните состав у сотрудника',unknown:'Аллергены: уточните у сотрудника'},
   en:{more:'Ingredients, allergens and more',allergen:'Listed allergens',check:'confirm ingredients with staff',unknown:'Allergens: ask the staff'},
   tr:{more:'İçindekiler, alerjenler ve ayrıntılar',allergen:'Menüdeki alerjenler',check:'içeriği personele doğrulayın',unknown:'Alerjenler: personele danışın'}
 };
+const cutawayCopy={
+  ru:{title:'Как выглядит внутри (AI-иллюстрация)',alt:'Иллюстрация возможной текстуры разреза',note:'Иллюстрация создана ИИ. Реальные слои, размер порции и подача могут отличаться.'},
+  en:{title:'Inside texture (AI illustration)',alt:'Illustration of a possible interior texture',note:'AI illustration, not an actual product cut. Layers, serving size and presentation may differ.'},
+  tr:{title:'İç doku (yapay zekâ görseli)',alt:'Ürünün olası iç dokusunun görseli',note:'Yapay zekâ görselidir, gerçek ürün kesiti değildir. Katmanlar, porsiyon ve sunum değişebilir.'}
+};
 function renderDetail() {
   const keepDetailsOpen=$('detail-dialog').open && $('detail-content').querySelector('.detail-more')?.open===true;
-  disposeCakeViewer();disposeTurntable();
   const p=byId.get(detailId),c=categories.find(c=>c.id===p.cat);if(!p)return;
-  $('detail-content').innerHTML=`<div class="detail-top">${detailVariant==='spin'?turntableMarkup(p,lang,name(p),money):hasCakeInterior(p)&&detailVariant!=='original'?cakeViewerMarkup(p,lang,name(p),detailVariant):hasPhoto(p)?`<img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p,480,detailVariant)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 32px), 480px',detailVariant)} width="640" height="640" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}">`:`<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(p))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}${hasTurntable(p)&&detailVariant!=='spin'&&detailVariant!=='original'?`<button type="button" class="spin-detail-launch" data-spin="${p.id}">${spinCopy[lang].open}</button>`:''}<button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
+  $('detail-content').innerHTML=`<div class="detail-top">${hasPhoto(p)?`<img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p,480,detailVariant)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 32px), 480px',detailVariant)} width="640" height="640" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}">`:`<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(p))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}<button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
     <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2><div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}${p.price!==null?`<span class="metric detail-price">${money(p.price)}</span>`:''}</div>
-    <p class="photo-provenance"${(hasCakeInterior(p)&&detailVariant!=='original')||detailVariant==='spin'?' hidden':''}>${esc(hasCakeInterior(p)&&detailVariant!=='original'?cakeCopy[lang].art:photoKind(p,detailVariant)==='generated'&&!hasRestagedPhoto(p)?(lang==='ru'?'AI-пример подачи, созданный по названию и составу меню; это не фотография блюда Miora.':lang==='en'?'AI serving illustration created from the menu name and ingredients; not a photograph of the actual Miora dish.':'Menü adı ve içeriğine göre oluşturulmuş yapay zekâ servis örneğidir; gerçek Miora ürün fotoğrafı değildir.'):(photoKind(p,detailVariant)==='illustration'||hasRestagedPhoto(p)&&detailVariant!=='original')?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
+    <p class="photo-provenance">${esc(photoKind(p,detailVariant)==='generated'&&!hasRestagedPhoto(p)?(lang==='ru'?'AI-пример подачи, созданный по названию и составу меню; это не фотография блюда Miora.':lang==='en'?'AI serving illustration created from the menu name and ingredients; not a photograph of the actual Miora dish.':'Menü adı ve içeriğine göre oluşturulmuş yapay zekâ servis örneğidir; gerçek Miora ürün fotoğrafı değildir.'):(photoKind(p,detailVariant)==='illustration'||hasRestagedPhoto(p)&&detailVariant!=='original')?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
     <p class="detail-allergen-quick">${p.allergens.length?`${esc(detailCopy[lang].allergen)}: ${esc(p.allergens.map(a=>t(a)).join(", "))} · ${esc(detailCopy[lang].check)}`:esc(detailCopy[lang].unknown)}</p>
     ${p.price===null?`<section class="detail-section"><h3>${t('ask')}</h3><p>${t('priceMissing')}</p></section>`:''}
     <details class="detail-more"><summary>${esc(detailCopy[lang].more)}</summary><div class="detail-more-body">
       ${lang!=='tr'?`<p class="original-name" lang="tr">${esc(p.name.tr)}</p>`:''}
     ${photoVariants(p).includes('original')?`<button type="button" class="detail-source-toggle" data-detail="${p.id}" data-source-view="${detailVariant==='original'?'focus':'original'}">${motionCopy[lang][detailVariant==='original'?'cover':'source']}</button>`:''}
+    ${hasCuratedCutaway(p)?`<details class="detail-cutaway"><summary>${esc(cutawayCopy[lang].title)}</summary><div class="detail-cutaway-content"><img src="${photo(p,640,'inside')}" ${photoSet(p,'(max-width: 620px) calc(100vw - 64px), 460px','inside')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(cutawayCopy[lang].alt)}"><p>${esc(cutawayCopy[lang].note)}</p></div></details>`:''}
     ${p.id==='430356'?videoStory('croissant',lang,{compact:true}):p.id==='431203'?videoStory('breakfast',lang,{compact:true}):''}
     <section class="detail-section"><h3>${t('ingredients')}</h3>${p.description?`<p lang="tr">${esc(p.description)}</p>${lang!=='tr'?`<p class="detail-disclaimer">${t('originalRecipe')}</p>`:''}`:`<p>${t('noIngredients')}</p>`}</section>
     <section class="detail-section"><h3>${t('allergens')}</h3>${p.allergens.length?`<div class="allergens">${p.allergens.map(a=>`<span>${t(a)}</span>`).join('')}</div>`:`<p>${t('noAllergens')}</p>`}<p class="detail-disclaimer">${t('allergenNote')}</p>${p.kcal?`<p class="detail-disclaimer">${p.calorieReview?t('reviewCalorie'):t('calorieNote')}</p>`:''}</section><div class="views">${icon('eye')}${views[p.id]||0} · ${t('localViews')}</div>
@@ -316,7 +325,7 @@ function renderDetail() {
     </div>
     <div class="detail-actions">${p.price!==null?`<button class="button primary" type="button" data-add="${p.id}">${icon('plus')}${t('addToOrder')} · ${money(p.price)}</button>`:`<button class="button secondary" type="button" data-close="detail-dialog">${t('backToMenu')}</button>`}<button class="icon-btn" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${t('favorites')}">${icon('heart')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${t('share')}">${icon('share')}</button></div>`;
   if(keepDetailsOpen)$('detail-content').querySelector('.detail-more').open=true;
-  disposeTurntable=mountTurntable($('detail-content'),{lang,name:name(p)});disposeCakeViewer=mountCakeViewer($('detail-content'),lang);enhanceKioskDetail(detailId);
+  enhanceKioskDetail(detailId);
 }
 function recommend() {
   const items=Object.keys(cart).map(id=>byId.get(id));if(!items.length&&!configuredOrders.length)return null;
@@ -448,7 +457,6 @@ document.addEventListener('click',async event=>{
   const button=event.target.closest('button,a[data-action]');if(!button)return;
   const d=button.dataset;
   if(d.close){$(d.close).close();return;}
-  if(d.spin){openDetail(d.spin,'spin');return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
   if(d.add){const added=add(d.add);if(added&&button.closest('#detail-dialog')&&$('detail-dialog').open)$('detail-dialog').close();return;}
   if(d.favorite){
@@ -514,4 +522,4 @@ storySizeObserver.observe($('feed-stories'));
 kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null});
 renderLanguage();updateUrl();
 const linked=params.get('item');if(byId.has(linked))openDetail(linked,params.get('photo'));
-$('detail-dialog').addEventListener('close',()=>disposeTurntable());
+
