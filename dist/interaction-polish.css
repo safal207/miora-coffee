@@ -234,3 +234,50 @@
     scroll-behavior:auto!important;
   }
 }
+
+/* Optional illustration, only for the two curated cheesecakes. No 360 viewer or swipe-to-split UI. */
+#detail-dialog .detail-cutaway {
+  border-top:1px solid var(--line);
+  margin: 8px 0;
+}
+#detail-dialog .detail-cutaway > summary {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  min-height:44px;
+  padding:10px 2px;
+  gap:12px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+  line-height:1.45;
+  color:var(--teal);
+  list-style:none;
+}
+#detail-dialog .detail-cutaway > summary::-webkit-details-marker{display:none;}
+#detail-dialog .detail-cutaway > summary::after{content:"+";font-size:19px;font-weight:400;}
+#detail-dialog .detail-cutaway[open] > summary::after{content:"−";}
+#detail-dialog .detail-cutaway-content {
+  padding:4px 0 12px;
+}
+#detail-dialog .detail-cutaway-content img {
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:270px;
+  aspect-ratio:4 / 3;
+  object-fit:contain;
+  border-radius:10px;
+  background:var(--soft);
+}
+#detail-dialog .detail-cutaway-content p {
+  font-size:10px;
+  line-height:1.55;
+  color:var(--muted);
+  margin-top:7px;
+}
+@media(max-width:620px){
+  #detail-dialog .detail-cutaway-content img {
+    max-height: min(32dvh, 230px);
+  }
+}
