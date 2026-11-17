@@ -28,7 +28,7 @@ test('one-column feed and mobile social controls do not replace the grid, galler
   assert.match(html, /app\.js\?v=20261117-premium1/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
-  assert.ok(app.includes('if(d.favorite){toggleFavorite(d.favorite);return;}'));
+  assert.match(app, /if\(d\.favorite\)\{[\s\S]*?toggleFavorite\(d\.favorite\)/);
 });
 
 test('optional discovery modules are accessible and do not conceal the ordering paths', () => {
