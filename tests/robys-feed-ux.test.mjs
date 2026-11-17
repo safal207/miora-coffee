@@ -24,8 +24,8 @@ test('one-column feed and mobile social controls do not replace the grid, galler
   assert.match(css, /\.feed-action-rail\s*\{[\s\S]*?flex-direction: column/);
   assert.match(css, /@media \(max-width: 620px\)/);
   assert.match(css, /prefers-reduced-motion/);
-  assert.match(html, /robys-feed-ux\.css\?v=20261117-robys2/);
-  assert.match(html, /app\.js\?v=20261117-robys1/);
+  assert.match(html, /robys-feed-ux\.css\?v=20261117-social3/);
+  assert.match(html, /app\.js\?v=20261117-social3/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
   assert.ok(app.includes('if(d.favorite){toggleFavorite(d.favorite);return;}'));
@@ -41,4 +41,13 @@ test('optional discovery modules are accessible and do not conceal the ordering 
   assert.match(css, /\.gallery-footer/);
   assert.ok(html.includes('data-k-start="sandwich"'));
   assert.ok(html.includes('data-k-start="breakfast"'));
+});
+
+test('Instagram-style paper airplane and right-side actions are used on every card layout', () => {
+  assert.match(app, /share:'<path d="m22 2-7 20-4-9-9-4L22 2Z"/);
+  assert.match(app, /<div class="product-social" role="group"/);
+  assert.match(app, /data-share="\$\{p\.id\}" aria-label="\$\{esc\(t\('share'\)/);
+  assert.match(css, /body:not\(\[data-view="feed"\]\) \.product-media \.product-social \{/);
+  assert.match(css, /body\[data-view="list"\] \.product-media \.product-social button:first-child \{\s*display: flex;/);
+  assert.equal((app.match(/\$\{icon\('share'\)\}/g) || []).length, 3, 'share available in feed, grid/list and detail');
 });
