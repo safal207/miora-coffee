@@ -109,7 +109,7 @@ try {
     assert.equal(Number(await product.locator('.social-action-number[data-share-count]').textContent()),initialShares+1);
     await gridPage.locator('#share-dialog [data-close]').click();
     await product.locator('.product-media').scrollIntoViewIfNeeded();
-    await gridPage.waitForFunction(()=>Number(document.querySelector('#products .product-card [data-view-count]')?.textContent())>=1,null,{timeout:5000});
+    await gridPage.waitForFunction(()=>Number(document.querySelector('#products .product-card [data-view-count]')?.textContent)>=1,null,{timeout:5000});
     await gridPage.screenshot({path:'artifacts/social-grid-'+lang+'-'+width+'.png'});
     assert.deepEqual(errors,[], 'uncaught browser errors');
     await gridPage.close();
