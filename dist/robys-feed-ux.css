@@ -340,3 +340,94 @@ body[data-view="list"] .product-media .product-social button {
     height: 19px;
   }
 }
+
+/* Honest engagement counts for this browser; NEVER imply cross-user popularity. */
+.social-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  min-width: 0;
+  color: var(--ink);
+}
+.social-stats .social-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.social-stats .social-stat svg {
+  width: 14px;
+  height: 14px;
+  color: var(--teal);
+  stroke-width: 1.7;
+}
+.social-stats .social-stat b {font-weight:700;}
+.social-stats .social-stats-scope {
+  flex-basis: 100%;
+  font-size: 9px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+.product-body .social-stats {
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+}
+body[data-view="feed"] .feed-post .social-stats {
+  margin: 1px 18px 11px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+body[data-view="feed"] .feed-post .social-stats .social-stats-scope {
+  flex-basis: auto;
+  margin-left: auto;
+}
+body[data-view="feed"] .feed-post .post-order {border-top:1px solid var(--line);}
+/* Counts next to actionable heart and paper plane in grid and list. */
+body:not([data-view="feed"]) .product-media .product-social button {
+  flex-direction: column;
+  gap: 0;
+  min-height: 51px;
+  height: 51px;
+  border-radius: 15px;
+  padding: 3px 2px;
+}
+body:not([data-view="feed"]) .product-media .product-social svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+body:not([data-view="feed"]) .product-media .product-social .social-action-number {
+  display: block;
+  min-height: 13px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 13px;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+}
+body[data-view="list"] .product-media .product-social button {
+  min-height: 51px;
+  height: 51px;
+}
+@media (max-width: 620px) {
+  .product-body .social-stats {gap: 5px 9px;}
+  .product-body .social-stats .social-stat {font-size:10px;}
+  .product-body .social-stats .social-stat svg {width:12px;height:12px;}
+  .product-body .social-stats .social-stats-scope {font-size:8px;}
+  body[data-view="feed"] .feed-post .social-stats {margin-inline:14px;}
+  body[data-view="feed"] .feed-post .social-stats .social-stats-scope {
+    flex-basis:100%;
+    margin-left:0;
+  }
+  body:not([data-view="feed"]) .product-media .product-social button {
+    min-height: 49px;
+    height: 49px;
+    width: 40px;
+    min-width: 40px;
+    border-radius: 14px;
+  }
+}
