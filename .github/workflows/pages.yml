@@ -54,6 +54,7 @@ jobs:
           python3 -m http.server 8123 --directory dist >/tmp/miora-smoke.log 2>&1 &
           sleep 2
           node tests/feed-smoke.mjs
+          node tests/layout-smoke.mjs
       - name: Upload feed screenshots for visual review
         if: always()
         uses: actions/upload-artifact@v4

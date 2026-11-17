@@ -25,7 +25,7 @@ test('one-column feed and mobile social controls do not replace the grid, galler
   assert.match(css, /@media \(max-width: 620px\)/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(html, /robys-feed-ux\.css\?v=20261117-counts1/);
-  assert.match(html, /app\.js\?v=20261117-curated1/);
+  assert.match(html, /app\.js\?v=20261117-layout1/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
   assert.match(app, /if\(d\.favorite\)\{[\s\S]*?toggleFavorite\(d\.favorite\)/);
@@ -106,4 +106,21 @@ test('the customer-facing menu has no AI 360 controls and only curated static cu
   assert.match(policy,/customer360Enabled = false/);
   assert.match(photos,/export const photoVariants=item=>focusedPhotos/);
   assert.doesNotMatch(photos.split('export const photoVariants=')[1].split(';')[0],/inside/);
+});
+
+
+test('responsive layout keeps social actions outside the list photograph and preserves all view modes',()=>{
+  const fixed=readFileSync(new URL('../dist/responsive-layout-fix.css',import.meta.url),'utf8');
+  assert.match(html,/responsive-layout-fix\.css\?v=20261117-fix1/);
+  assert.match(app,/function productSocial\(p,compact=false\)/);
+  assert.match(app,/view==='list'\?productSocial\(p,true\):socialStats\(p\.id\)/);
+  assert.match(app,/view==='list'\?'':productSocial\(p\)/);
+  assert.match(app,/class="list-view-stat"/);
+  assert.match(fixed,/body\[data-view="list"\] #products\.list-view \.product-card/);
+  assert.match(fixed,/grid-template-columns:clamp\(96px,29%,138px\) minmax\(0,1fr\)/);
+  assert.match(fixed,/body\[data-view="list"\] #products \.product-body>\.product-social/);
+  assert.match(fixed,/position:static/);
+  assert.match(fixed,/body\[data-view="grid"\] #products \.product-price/);
+  assert.match(fixed,/body:not\(\[data-view="feed"\]\) \.toolbar \.search-row/);
+  assert.match(fixed,/grid-row:2/);
 });
