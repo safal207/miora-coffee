@@ -53,9 +53,26 @@ try {
     const gallery = page.locator('.product-gallery').first();
     assert(await gallery.count() > 0, 'interior gallery must remain accessible');
     await gallery.locator('.gallery-next').click();
-    // Grid mode must retain ordinary card layout, and feed mode must restore the rail.
+    // Grid and compact list must both provide accessible right-side favorite and paper-plane share.
     await page.locator('#view-grid').click();
     assert(await page.locator('#products.product-grid:not(.feed-view)').count() === 1);
+    const gridCard = page.locator('#products .product-card').first();
+    const social = gridCard.locator('.product-social');
+    assert.equal(await social.locator('button').count(), 2);
+    const gridImage = await gridCard.locator('.product-media').boundingBox();
+    const gridSocial = await social.boundingBox();
+    assert(gridImage && gridSocial && gridSocial.x > gridImage.x + gridImage.width * .5, 'social rail right of grid image');
+    assert(await gridCard.locator('[data-share]').isVisible(), 'share must be visible in grid');
+    await gridCard.locator('[data-share]').click();
+    await page.locator('#share-dialog[open]').waitFor();
+    await page.locator('#share-dialog [data-close]').click();
+    await page.locator('#view-list').click();
+    const listCard = page.locator('#products .product-card').first();
+    assert(await listCard.locator('[data-share]').isVisible(), 'share must be visible in compact list');
+    assert(await listCard.locator('[data-favorite]').isVisible(), 'favorite must be visible in compact list');
+    await listCard.locator('[data-share]').click();
+    await page.locator('#share-dialog[open]').waitFor();
+    await page.locator('#share-dialog [data-close]').click();
     await page.locator('#view-feed').click();
     assert(await page.locator('.feed-action-rail').count() > 0);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
