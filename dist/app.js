@@ -127,6 +127,14 @@ function recordShare(id) {
   save('shares',shareCounts);
   syncSocialStats();
 }
+function productSocial(p,compact=false){
+  const scope=esc(socialCopy[lang].scope);
+  return `<div class="product-social" role="group" aria-label="${esc(name(p)+' · '+socialCopy[lang].scope)}">
+    <button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" title="${esc(t('favorites'))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}<span class="social-action-number" data-like-count="${p.id}" aria-hidden="true">${favorites.has(p.id)?1:0}</span></button>
+    <button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}" title="${esc(t('share'))}">${icon('share')}<span class="social-action-number" data-share-count="${p.id}" aria-hidden="true">${shareCounts[p.id]||0}</span></button>
+    ${compact?`<span class="list-view-stat" title="${esc(socialCopy[lang].views)}">${icon('eye')}<b data-view-count="${p.id}">${views[p.id]||0}</b></span><small class="list-device-scope">${scope}</small>`:''}
+  </div>`;
+}
 function renderProducts() {
   stopFeedViews();disposeSpotlight();disposeGalleries();
   const videoSlot=$('dessert-video');
@@ -158,8 +166,8 @@ function renderProducts() {
   }
   $('products').innerHTML=displayList.map(p=>`<article class="product-card" data-product="${p.id}">
     <div class="product-media" data-view-id="${p.id}"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}>`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${photoKind(p)==='generated'?`<span class="generated-media-label">${esc(journeyCopy[lang].generated)}</span>`:''}${flavorChip(p)}
-    <div class="product-social" role="group" aria-label="${esc(name(p))}"><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" title="${esc(t('favorites'))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}<span class="social-action-number" data-like-count="${p.id}" aria-hidden="true">${favorites.has(p.id)?1:0}</span></button><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}" title="${esc(t('share'))}">${icon('share')}<span class="social-action-number" data-share-count="${p.id}" aria-hidden="true">${shareCounts[p.id]||0}</span></button></div></div>
-    <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div>${socialStats(p.id)}<div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
+${view==='list'?'':productSocial(p)}</div>
+    <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div>${view==='list'?productSocial(p,true):socialStats(p.id)}<div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
   enhanceKioskCards();startFeedViews();
 }
 const kioskFor=id=>({430236:'sandwich',430240:'sandwich',431177:'sandwich',431178:'sandwich',431179:'sandwich',431203:'breakfast',431333:'pancake'})[id]||null;
