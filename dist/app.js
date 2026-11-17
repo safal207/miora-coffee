@@ -1,9 +1,9 @@
 import {hasCuratedCutaway} from './media-merchandising.js?v=20261117-curated1';
-import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261116-spin1';
+import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261117-curated1';
 import {desireSections,journeyCopy,localizedJourney} from './desire-journey.js?v=20261112-generated1';
 import {videoStory,dessertStoryVisible} from './video-stories.js';
 import {products,categories,featured,source} from './menu-data.js';
-import {photoUrl as photo,photoSet,hasPhoto,photoKind,hasAlternatePhoto,photoVariants,hasRestagedPhoto} from './photos.js?v=20261115-angles1';
+import {photoUrl as photo,photoSet,hasPhoto,photoKind,hasAlternatePhoto,photoVariants,hasRestagedPhoto} from './photos.js?v=20261117-curated1';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
