@@ -110,6 +110,32 @@ try {
     await gridPage.locator('#share-dialog [data-close]').click();
     await product.locator('.product-media').scrollIntoViewIfNeeded();
     await gridPage.waitForFunction(()=>Number(document.querySelector('#products .product-card [data-view-count]')?.textContent)>=1,null,{timeout:5000});
+    // SamCart/ClickFunnels-style quick view: no mandatory scrolling to purchase.
+    const cakeProduct=gridPage.locator('#products .product-card[data-product="430226"]');
+    await cakeProduct.locator('.product-open').click();
+    const dialog=gridPage.locator('#detail-dialog[open]');
+    await dialog.waitFor();
+    const specs=dialog.locator('.detail-more');
+    assert.equal(await specs.evaluate(el=>el.open),false,'long ingredients and provenance extras must be optional');
+    assert(await dialog.locator('.detail-allergen-quick').isVisible(),'important allergy warning remains prominent');
+    const action=dialog.locator('.detail-actions [data-add]');
+    assert(await action.isVisible(),'primary action must be visible without navigating to another page');
+    const purchaseRect=await action.boundingBox();
+    assert(purchaseRect && purchaseRect.y>=-1 && purchaseRect.y+purchaseRect.height<=850,
+      'product add action must fit inside the initial mobile viewport');
+    await gridPage.screenshot({path:'artifacts/quick-detail-'+lang+'-'+width+'.png'});
+    await specs.locator('summary').click();
+    assert.equal(await specs.evaluate(el=>el.open),true,'full specifications must remain accessible');
+    assert(await dialog.locator('.detail-more-body .detail-section').first().isVisible());
+    await specs.locator('summary').click();
+    assert.equal(await specs.evaluate(el=>el.open),false);
+    const countBefore=Number(await gridPage.locator('#cart-open .cart-count').textContent());
+    await action.click();
+    assert.equal(await gridPage.locator('#detail-dialog').evaluate(el=>el.open),false,
+      'successful addition should return immediately to browsing');
+    assert.equal(Number(await gridPage.locator('#cart-open .cart-count').textContent()),countBefore+1,
+      'cart must persist after quick add');
+    assert.equal(await gridPage.locator('body').getAttribute('data-view'),'grid');
     await gridPage.screenshot({path:'artifacts/social-grid-'+lang+'-'+width+'.png'});
     assert.deepEqual(errors,[], 'uncaught browser errors');
     await gridPage.close();
