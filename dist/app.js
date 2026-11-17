@@ -30,7 +30,7 @@ const svgPaths = {
   grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
   list:'<path d="M8 5h13M8 12h13M8 19h13M3 5h.01M3 12h.01M3 19h.01"/>',
   search:'<circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/>',
-  share:'<path d="M16 7h.01M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5M10 18v3m4-3.25V21m-7-3a6 6 0 0 0 3.84-10.61"/>',
+  share:'<path d="m22 2-7 20-4-9-9-4L22 2Z"/><path d="M22 2 11 13"/>',
   moon:'<path d="M21 13a9 9 0 0 1-10-10A9 9 0 1 0 21 13Z"/>',
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1 1m12 12 1 1M19 5l-1 1M6 18l-1 1"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -131,7 +131,7 @@ function renderProducts() {
   }
   $('products').innerHTML=displayList.map(p=>`<article class="product-card" data-product="${p.id}">
     <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}>`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${photoKind(p)==='generated'?`<span class="generated-media-label">${esc(journeyCopy[lang].generated)}</span>`:''}${flavorChip(p)}
-    <div class="product-social"><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}">${icon('share')}</button><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}</button></div></div>
+    <div class="product-social" role="group" aria-label="${esc(name(p))}"><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" title="${esc(t('favorites'))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}</button><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}" title="${esc(t('share'))}">${icon('share')}</button></div></div>
     <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div><div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
   enhanceKioskCards();
 }
