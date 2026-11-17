@@ -44,7 +44,7 @@ try {
     await page.locator('#detail-dialog [data-close]').first().click();
     await page.locator('#builder-menu > summary').click();
     assert.equal(await page.locator('#builder-menu').evaluate(x => x.open), true);
-    assert(await page.locator('#builder-menu [data-k-start="sandwich"]').isVisible());
+    assert(await page.locator('#builder-menu .builder-shortcuts [data-k-start="sandwich"]').isVisible());
     await page.locator('#builder-menu > summary').click();
     assert.equal(await page.locator('#builder-menu').evaluate(x => x.open), false);
     await page.locator('#feed-stories .story-button[data-category="46818"]').click();
