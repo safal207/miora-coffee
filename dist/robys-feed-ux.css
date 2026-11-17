@@ -263,3 +263,80 @@ body[data-view="feed"] .spin-card-launch {
   body[data-view="feed"] .spotlight-disclosure {margin:0 12px 8px;}
   body[data-view="feed"] .gallery-frame .gallery-label {font-size:9px;}
 }
+
+/* Reels-inspired social actions on EVERY catalog card (feed, grid and list).
+   Real favorites + native share; no fabricated engagement counters. */
+body:not([data-view="feed"]) .product-media .product-social {
+  inset: 8px 8px auto auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 7px;
+  pointer-events: none;
+  z-index: 3;
+}
+body:not([data-view="feed"]) .product-media .product-social button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  pointer-events: auto;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  min-height: 42px;
+  border: 1px solid #ffffff73;
+  border-radius: 50%;
+  background: #221d1dbd;
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 3px 12px #0003;
+}
+body:not([data-view="feed"]) .product-media .product-social svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 1.8;
+}
+body:not([data-view="feed"]) .product-media .product-social button[aria-pressed="true"] {
+  color: #fff;
+  background: #812f43;
+}
+body:not([data-view="feed"]) .product-media .product-social button[aria-pressed="true"] svg {
+  fill: currentColor;
+}
+body:not([data-view="feed"]) .product-media .product-social button:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+/* The compact list must retain share and save, not silently drop one. */
+body[data-view="list"] .product-media .product-social {
+  inset: 5px 5px auto auto;
+  gap: 5px;
+}
+body[data-view="list"] .product-media .product-social button:first-child {
+  display: flex;
+}
+body[data-view="list"] .product-media .product-social button {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+}
+@media (max-width: 620px) {
+  body:not([data-view="feed"]) .product-media .product-social {
+    inset: 5px 5px auto auto;
+    gap: 5px;
+  }
+  body:not([data-view="feed"]) .product-media .product-social button {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+  body:not([data-view="feed"]) .product-media .product-social svg {
+    width: 19px;
+    height: 19px;
+  }
+}
