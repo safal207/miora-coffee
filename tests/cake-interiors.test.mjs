@@ -7,6 +7,7 @@ import {cakePhotos} from '../dist/cake-photo-data.js';
 import {hasCakeInterior,cakeIngredientInfo,cakeViewerMarkup,cakeCopy} from '../dist/cake-interiors.js';
 import {photoVariants,photoUrl,photoKind} from '../dist/photos.js';
 import {galleryMarkup} from '../dist/menu-motion.js';
+import {hasCuratedCutaway,customer360Enabled} from '../dist/media-merchandising.js';
 const expected=['430226','430222','429826','429828','429921','429808','429822','431314','429834'].sort();
 const byId=new Map(products.map(p=>[p.id,p]));
 test('nine additional cutaways preserve covers, recipe membership and source provenance',()=>{
@@ -14,7 +15,7 @@ test('nine additional cutaways preserve covers, recipe membership and source pro
  const manifest=JSON.parse(readFileSync(new URL('../docs/cake-interiors-2026-11-13.json',import.meta.url)));
  const hash=b=>createHash('sha256').update(b).digest('hex');
  for(const [id,record] of Object.entries(manifest.photos)){
-  const p=byId.get(id);assert.ok(hasCakeInterior(p));assert.ok(photoVariants(p).includes('inside'));assert.equal(photoKind(p,'inside'),'generated');assert.notEqual(photoUrl(p),photoUrl(p,640,'inside'));
+  const p=byId.get(id);assert.ok(hasCakeInterior(p));assert.ok(!photoVariants(p).includes('inside'));assert.equal(photoKind(p,'inside'),'generated');assert.notEqual(photoUrl(p),photoUrl(p,640,'inside'));
   assert.equal(record.sourceIngredients,p.description);assert.equal(hash(readFileSync(new URL('../dist/'+record.referenceAsset,import.meta.url))),record.referenceSha256);assert.equal(record.visualReview,'accepted');assert.ok(record.prompt.length>200);
   for(const [size,a] of Object.entries(record.assets)){const bytes=readFileSync(new URL('../dist/'+a.path,import.meta.url));assert.equal(hash(bytes),a.sha256);assert.equal(bytes.length,a.bytes);assert.ok(bytes.length<250000);assert.ok(a.dimensions[0]<=record.sourceDimensions[0]&&a.dimensions[0]<=Number(size));}
  }
@@ -28,12 +29,35 @@ test('ingredient translations include every source token and preview never adds 
  assert.ok(cakeIngredientInfo(byId.get('429921'),'ru').parts.includes('Фундук'));
  assert.ok(cakeIngredientInfo(byId.get('429834'),'en').parts.includes('Oil / fat'));assert.ok(!cakeIngredientInfo(byId.get('429834'),'en').parts.includes('Butter'));
 });
-test('localized gallery and ingredient viewer preserve real source and manual controls',()=>{
- for(const id of expected)for(const lang of ['ru','tr','en']){
-  const p=byId.get(id),views=photoVariants(p),gallery=galleryMarkup(p,lang,p.name[lang],'Details'),viewer=cakeViewerMarkup(p,lang,p.name[lang],'inside');
-  assert.equal((gallery.match(/class="gallery-frame"/g)||[]).length,views.length);assert.ok(gallery.includes('data-source-view="inside"'));assert.ok(gallery.includes(`1/${views.length}`));
-  assert.ok(viewer.includes('type="range"'));assert.ok(viewer.includes('value="100"'));assert.ok(viewer.includes(cakeCopy[lang].art));assert.ok(viewer.includes(cakeCopy[lang].range));assert.ok(!/<iframe|<video|autoplay/.test(viewer));
+
+test('only two relevant cakes get optional illustrations, never forced into the feed or main photo',()=>{
+ const keep=new Set(['430226','429808']);
+ assert.equal(customer360Enabled,false);
+ for(const id of expected){
+  const p=byId.get(id);
+  assert.equal(hasCuratedCutaway(p),keep.has(id),id);
+  assert.ok(!photoVariants(p).includes('inside'),id+' must never surface a cut in the feed');
+  for(const lang of ['ru','tr','en']){
+   const gallery=galleryMarkup(p,lang,p.name[lang],'Details');
+   assert.ok(!gallery.includes('data-source-view="inside"'),id);
+   assert.ok(!gallery.includes('data-spin='),id);
+   assert.ok(!gallery.includes('360°'),id);
+   assert.equal((gallery.match(/class="gallery-frame"/g)||[]).length,photoVariants(p).length);
+  }
  }
- assert.deepEqual(photoVariants(byId.get('429808')),['focus','inside','original']);assert.deepEqual(photoVariants(byId.get('430226')),['focus','inside']);assert.deepEqual(photoVariants(byId.get('460119')),['focus','original']);
+ assert.equal(hasCuratedCutaway(byId.get('428748')),false);
+ assert.equal(hasCuratedCutaway(null),false);
+ assert.deepEqual(photoVariants(byId.get('430226')),['focus']);
+ assert.deepEqual(photoVariants(byId.get('429808')),['focus','original']);
+ assert.deepEqual(photoVariants(byId.get('460119')),['focus','original']);
+});
+
+test('archival visual viewer remains integrity-tested but never loads by default',()=>{
+ const item=byId.get('429808');
+ const html=cakeViewerMarkup(item,'ru',item.name.ru,'inside');
+ assert.ok(html.includes('type="range"'));
+ assert.ok(html.includes(cakeCopy.ru.art));
+ assert.ok(html.includes(cakeCopy.ru.range));
+ assert.ok(!/<iframe|<video|autoplay/.test(html));
  assert.equal(cakeViewerMarkup(byId.get('428748'),'en','Latte'),'');
 });
