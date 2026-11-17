@@ -24,8 +24,8 @@ test('one-column feed and mobile social controls do not replace the grid, galler
   assert.match(css, /\.feed-action-rail\s*\{[\s\S]*?flex-direction: column/);
   assert.match(css, /@media \(max-width: 620px\)/);
   assert.match(css, /prefers-reduced-motion/);
-  assert.match(html, /robys-feed-ux\.css\?v=20261117-social3/);
-  assert.match(html, /app\.js\?v=20261117-social3/);
+  assert.match(html, /robys-feed-ux\.css\?v=20261117-counts1/);
+  assert.match(html, /app\.js\?v=20261117-counts1/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
   assert.ok(app.includes('if(d.favorite){toggleFavorite(d.favorite);return;}'));
@@ -49,5 +49,21 @@ test('Instagram-style paper airplane and right-side actions are used on every ca
   assert.match(app, /data-share="\$\{p\.id\}" aria-label="\$\{esc\(t\('share'\)/);
   assert.match(css, /body:not\(\[data-view="feed"\]\) \.product-media \.product-social \{/);
   assert.match(css, /body\[data-view="list"\] \.product-media \.product-social button:first-child \{\s*display: flex;/);
-  assert.equal((app.match(/\$\{icon\('share'\)\}/g) || []).length, 3, 'share available in feed, grid/list and detail');
+  assert.equal((app.match(/\$\{icon\('share'\)\}/g) || []).length, 4, 'share also appears in the statistics row');
+});
+
+test('per-device counters are explicit, and each card mode includes likes, shares and impressions', () => {
+  assert.match(app, /scope:'На этом устройстве'/);
+  assert.match(app, /function socialStats\(id\)/);
+  for (const field of ['data-like-count', 'data-share-count', 'data-view-count']) {
+    assert.ok(app.includes(field), field);
+  }
+  assert.match(app, /<div class="product-media" data-view-id="\$\{p\.id\}"/);
+  assert.match(app, /<div class="feed-media" data-view-id="\$\{p\.id\}"/);
+  assert.match(app, /document\.querySelectorAll\('\[data-view-id\]'\)/);
+  assert.match(app, /save\('shares',shareCounts\)/);
+  assert.match(app, /if\(ok&&pendingShareId\)recordShare\(pendingShareId\)/);
+  assert.match(app, /navigator\.share\(\{title:[\s\S]*?\}\);recordShare\(id\)/);
+  assert.match(app, /syncSocialStats\(\)/);
+  assert.match(css, /\.social-stats-scope/);
 });

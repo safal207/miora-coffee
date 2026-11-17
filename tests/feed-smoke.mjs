@@ -78,9 +78,44 @@ try {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     assert(overflow <= 2, 'horizontal overflow: ' + overflow);
     assert.deepEqual(errors, [], 'uncaught browser errors');
+    // Reproduce the exact public entry path: grid + Russian locale + UTM + all catalog.
+    const gridPage=await context.newPage();
+    gridPage.on('pageerror',error=>errors.push(String(error.message)));
+    await gridPage.addInitScript(()=>{
+      Object.defineProperty(navigator,'share',{configurable:true,value:undefined});
+      Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.__copiedShareLink=text;}}});
+    });
+    const gridRes=await gridPage.goto(origin+'/?view=grid&lang='+lang+'&utm_source=chatgpt.com&category=all',{waitUntil:'domcontentloaded'});
+    assert.equal(gridRes.status(),200);
+    await gridPage.locator('#products .product-card').first().waitFor();
+    assert.equal(await gridPage.locator('body').getAttribute('data-view'),'grid');
+    assert.equal(await gridPage.locator('.product-card').count(),93,'direct all-products grid should contain all 93 items');
+    const product=gridPage.locator('#products .product-card').first();
+    assert.equal(await product.locator('.social-stats .social-stat').count(),3,'three social counters must be visible');
+    assert(await product.locator('.social-stats-scope').isVisible(),'counts must be labeled as device-local');
+    assert(await product.locator('[data-view-count]').isVisible());
+    const heart=product.locator('.product-social [data-favorite]');
+    const initialLike=Number(await product.locator('.social-stats [data-like-count]').textContent());
+    await heart.click();
+    assert.equal(Number(await product.locator('.social-stats [data-like-count]').textContent()),initialLike?0:1,'favorite must update count');
+    assert.equal(Number(await product.locator('.social-action-number[data-like-count]').textContent()),initialLike?0:1,'right rail must mirror count');
+    const initialShares=Number(await product.locator('.social-stats [data-share-count]').textContent());
+    await product.locator('.product-social [data-share]').click();
+    await gridPage.locator('#share-dialog[open]').waitFor();
+    assert.equal(Number(await product.locator('.social-stats [data-share-count]').textContent()),initialShares,'opening share dialog must not inflate shares');
+    await gridPage.locator('#copy-link').click();
+    await gridPage.waitForFunction(()=>!!window.__copiedShareLink);
+    assert.equal(Number(await product.locator('.social-stats [data-share-count]').textContent()),initialShares+1,'successful copy should increment local shares');
+    assert.equal(Number(await product.locator('.social-action-number[data-share-count]').textContent()),initialShares+1);
+    await gridPage.locator('#share-dialog [data-close]').click();
+    await product.locator('.product-media').scrollIntoViewIfNeeded();
+    await gridPage.waitForFunction(()=>Number(document.querySelector('#products .product-card [data-view-count]')?.textContent)>=1,null,{timeout:5000});
+    await gridPage.screenshot({path:'artifacts/social-grid-'+lang+'-'+width+'.png'});
+    assert.deepEqual(errors,[], 'uncaught browser errors');
+    await gridPage.close();
     await page.close(); await context.close();
     tests++;
-    console.log('PASS: ' + lang + ' ' + width + 'px feed/social/gallery/grid regression');
+    console.log('PASS: ' + lang + ' ' + width + 'px feed/grid views, favorite and shared-copy counts');
   }
   console.log('PASS: ' + tests + ' browser viewport + locale configurations');
 } finally {

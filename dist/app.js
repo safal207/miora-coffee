@@ -68,6 +68,10 @@ let category=['all','featured',...categories.map(c=>c.id)].includes(requestedCat
 let service=load('service','dineIn'); if(!['dineIn','takeaway'].includes(service))service='dineIn';
 let views=load('views',{}); if(!views||typeof views!=='object'||Array.isArray(views))views={};
 views=Object.fromEntries(Object.entries(views).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));
+let shareCounts=load('shares',{});
+if(!shareCounts||typeof shareCounts!=='object'||Array.isArray(shareCounts))shareCounts={};
+shareCounts=Object.fromEntries(Object.entries(shareCounts).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));
+let pendingShareId=null;
 const viewedThisSession=new Set();
 let feedObserver=null;
 const feedViewTimers=new Map();
@@ -100,6 +104,30 @@ const flavorChip=item=>{
  const name=identityFor(item,lang);
  return name?'<span class="miora-photo-identity">'+esc(name)+'</span>':'';
 };
+const socialCopy={
+  ru:{likes:'Лайки',shares:'Поделились или скопировали',views:'Просмотры',scope:'На этом устройстве'},
+  tr:{likes:'Beğeniler',shares:'Paylaşılan veya kopyalanan',views:'Görüntüleme',scope:'Bu cihazda'},
+  en:{likes:'Likes',shares:'Shared or copied',views:'Views',scope:'On this device'}
+};
+function socialStats(id) {
+  const c=socialCopy[lang],like=favorites.has(id)?1:0,share=shareCounts[id]||0,seen=views[id]||0;
+  return `<div class="social-stats" role="group" aria-label="${esc(c.scope)}" title="${esc(c.scope)}">
+    <span class="social-stat" title="${esc(c.likes)}">${icon('heart')}<b data-like-count="${id}">${like}</b><span class="sr-only">${esc(c.likes)}</span></span>
+    <span class="social-stat" title="${esc(c.shares)}">${icon('share')}<b data-share-count="${id}">${share}</b><span class="sr-only">${esc(c.shares)}</span></span>
+    <span class="social-stat" title="${esc(c.views)}">${icon('eye')}<b data-view-count="${id}">${seen}</b><span class="sr-only">${esc(c.views)}</span></span>
+    <span class="social-stats-scope">${esc(c.scope)}</span></div>`;
+}
+function syncSocialStats() {
+  document.querySelectorAll('[data-like-count]').forEach(el=>el.textContent=favorites.has(el.dataset.likeCount)?1:0);
+  document.querySelectorAll('[data-share-count]').forEach(el=>el.textContent=shareCounts[el.dataset.shareCount]||0);
+  document.querySelectorAll('[data-view-count]').forEach(el=>el.textContent=views[el.dataset.viewCount]||0);
+}
+function recordShare(id) {
+  if(!byId.has(id))return;
+  shareCounts[id]=Math.min((shareCounts[id]||0)+1,1000000);
+  save('shares',shareCounts);
+  syncSocialStats();
+}
 function renderProducts() {
   stopFeedViews();disposeSpotlight();disposeGalleries();
   const videoSlot=$('dessert-video');
@@ -130,10 +158,10 @@ function renderProducts() {
     disposeGalleries=mountGalleries($('products'));startFeedViews();enhanceKioskCards();return;
   }
   $('products').innerHTML=displayList.map(p=>`<article class="product-card" data-product="${p.id}">
-    <div class="product-media"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}>`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${photoKind(p)==='generated'?`<span class="generated-media-label">${esc(journeyCopy[lang].generated)}</span>`:''}${flavorChip(p)}
-    <div class="product-social" role="group" aria-label="${esc(name(p))}"><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" title="${esc(t('favorites'))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}</button><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}" title="${esc(t('share'))}">${icon('share')}</button></div></div>
-    <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div><div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
-  enhanceKioskCards();
+    <div class="product-media" data-view-id="${p.id}"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}>`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${photoKind(p)==='generated'?`<span class="generated-media-label">${esc(journeyCopy[lang].generated)}</span>`:''}${flavorChip(p)}
+    <div class="product-social" role="group" aria-label="${esc(name(p))}"><button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" title="${esc(t('favorites'))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}<span class="social-action-number" data-like-count="${p.id}" aria-hidden="true">${favorites.has(p.id)?1:0}</span></button><button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}" title="${esc(t('share'))}">${icon('share')}<span class="social-action-number" data-share-count="${p.id}" aria-hidden="true">${shareCounts[p.id]||0}</span></button></div></div>
+    <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div>${socialStats(p.id)}<div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
+  enhanceKioskCards();startFeedViews();
 }
 const kioskFor=id=>({430236:'sandwich',430240:'sandwich',431177:'sandwich',431178:'sandwich',431179:'sandwich',431203:'breakfast',431333:'pancake'})[id]||null;
 function kioskBread(id){return ({430236:'wholewheat',430240:'olive',431177:'tomato-walnut',431178:'plain',431179:'focaccia'})[id]||null;}
@@ -174,20 +202,21 @@ function feedPost(p) {
     :hasAlternatePhoto(p)?`<div class="feed-photo generated-photo" data-feed-photo="${p.id}">${galleryMarkup(p,lang,name(p),copy.details)}</div>`
     :`<div class="feed-photo ${kind==='original'?'original-photo original-'+p.id:kind==='generated'?'generated-photo generated-'+p.id:''}" data-feed-photo="${p.id}"><button class="feed-photo-button" type="button" data-detail="${p.id}" aria-label="${esc(copy.details+' · '+name(p))}"><img src="${photo(p)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 24px), (max-width: 960px) 660px, 640px')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(name(p))}"></button>${flavorChip(p)}</div>`;
   return `<article class="product-card feed-post" data-product="${p.id}" aria-labelledby="post-title-${p.id}">
-    <div class="feed-media">${media}<div class="feed-action-rail" role="group" aria-label="${esc(name(p))}">
+    <div class="feed-media" data-view-id="${p.id}">${media}<div class="feed-action-rail" role="group" aria-label="${esc(name(p))}">
       <button class="icon-btn feed-save feed-rail-button" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${esc(t('favorites')+' · '+name(p))}" title="${esc(t('favorites'))}">${icon('heart')}<span class="feed-rail-label" aria-hidden="true">${esc(t('favorites'))}</span></button>
       <button class="icon-btn feed-rail-button" type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}" title="${esc(t('share'))}">${icon('share')}<span class="feed-rail-label" aria-hidden="true">${esc(t('share'))}</span></button>
       <button class="icon-btn feed-rail-button" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}" title="${esc(t('detail'))}">${icon('info')}<span class="feed-rail-label" aria-hidden="true">${esc(t('detail'))}</span></button>
     </div></div>
     ${kind==='missing'||hasAlternatePhoto(p)?'':`<p class="feed-media-note">${kind==='generated'?copy.generated:kind==='illustration'?copy.illustration:copy.photo}</p>`}
     <div class="post-caption"><h3 id="post-title-${p.id}"><button type="button" data-detail="${p.id}">${esc(name(p))}</button></h3>${lang==='tr'?'':`<p class="post-original" lang="tr">${esc(p.name.tr)}</p>`}</div>
+    ${socialStats(p.id)}
     <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${copy.add}</button>`}</div></article>`;
 }
 function recordView(id) {
   if(!byId.has(id)||viewedThisSession.has(id))return;
   const stored=load('views',{}),current=stored&&Number.isSafeInteger(stored[id])&&stored[id]>=0?stored[id]:0;
   views[id]=Math.min(Math.max(views[id]||0,current)+1,1000000);viewedThisSession.add(id);save('views',views);
-  document.querySelectorAll(`[data-views="${id}"]`).forEach(el=>{el.hidden=false;el.innerHTML=`${icon('eye')}<span>${views[id]} · ${t('viewOnDevice')}</span>`;});
+  document.querySelectorAll(`[data-view-count="${id}"]`).forEach(el=>el.textContent=views[id]);
 }
 function stopFeedViews() {
   feedObserver?.disconnect();feedObserver=null;
@@ -195,11 +224,11 @@ function stopFeedViews() {
 }
 function startFeedViews() {
   stopFeedViews();
-  if(view!=='feed'||!('IntersectionObserver' in window))return;
-  feedObserver=new IntersectionObserver(entries=>{for(const entry of entries){const id=entry.target.dataset.feedPhoto;clearTimeout(feedViewTimers.get(id));feedViewTimers.delete(id);
-    if(entry.intersectionRatio>=.65&&!document.hidden&&!document.querySelector('dialog[open]')&&!viewedThisSession.has(id))feedViewTimers.set(id,setTimeout(()=>{feedViewTimers.delete(id);if(view==='feed'&&!document.hidden&&!document.querySelector('dialog[open]')&&entry.target.isConnected)recordView(id);},1000));
+  if(!('IntersectionObserver' in window))return;
+  feedObserver=new IntersectionObserver(entries=>{for(const entry of entries){const id=entry.target.dataset.viewId;clearTimeout(feedViewTimers.get(id));feedViewTimers.delete(id);
+    if(entry.intersectionRatio>=.65&&!document.hidden&&!document.querySelector('dialog[open]')&&!viewedThisSession.has(id))feedViewTimers.set(id,setTimeout(()=>{feedViewTimers.delete(id);if(!document.hidden&&!document.querySelector('dialog[open]')&&entry.target.isConnected)recordView(id);},1000));
   }},{threshold:[0,.65],rootMargin:`-${document.querySelector('.header').offsetHeight+$('toolbar').offsetHeight}px 0px 0px 0px`});
-  document.querySelectorAll('[data-feed-photo]').forEach(el=>feedObserver.observe(el));
+  document.querySelectorAll('[data-view-id]').forEach(el=>feedObserver.observe(el));
 }
 function likePhoto(id,button) {
   if(!favorites.has(id))toggleFavorite(id);
@@ -237,7 +266,7 @@ function add(id) {if(byId.get(id)?.price==null)return;refreshCart();if((cart[id]
 function toggleFavorite(id) {
   if(!byId.has(id))return;
   if(favorites.has(id)){favorites.delete(id);notify(t('favoriteRemoved'));}else{favorites.add(id);notify(t('favoriteAdded'));}
-  save('favorites',[...favorites]);document.querySelectorAll(`[data-favorite="${id}"]`).forEach(b=>b.setAttribute('aria-pressed',String(favorites.has(id))));
+  save('favorites',[...favorites]);document.querySelectorAll(`[data-favorite="${id}"]`).forEach(b=>b.setAttribute('aria-pressed',String(favorites.has(id))));syncSocialStats();
   document.querySelectorAll(`[data-saved="${id}"]`).forEach(el=>el.hidden=!favorites.has(id));
   if(category==='favorites')renderProducts();
 }
@@ -369,8 +398,8 @@ function openCart() {refreshCart();staffMode=false;renderCart();$('cart-dialog')
 async function copyText(text,success,fallback) {try {if(!navigator.clipboard?.writeText)throw new Error('clipboard');await navigator.clipboard.writeText(text);notify(success);return true;}catch{fallback?.();return false;}}
 async function shareItem(id) {
   const p=byId.get(id);if(!p)return;const url=new URL(location.href);url.hash='';url.search='';url.searchParams.set('item',id);url.searchParams.set('lang',lang);url.searchParams.set('view',view);
-  if(navigator.share){try{await navigator.share({title:'Miora Coffee · '+name(p),text:name(p),url:url.href});return;}catch(e){if(e.name==='AbortError')return;}}
-  $('share-title').textContent=t('share')+' · Miora';$('share-description').textContent=name(p)+' — '+t('shareDescription');$('share-link').value=url.href;$('copy-link').textContent=t('copy');$('share-dialog').showModal();
+  if(navigator.share){try{await navigator.share({title:'Miora Coffee · '+name(p),text:name(p),url:url.href});recordShare(id);return;}catch(e){if(e.name==='AbortError')return;}}
+  pendingShareId=id;$('share-title').textContent=t('share')+' · Miora';$('share-description').textContent=name(p)+' — '+t('shareDescription');$('share-link').value=url.href;$('copy-link').textContent=t('copy');$('share-dialog').showModal();
 }
 function showCategoryResults() {
   const header=document.querySelector('.header').offsetHeight;
@@ -422,7 +451,7 @@ $('search-clear').addEventListener('click',()=>{search='';$('search').value='';r
 $('favorites-filter').addEventListener('click',()=>{search='';$('search').value='';selectCategory(category==='favorites'?'featured':'favorites');});
 $('language').addEventListener('change',event=>{lang=event.target.value;save('language',lang);renderLanguage();updateUrl();});
 $('theme-toggle').addEventListener('click',()=>{const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=theme;try{localStorage.setItem('miora:theme',theme);}catch{}document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#1e1c19':'#f8f5ef';renderTheme();});
-$('copy-link').addEventListener('click',()=>copyText($('share-link').value,t('copied'),()=>{$('share-link').focus();$('share-link').select();notify(t('selectCopy'));}));
+$('copy-link').addEventListener('click',async()=>{const ok=await copyText($('share-link').value,t('copied'),()=>{$('share-link').focus();$('share-link').select();notify(t('selectCopy'));});if(ok&&pendingShareId)recordShare(pendingShareId);});
 document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}));
 document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('close',()=>{if(!document.querySelector('dialog[open]'))startFeedViews();}));
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stopFeedViews();else if(!document.querySelector('dialog[open]'))startFeedViews();});
@@ -440,6 +469,7 @@ window.addEventListener('storage',event=>{
   if(event.key==='miora:cart'||event.key===null){refreshCart();renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();if($('detail-dialog').open)renderDetail();}
+  if(event.key==='miora:views'||event.key==='miora:shares'||event.key===null){const nextViews=load('views',{}),nextShares=load('shares',{});views=Object.fromEntries(Object.entries(nextViews&&typeof nextViews==='object'&&!Array.isArray(nextViews)?nextViews:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));shareCounts=Object.fromEntries(Object.entries(nextShares&&typeof nextShares==='object'&&!Array.isArray(nextShares)?nextShares:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));syncSocialStats();}
 });
 // Translated category labels can change the sticky row height.
 const storySizeObserver=new ResizeObserver(()=>{
