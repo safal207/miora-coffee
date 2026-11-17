@@ -134,7 +134,7 @@ try {
     assert(purchaseRect && purchaseRect.y>=-1 && purchaseRect.y+purchaseRect.height<=850,
       'product add action must fit inside the initial mobile viewport');
     await gridPage.screenshot({path:'artifacts/quick-detail-'+lang+'-'+width+'.png'});
-    await specs.locator('summary').click();
+    await specs.locator(':scope > summary').click();
     assert.equal(await specs.evaluate(el=>el.open),true,'full specifications must remain accessible');
     assert(await dialog.locator('.detail-more-body .detail-section').first().isVisible());
     assert.equal(await dialog.locator('.detail-cutaway').count(),1,'only curated cheesecake has an optional cutaway');
@@ -147,7 +147,7 @@ try {
     assert.match(await cutaway.locator('p').textContent(),/AI|yapay zekâ|ИИ|иллюстрац/i);
     await cutaway.locator('summary').click();
 
-    await specs.locator('summary').click();
+    await specs.locator(':scope > summary').click();
     assert.equal(await specs.evaluate(el=>el.open),false);
     const countBefore=Number(await gridPage.locator('#cart-open .cart-count').textContent());
     await action.click();
