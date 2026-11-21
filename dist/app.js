@@ -9,6 +9,7 @@ import {selectCartOffer,recordGrowthEvent} from './growth-engine.js?v=20261121-v
 import {readTasteMemory,setTasteMemoryEnabled,rememberTasteChoice,tasteSuggestions,TASTE_STORAGE_KEY} from './taste-memory.js?v=20261121-v1';
 import {USUAL_STORAGE_KEY,readUsual,saveUsual,forgetUsual,usualTotals,appendUsual} from './usual-order.js?v=20261121-v1';
 import {CITY_CATEGORY,CITY_ASSETS,CITY_COPY,cityNext,cityProducts} from './city-guide.js?v=20261121-v1';
+import {TOUR_SPOTS,TOUR_COPY,validTourSpot,nextTourSpot,getTourCopy} from './city-tour.js?v=20261121-v1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
@@ -136,8 +137,29 @@ function repeatUsual(){
 }
 const CITY_DISMISS_KEY='miora:city-guide-dismissed:v1';
 function cityDismissed(){try{return sessionStorage.getItem(CITY_DISMISS_KEY)==='1';}catch{return false;}}
-let cityStep='hello',cityHidden=cityDismissed();
+let cityStep='hello',cityHidden=cityDismissed(),cityTourSpot='houses';
 const cityHistory=[];
+function tourMarkup(c){
+  const words=TOUR_COPY[lang],selected=getTourCopy(lang,cityTourSpot);
+  const spots=TOUR_SPOTS.map((spot,i)=>{
+    const title=words[spot].label,pressed=spot===cityTourSpot;
+    return `<button type="button" class="city-tour-pin city-tour-pin-${spot}" data-city-spot="${spot}" aria-pressed="${pressed}" aria-label="${esc(title)}" title="${esc(title)}"><b aria-hidden="true">${i+1}</b></button>`;
+  }).join('');
+  const choices=TOUR_SPOTS.map((spot,i)=>{
+    const title=words[spot].label,pressed=spot===cityTourSpot;
+    return `<button type="button" class="city-tour-stop" data-city-spot="${spot}" aria-pressed="${pressed}"><span aria-hidden="true">${i+1}</span>${esc(title)}</button>`;
+  }).join('');
+  return `<section class="city-tour" aria-label="${esc(words.prompt)}"><figure class="city-tour-figure"><div class="city-tour-image"><img src="${CITY_ASSETS.panorama}" alt="${esc(words.photo)}" width="390" height="130" decoding="async" loading="lazy">${spots}</div><figcaption>${esc(words.hint)}</figcaption></figure><div class="city-tour-bottom"><div class="city-tour-stops" role="group" aria-label="${esc(words.prompt)}">${choices}</div><div class="city-tour-story" role="status" aria-live="polite" aria-atomic="true"><b id="city-tour-name">${esc(selected.label)}</b><p id="city-tour-description">${esc(selected.story)}</p></div><button class="city-tour-next" type="button" data-city-tour-next>${esc(words.next)} →</button><p class="city-guide-photo-note">${esc(c.privacy)}</p></div></section>`;
+}
+function selectTourSpot(spot){
+  if(cityStep!=='town'||!validTourSpot(spot))return;
+  cityTourSpot=spot;
+  const root=$('city-guide'),c=getTourCopy(lang,spot);
+  root.querySelectorAll('[data-city-spot]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.citySpot===spot)));
+  const title=root.querySelector('#city-tour-name'),detail=root.querySelector('#city-tour-description');
+  if(title)title.textContent=c.label;
+  if(detail)detail.textContent=c.story;
+}
 function setCityVisibility(visible){
   cityHidden=!visible;
   try{if(visible)sessionStorage.removeItem(CITY_DISMISS_KEY);
@@ -167,7 +189,7 @@ function renderCityGuide(focus=false){
   if(cityStep==='hello'&&readUsual(localStorage,byId))labels.hello.push(['usual',c.usual]);
   if(favorites.size&&['family','adults','choose'].includes(cityStep))labels[cityStep].push(['favorites',c.favorites]);
   const photos=cityStep==='town'
-    ?`<figure class="city-guide-mosaic"><img src="${CITY_ASSETS.panorama}" alt="${esc(c.panorama)}" width="390" height="130" loading="lazy"><figcaption><span title="${esc(c.photoTown)}">${esc(c.shortTown)}</span><span title="${esc(c.photoPlay)}">${esc(c.shortPlay)}</span><span title="${esc(c.photoCoffee)}">${esc(c.shortCoffee)}</span></figcaption></figure><p class="city-guide-photo-note">${esc(c.privacy)}</p>`
+    ?tourMarkup(c)
     :cityStep==='hello'
       ?`<img class="city-guide-preview" src="${CITY_ASSETS.panorama}" width="390" height="130" alt="${esc(c.panorama)}" loading="lazy">`:'';
   const suggestions=['coffee','dessert','food'].includes(cityStep)
@@ -196,6 +218,7 @@ function cityAction(action){
   }
   const next=cityNext(cityStep,action);
   if(!next)return;
+  if(next==='town')cityTourSpot='houses';
   cityHistory.push(cityStep);cityStep=next;
   renderCityGuide(true);
 }
@@ -608,6 +631,12 @@ document.addEventListener('click',async event=>{
   if(d.close){$(d.close).close();return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
   if(d.cityOpen!==undefined){cityStep='hello';cityHistory.length=0;setCityVisibility(true);renderCityGuide(true);$('city-guide').scrollIntoView({block:'start',behavior:'instant'});return;}
+  if(d.citySpot){selectTourSpot(d.citySpot);return;}
+  if(d.cityTourNext!==undefined){
+    selectTourSpot(nextTourSpot(cityTourSpot));
+    $('city-guide').querySelector('.city-tour-stops [data-city-spot="'+cityTourSpot+'"]')?.focus({preventScroll:true});
+    return;
+  }
   if(d.cityAction){cityAction(d.cityAction);return;}
   if(d.tasteToggle!==undefined){
     const enabled=!readTasteMemory(localStorage,byId).enabled;
