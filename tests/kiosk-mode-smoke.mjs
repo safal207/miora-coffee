@@ -64,7 +64,12 @@ export async function verifyKioskMode(browser, origin) {
     assert.equal(await total.innerText(), '130 ₺');
     assert.equal(await cart.locator('[data-service="dineIn"]').getAttribute('aria-pressed'), 'true');
     await cart.locator('[data-close]').click();
-    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    const layout = await page.evaluate(() => ({
+      width: innerWidth, content: document.documentElement.scrollWidth,
+      offenders: [...document.querySelectorAll('body *')].filter(el => el.getBoundingClientRect().right > innerWidth + 0.5)
+        .map(el => [el.tagName, el.id || String(el.className), Math.round(el.getBoundingClientRect().right)]).slice(0,15)
+    }));
+    assert(layout.content <= layout.width, JSON.stringify(layout));
     assert.deepEqual(errors, []);
     await context.close();
   }
