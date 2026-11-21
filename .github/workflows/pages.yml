@@ -30,6 +30,7 @@ jobs:
           node --check dist/usual-order.js
           node --check dist/city-guide.js
           node --check dist/city-tour.js
+          node --check dist/miora-reactions.js
           node --check dist/photos.js
           node --check dist/photo-data.js
           node --check dist/menu-data.js
@@ -64,6 +65,7 @@ jobs:
           node tests/taste-memory-smoke.mjs
           node tests/usual-order-smoke.mjs
           node tests/city-guide-smoke.mjs
+          node tests/miora-reactions-smoke.mjs
       - name: Upload feed screenshots for visual review
         if: always()
         uses: actions/upload-artifact@v4
