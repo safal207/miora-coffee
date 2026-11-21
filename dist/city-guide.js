@@ -1,11 +1,7 @@
 // Miora City Guide — a short, local, opt-out-first conversation.
 // No child profiling, registration, questions about age, remote AI or telemetry.
 export const CITY_CATEGORY=Object.freeze({coffee:'46776',dessert:'46818',food:'46885'});
-export const CITY_ASSETS=Object.freeze({
-  town:'assets/city/town.webp',
-  play:'assets/city/play.webp',
-  coffee:'assets/city/coffee.webp'
-});
+export const CITY_ASSETS=Object.freeze({panorama:'assets/city/miora-city.webp'});
 const path=Object.freeze({
   hello:{family:'family',adults:'adults'},
   family:{tour:'town',choose:'choose'},
@@ -43,7 +39,7 @@ export const CITY_COPY=Object.freeze({
     openCategory:'Menüde göster',skip:'Tüm menüye geç',back:'Geri',restart:'Baştan başla',
     reopen:'Miora ile tanış',notChat:'Bu, canlı sohbet değil; kısa bir menü rehberi. Yanıtlar gönderilmez ve kaydedilmez.',
     photoTown:'Miora oyun alanında küçük dükkân cepheleri',photoPlay:'Miora oyun alanında kaydırak ve oyuncaklar',
-    photoCoffee:'Miora kahve tezgâhı',privacy:'Çocukların yüzlerini göstermeyen, mekândan gerçek fotoğraflar.'
+    photoCoffee:'Miora kahve tezgâhı',panorama:'Oyun şehri, kaydırak ve kahve tezgâhı · Miora',privacy:'Çocukların yüzlerini göstermeyen, mekândan gerçek fotoğraflar.'
   },
   ru:{
     eyebrow:'ГОРОД MIORA · ДАВАЙ ЗНАКОМИТЬСЯ',title:'Маленький город, большой перерыв.',
@@ -60,7 +56,7 @@ export const CITY_COPY=Object.freeze({
     openCategory:'Открыть в меню',skip:'Сразу в меню',back:'Назад',restart:'Начать заново',
     reopen:'Познакомиться с Miora',notChat:'Это не онлайн-чат, а мини-гид по кафе. Ответы никуда не отправляются и не сохраняются.',
     photoTown:'Настоящие фасады домиков игрового городка Miora',photoPlay:'Горка и игрушки в детской зоне Miora',
-    photoCoffee:'Кофейная стойка Miora',privacy:'Настоящие фотографии пространства, без публикации детских лиц.'
+    photoCoffee:'Кофейная стойка Miora',panorama:'Домики, горка и кофейная стойка Miora',privacy:'Настоящие фотографии пространства, без публикации детских лиц.'
   },
   en:{
     eyebrow:'MIORA TOWN · SAY HELLO',title:'A little town. A lovely break.',
@@ -77,6 +73,6 @@ export const CITY_COPY=Object.freeze({
     openCategory:'See in menu',skip:'Go straight to menu',back:'Back',restart:'Start again',
     reopen:'Meet Miora',notChat:'This is a short interactive guide, not a live chat. Answers are not sent or stored.',
     photoTown:'Real storefront facades in the Miora play town',photoPlay:'Slide and toys in the Miora play area',
-    photoCoffee:'Miora coffee counter',privacy:'Real venue photos cropped to exclude identifiable children.'
+    photoCoffee:'Miora coffee counter',panorama:'Miora play town, slide and coffee counter',privacy:'Real venue photos cropped to exclude identifiable children.'
   }
 });
