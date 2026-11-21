@@ -20,76 +20,8 @@ body[data-view="feed"] .feed-media {
   position: relative;
   isolation: isolate;
 }
-body[data-view="feed"] .feed-media::after {
-  content: "";
-  position: absolute;
-  inset: 0 0 0 auto;
-  width: min(30%, 145px);
-  background: linear-gradient(90deg, transparent, #19151126);
-  pointer-events: none;
-  z-index: 1;
-}
 body[data-view="feed"] .feed-post .feed-photo:not(:has(.product-gallery)) {
   aspect-ratio: 4 / 3;
-}
-body[data-view="feed"] .feed-action-rail {
-  position: absolute;
-  z-index: 5;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-}
-body[data-view="feed"] .feed-action-rail .feed-rail-button {
-  position: static;
-  width: 58px;
-  min-width: 58px;
-  height: 59px;
-  min-height: 59px;
-  padding: 6px 3px 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border: 1px solid #ffffff80;
-  border-radius: 14px;
-  background: #221d1dbd;
-  color: #fff;
-  backdrop-filter: blur(9px);
-  -webkit-backdrop-filter: blur(9px);
-  box-shadow: 0 3px 12px #0002;
-  transition: background .18s ease, transform .18s ease;
-}
-body[data-view="feed"] .feed-action-rail .feed-rail-button:hover {
-  background: #302b25ed;
-  transform: translateY(-1px);
-}
-body[data-view="feed"] .feed-action-rail .feed-rail-button:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
-}
-body[data-view="feed"] .feed-action-rail .feed-rail-button svg {
-  width: 22px;
-  height: 22px;
-  stroke-width: 1.9px;
-  flex-shrink: 0;
-}
-body[data-view="feed"] .feed-action-rail .feed-save[aria-pressed="true"] {
-  background: #812f43;
-  color: #fff;
-}
-body[data-view="feed"] .feed-action-rail .feed-save[aria-pressed="true"] svg {
-  fill: currentColor;
-}
-body[data-view="feed"] .feed-rail-label {
-  max-width: 100%;
-  font: 700 9px/1.1 Arial, Helvetica, sans-serif;
-  text-align: center;
-  overflow-wrap: anywhere;
 }
 body[data-view="feed"] .feed-post .post-caption {
   padding: 15px 18px 9px;
@@ -135,16 +67,6 @@ body[data-view="feed"] .builder-entry summary {
   body[data-view="feed"] .journey-section {padding-inline: 12px;}
   body[data-view="feed"] .journey-cards {gap: 16px;}
   body[data-view="feed"] .feed-post {border-radius: 16px;}
-  body[data-view="feed"] .feed-action-rail {right: 9px; gap: 9px;}
-  body[data-view="feed"] .feed-action-rail .feed-rail-button {
-    width: 46px;
-    min-width: 46px;
-    height: 46px;
-    min-height: 46px;
-    padding: 8px;
-    border-radius: 50%;
-  }
-  body[data-view="feed"] .feed-rail-label {display: none;}
   body[data-view="feed"] .feed-post .post-caption {padding: 13px 14px 9px;}
   body[data-view="feed"] .feed-post .post-caption h3 {font-size: 18px;}
   body[data-view="feed"] .feed-post .post-order {margin-inline: 14px;padding-bottom: 15px;}
@@ -153,13 +75,10 @@ body[data-view="feed"] .builder-entry summary {
   body[data-view="feed"] .feed-post .feed-photo:not(:has(.product-gallery)) {aspect-ratio: 4 / 3;}
 }
 @media (max-width: 359px) {
-  body[data-view="feed"] .feed-action-rail {gap: 6px;right: 8px;}
-  body[data-view="feed"] .feed-action-rail .feed-rail-button {width: 44px;min-width: 44px;height: 44px;min-height: 44px;}
   body[data-view="feed"] .feed-post .post-order .feed-add {min-width: 112px;}
   body[data-view="feed"] .feed-post .post-order strong {font-size: 19px;}
 }
 @media (prefers-reduced-motion: reduce) {
-  body[data-view="feed"] .feed-action-rail .feed-rail-button {transition: none;}
 }
 /* Discovery stays available, but the photograph is the first protagonist. */
 body[data-view="feed"] .builder-entry,
@@ -264,170 +183,4 @@ body[data-view="feed"] .spin-card-launch {
   body[data-view="feed"] .gallery-frame .gallery-label {font-size:9px;}
 }
 
-/* Reels-inspired social actions on EVERY catalog card (feed, grid and list).
-   Real favorites + native share; no fabricated engagement counters. */
-body:not([data-view="feed"]) .product-media .product-social {
-  inset: 8px 8px auto auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-start;
-  gap: 7px;
-  pointer-events: none;
-  z-index: 3;
-}
-body:not([data-view="feed"]) .product-media .product-social button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  pointer-events: auto;
-  width: 42px;
-  min-width: 42px;
-  height: 42px;
-  min-height: 42px;
-  border: 1px solid #ffffff73;
-  border-radius: 50%;
-  background: #221d1dbd;
-  color: #fff;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 3px 12px #0003;
-}
-body:not([data-view="feed"]) .product-media .product-social svg {
-  width: 21px;
-  height: 21px;
-  stroke-width: 1.8;
-}
-body:not([data-view="feed"]) .product-media .product-social button[aria-pressed="true"] {
-  color: #fff;
-  background: #812f43;
-}
-body:not([data-view="feed"]) .product-media .product-social button[aria-pressed="true"] svg {
-  fill: currentColor;
-}
-body:not([data-view="feed"]) .product-media .product-social button:focus-visible {
-  outline: 3px solid var(--teal);
-  outline-offset: 2px;
-}
-/* The compact list must retain share and save, not silently drop one. */
-body[data-view="list"] .product-media .product-social {
-  inset: 5px 5px auto auto;
-  gap: 5px;
-}
-body[data-view="list"] .product-media .product-social button:first-child {
-  display: flex;
-}
-body[data-view="list"] .product-media .product-social button {
-  width: 40px;
-  min-width: 40px;
-  height: 40px;
-  min-height: 40px;
-}
-@media (max-width: 620px) {
-  body:not([data-view="feed"]) .product-media .product-social {
-    inset: 5px 5px auto auto;
-    gap: 5px;
-  }
-  body:not([data-view="feed"]) .product-media .product-social button {
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-    min-height: 40px;
-  }
-  body:not([data-view="feed"]) .product-media .product-social svg {
-    width: 19px;
-    height: 19px;
-  }
-}
-
-/* Honest engagement counts for this browser; NEVER imply cross-user popularity. */
-.social-stats {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 12px;
-  min-width: 0;
-  color: var(--ink);
-}
-.social-stats .social-stat {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-.social-stats .social-stat svg {
-  width: 14px;
-  height: 14px;
-  color: var(--teal);
-  stroke-width: 1.7;
-}
-.social-stats .social-stat b {font-weight:700;}
-.social-stats .social-stats-scope {
-  flex-basis: 100%;
-  font-size: 9px;
-  line-height: 1.35;
-  color: var(--muted);
-}
-.product-body .social-stats {
-  margin-top: 9px;
-  padding-top: 9px;
-  border-top: 1px solid var(--line);
-}
-body[data-view="feed"] .feed-post .social-stats {
-  margin: 1px 18px 11px;
-  padding-top: 10px;
-  border-top: 1px solid var(--line);
-}
-body[data-view="feed"] .feed-post .social-stats .social-stats-scope {
-  flex-basis: auto;
-  margin-left: auto;
-}
-body[data-view="feed"] .feed-post .post-order {border-top:1px solid var(--line);}
-/* Counts next to actionable heart and paper plane in grid and list. */
-body:not([data-view="feed"]) .product-media .product-social button {
-  flex-direction: column;
-  gap: 0;
-  min-height: 51px;
-  height: 51px;
-  border-radius: 15px;
-  padding: 3px 2px;
-}
-body:not([data-view="feed"]) .product-media .product-social svg {
-  width: 19px;
-  height: 19px;
-  flex-shrink: 0;
-}
-body:not([data-view="feed"]) .product-media .product-social .social-action-number {
-  display: block;
-  min-height: 13px;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 13px;
-  font-variant-numeric: tabular-nums;
-  color: inherit;
-}
-body[data-view="list"] .product-media .product-social button {
-  min-height: 51px;
-  height: 51px;
-}
-@media (max-width: 620px) {
-  .product-body .social-stats {gap: 5px 9px;}
-  .product-body .social-stats .social-stat {font-size:10px;}
-  .product-body .social-stats .social-stat svg {width:12px;height:12px;}
-  .product-body .social-stats .social-stats-scope {font-size:8px;}
-  body[data-view="feed"] .feed-post .social-stats {margin-inline:14px;}
-  body[data-view="feed"] .feed-post .social-stats .social-stats-scope {
-    flex-basis:100%;
-    margin-left:0;
-  }
-  body:not([data-view="feed"]) .product-media .product-social button {
-    min-height: 49px;
-    height: 49px;
-    width: 40px;
-    min-width: 40px;
-    border-radius: 14px;
-  }
-}
+body[data-view="feed"] .feed-post .post-order { border-top: 1px solid var(--line); }

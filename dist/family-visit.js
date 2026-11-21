@@ -28,7 +28,7 @@ export const familyCopy = {
   en: {entry:'Kids’ combos', title:'With kids at MIORA', room:'Baby care room', roomText:'There’s a restroom and a separate baby care room with a changing table.', roomPhoto:'Baby Care Room sign at MIORA', check:'Tap an item for ingredients. Ask the team about allergens.', add:'Add combo', welcome:'Take MIORA with you'}
 };
 
-export function renderFamilyVisit(root, {byId, lang, money, esc, name, social}) {
+export function renderFamilyVisit(root, {byId, lang, money, esc, name, overlay, scope}) {
   const c = familyCopy[lang];
   const combos = Object.entries(familyCombos).map(([id, combo]) => {
     const items = combo.lines.map(([itemId, quantity]) => [byId.get(itemId), quantity]);
@@ -44,24 +44,24 @@ export function renderFamilyVisit(root, {byId, lang, money, esc, name, social}) 
       </button>`;
     }).join('');
     return `<article class="family-card share-target" id="${id}" aria-labelledby="${id}-title">
-      <div class="family-photos" data-view-id="${id}">${photos}</div>
+      <div class="family-photos photo-surface" data-view-id="${id}">${photos}${overlay(id,money(price))}</div>
       <div class="family-card-copy">
         <p class="family-size">${esc(combo.size[lang])}</p>
         <h3 id="${id}-title">${esc(combo.title[lang])}</h3>
         <ul class="family-combo-items">${items.map(([item, quantity]) =>
           `<li><button type="button" data-detail="${item.id}">${quantity > 1 ? quantity + ' × ' : ''}${esc(name(item))}</button></li>`).join('')}</ul>
-        ${social(id)}
-        <button type="button" class="button primary family-add" data-family-add="${id}">${esc(c.add)} · ${money(price)}</button>
+        <button type="button" class="button primary family-add" data-family-add="${id}" aria-label="${esc(c.add+' · '+combo.title[lang])}">${esc(c.add)}</button>
       </div>
     </article>`;
   }).join('');
-  root.innerHTML = `<h2 id="family-title" tabindex="-1">${esc(c.title)}</h2>
+  root.innerHTML = `<h2 id="family-title" tabindex="-1">${esc(c.title)}</h2><small class="photo-scope">${esc(scope)}</small>
     <div class="family-grid">${combos}</div>
     <p class="family-note">${esc(c.check)}</p>
     <article class="family-care family-card share-target" id="family-care" aria-labelledby="family-care-title">
-      <div class="family-care-photo" data-view-id="family-care">
+      <div class="family-care-photo photo-surface" data-view-id="family-care">
         <img src="assets/family/baby-care-sign.webp" width="960" height="422" loading="lazy" decoding="async" alt="${esc(c.roomPhoto)}">
+        ${overlay('family-care')}
       </div>
-      <div class="family-card-copy"><h3 id="family-care-title">${esc(c.room)}</h3><p>${esc(c.roomText)}</p>${social('family-care')}</div>
+      <div class="family-card-copy"><h3 id="family-care-title">${esc(c.room)}</h3><p>${esc(c.roomText)}</p></div>
     </article>`;
 }

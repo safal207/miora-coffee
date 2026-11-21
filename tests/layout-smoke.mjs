@@ -46,24 +46,22 @@ try{
    const media=card.locator('.product-media'),body=card.locator('.product-body');
    const cardRect=await rect(card),imageRect=await rect(media),bodyRect=await rect(body);
    const titleRect=await rect(card.locator('.product-title'));
-   const priceRect=await rect(card.locator('.product-price'));
+   const priceRect=await rect(card.locator('.photo-price'));
    const addRect=await rect(card.locator('.product-bottom button'));
    assert(cardRect&&imageRect&&bodyRect&&titleRect&&priceRect&&addRect);
    assert(imageRect.width<=cardRect.width*.43,'media too wide at '+width+' card '+i);
    assert(imageRect.x+imageRect.width<=bodyRect.x+2,'media overlaps text column at '+width+' card '+i);
    assert(within(titleRect,bodyRect),'title outside body at '+width+' card '+i);
-   assert(within(priceRect,bodyRect),'price outside body at '+width+' card '+i);
+   assert(within(priceRect,imageRect),'price outside photo at '+width+' card '+i);
    assert(within(addRect,bodyRect),'add outside body at '+width+' card '+i);
-   const rail=card.locator('.product-body > .product-social');
+   const rail=card.locator('.product-media > .photo-actions');
    assert.equal(await rail.locator('button').count(),2,'two list reactions');
    assert.equal(await rail.locator('[data-view-count]').count(),1,'local view count');
    for(const button of await rail.locator('button').all()){
-    assert(within(await rect(button),bodyRect),'social outside body at '+width+' card '+i);
+    assert(within(await rect(button),imageRect),'social outside photo at '+width+' card '+i);
    }
    assertions+=9;
   }
-  const first=page.locator('#products .product-card').first();
-  assert(await first.locator('.product-media .product-social').count()===0,'no buttons overlaying list photo');
   if(width<=620){
    const search=await rect(page.locator('.toolbar .search'));
    const switcher=await rect(page.locator('.toolbar .view-switch'));
@@ -82,13 +80,13 @@ try{
   for(const i of [0,1,4,30,92]){
    const card=gridCards.nth(i);
    const cardRect=await rect(card);
-   const priceRect=await rect(card.locator('.product-price'));
-   const bodyRect=await rect(card.locator('.product-body'));
-   const social=card.locator('.product-media .product-social');
-   assert(within(priceRect,bodyRect),'grid price outside card body '+width+' / '+i);
+   const priceRect=await rect(card.locator('.photo-price'));
+   const social=card.locator('.product-media .photo-actions');
    assert.equal(await social.locator('button').count(),2);
    const socialRect=await rect(social),photoRect=await rect(card.locator('.product-media'));
-   assert(within(socialRect,photoRect),'grid reaction rail escapes photo '+width+' / '+i);
+   assert(within(socialRect,photoRect),'grid actions escape photo '+width+' / '+i);
+   assert(within(priceRect,photoRect),'grid price escapes photo '+width+' / '+i);
+   assert(socialRect.y+socialRect.height<=priceRect.y,'price overlaps the reactions '+width+' / '+i);
    assertions+=3;
   }
   await capture(page,'layout-grid',{width,lang});
@@ -98,9 +96,10 @@ try{
   await page.locator('.feed-post').first().waitFor();
   await checkOverflow(page,'feed '+width+' '+lang);
   const feed=page.locator('.feed-post').first();
-  const rail=await rect(feed.locator('.feed-action-rail'));
+  const rail=await rect(feed.locator('.photo-actions'));
   const photo=await rect(feed.locator('.feed-media'));
   assert(within(rail,photo),'feed reactions outside photo at '+width);
+  assert(within(await rect(feed.locator('.photo-price')),photo),'feed price outside photo at '+width);
   await capture(page,'layout-feed',{width,lang});
   assert.deepEqual(errors,[],'runtime browser errors '+width+' '+lang);
   if(width===390&&lang==='ru'){

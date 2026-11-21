@@ -1,5 +1,5 @@
 import {hasCuratedCutaway} from './media-merchandising.js?v=20261117-curated1';
-import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261122-family1';
+import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261122-photo1';
 import {desireSections,journeyCopy,localizedJourney} from './desire-journey.js?v=20261112-generated1';
 import {videoStory,dessertStoryVisible,stories} from './video-stories.js?v=20261122-family1';
 import {products,categories,featured,source} from './menu-data.js';
@@ -11,9 +11,9 @@ import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection,sandwichIdeas,localizedIdea} from './sandwich-preview.js';
 import {breakfastVisualForSelection,breakfastCopy,breakfastIdeas,localizedBreakfastIdea} from './breakfast-preview.js';
 import {identityFor,diversifyPhotoOrder,storyCoverIds} from './visual-merchandising.js?v=20261112-covers1';
-import {mountKioskMode,kioskCopy,kioskPairs} from './kiosk-mode.js?v=20261122-family1';
+import {mountKioskMode,kioskCopy,kioskPairs} from './kiosk-mode.js?v=20261122-photo1';
 import {dishFrameStyle} from './photo-framing.js';
-import {familyCombos,familyCopy,renderFamilyVisit} from './family-visit.js';
+import {familyCombos,familyCopy,renderFamilyVisit} from './family-visit.js?v=20261122-photo1';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -128,10 +128,11 @@ function renderLanguage() {
   document.querySelectorAll('[data-journey-copy]').forEach(node=>node.textContent=journeyCopy[lang][node.dataset.journeyCopy]);
   document.querySelectorAll('[data-family-entry]').forEach(link=>link.textContent=familyCopy[lang].entry);
   $('quick-social-scope').textContent=socialCopy[lang].scope;
+  $('catalog-social-scope').textContent=socialCopy[lang].scope;
   document.querySelectorAll('[data-builder-card]').forEach(card=>card.lastElementChild.innerHTML=cardEngagement(card.dataset.builderCard));
   $('welcome-caption').textContent=familyCopy[lang].welcome;
-  $('pairing-social').innerHTML=cardEngagement('pair-cappuccino');
-  renderFamilyVisit($('family'),{byId,lang,money,esc,name,social:cardEngagement});
+  $('pairing-overlay').innerHTML=photoOverlay('pair-cappuccino',money(kioskPairs.cappuccino.reduce((total,id)=>total+byId.get(id).price,0)));
+  renderFamilyVisit($('family'),{byId,lang,money,esc,name,overlay:photoOverlay,scope:socialCopy[lang].scope});
   kioskUI?.refresh();renderTheme();renderCategories();renderProducts();renderCartCount();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
@@ -147,47 +148,45 @@ const flavorChip=item=>{
  return name?'<span class="miora-photo-identity">'+esc(name)+'</span>':'';
 };
 const socialCopy={
-  ru:{likes:'Лайки',shares:'Поделились или скопировали',views:'Просмотры',scope:'На этом устройстве',like:'Нравится',liked:'Лайк сохранён',unliked:'Лайк снят'},
-  tr:{likes:'Beğeniler',shares:'Paylaşılan veya kopyalanan',views:'Görüntüleme',scope:'Bu cihazda',like:'Beğen',liked:'Beğenildi',unliked:'Beğeni kaldırıldı'},
-  en:{likes:'Likes',shares:'Shared or copied',views:'Views',scope:'On this device',like:'Like',liked:'Liked',unliked:'Like removed'}
+  ru:{shares:'Поделились или скопировали',views:'Просмотры',scope:'На этом устройстве',like:'Нравится',liked:'Лайк сохранён',unliked:'Лайк снят'},
+  tr:{shares:'Paylaşılan veya kopyalanan',views:'Görüntüleme',scope:'Bu cihazda',like:'Beğen',liked:'Beğenildi',unliked:'Beğeni kaldırıldı'},
+  en:{shares:'Shared or copied',views:'Views',scope:'On this device',like:'Like',liked:'Liked',unliked:'Like removed'}
 };
-function cardEngagement(id) {
+const compactCount = count => count > 999 ? '999+' : count;
+function cardEngagement(id,onPhoto=false) {
   const label=socialName(id),c=socialCopy[lang];
   if(!label)return '';
-  return `<div class="card-engagement" role="group" aria-label="${esc(label+' · '+c.scope)}" title="${esc(c.scope)}">
-    <span class="card-views" title="${esc(c.views)}">${icon('eye')}<b data-view-count="${id}">${views[id]||0}</b><span class="sr-only">${esc(c.views)}</span></span>
+  const count=n=>onPhoto?compactCount(n||0):n||0;
+  return `<div class="card-engagement${onPhoto?' photo-actions':''}" role="group" aria-label="${esc(label+' · '+c.scope)}" title="${esc(c.scope)}">
+    <span class="card-views" title="${esc(c.views)}">${icon('eye')}<b data-view-count="${id}">${count(views[id])}</b><span class="sr-only">${esc(c.views)}</span></span>
     <button type="button" data-favorite="${id}" aria-pressed="${favorites.has(id)}" aria-label="${esc(c.like+' · '+label)}">${icon('heart')}<b data-like-count="${id}">${favorites.has(id)?1:0}</b></button>
-    <button type="button" data-share="${id}" title="${esc(c.shares)}" aria-label="${esc(t('share')+' · '+label)}">${icon('share')}<b data-share-count="${id}">${shareCounts[id]||0}</b></button>
-    <small class="engagement-scope">${esc(c.scope)}</small>
+    <button type="button" data-share="${id}" title="${esc(c.shares)}" aria-label="${esc(t('share')+' · '+label)}">${icon('share')}<b data-share-count="${id}">${count(shareCounts[id])}</b></button>
+    ${onPhoto?'':`<small class="engagement-scope">${esc(c.scope)}</small>`}
   </div>`;
 }
-function socialStats(id) {
-  const c=socialCopy[lang],like=favorites.has(id)?1:0,share=shareCounts[id]||0,seen=views[id]||0;
-  return `<div class="social-stats" role="group" aria-label="${esc(c.scope)}" title="${esc(c.scope)}">
-    <span class="social-stat" title="${esc(c.likes)}">${icon('heart')}<b data-like-count="${id}">${like}</b><span class="sr-only">${esc(c.likes)}</span></span>
-    <span class="social-stat" title="${esc(c.shares)}">${icon('share')}<b data-share-count="${id}">${share}</b><span class="sr-only">${esc(c.shares)}</span></span>
-    <span class="social-stat" title="${esc(c.views)}">${icon('eye')}<b data-view-count="${id}">${seen}</b><span class="sr-only">${esc(c.views)}</span></span>
-    <span class="social-stats-scope">${esc(c.scope)}</span></div>`;
+function photoOverlay(id,price) {
+  const from=kioskMessages[lang].from+' ';
+  const starting=price?.startsWith(from);
+  const amount=starting?price.slice(from.length):price;
+  const priceTag=amount?`<strong class="photo-price${amount===t('ask')?' photo-price-text':''}">${starting?`<small class="photo-price-qualifier">${esc(from.trim())}</small>`:''}<span>${esc(amount)}</span></strong>`:'';
+  return cardEngagement(id,true)+priceTag;
+}
+function updateSocialCount(el,count) {
+  el.textContent=el.closest('.photo-actions')?compactCount(count):count;
+  if(count>999)el.title=String(count);
+  else el.removeAttribute('title');
 }
 function syncSocialStats() {
   document.querySelectorAll('[data-favorite]').forEach(el=>el.setAttribute('aria-pressed',String(favorites.has(el.dataset.favorite))));
   document.querySelectorAll('[data-like-count]').forEach(el=>el.textContent=favorites.has(el.dataset.likeCount)?1:0);
-  document.querySelectorAll('[data-share-count]').forEach(el=>el.textContent=shareCounts[el.dataset.shareCount]||0);
-  document.querySelectorAll('[data-view-count]').forEach(el=>el.textContent=views[el.dataset.viewCount]||0);
+  document.querySelectorAll('[data-share-count]').forEach(el=>updateSocialCount(el,shareCounts[el.dataset.shareCount]||0));
+  document.querySelectorAll('[data-view-count]').forEach(el=>updateSocialCount(el,views[el.dataset.viewCount]||0));
 }
 function recordShare(id) {
   if(!hasSocialCard(id))return;
   shareCounts[id]=Math.min(Math.max(shareCounts[id]||0,loadCounts('shares')[id]||0)+1,1000000);
   save('shares',shareCounts);
   syncSocialStats();
-}
-function productSocial(p,compact=false){
-  const scope=esc(socialCopy[lang].scope);
-  return `<div class="product-social" role="group" aria-label="${esc(name(p)+' · '+socialCopy[lang].scope)}">
-    <button type="button" data-favorite="${p.id}" aria-label="${esc(t('favorites')+' · '+name(p))}" title="${esc(t('favorites'))}" aria-pressed="${favorites.has(p.id)}">${icon('heart')}<span class="social-action-number" data-like-count="${p.id}" aria-hidden="true">${favorites.has(p.id)?1:0}</span></button>
-    <button type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}" title="${esc(t('share'))}">${icon('share')}<span class="social-action-number" data-share-count="${p.id}" aria-hidden="true">${shareCounts[p.id]||0}</span></button>
-    ${compact?`<span class="list-view-stat" title="${esc(socialCopy[lang].views)}">${icon('eye')}<b data-view-count="${p.id}">${views[p.id]||0}</b></span><small class="list-device-scope">${scope}</small>`:''}
-  </div>`;
 }
 function renderProducts() {
   stopFeedViews();disposeSpotlight();disposeGalleries();
@@ -214,7 +213,7 @@ function renderProducts() {
   $('empty-state').hidden=list.length>0;$('products').className='product-grid'+(view==='list'?' list-view':view==='feed'?' feed-view':'');
   $('view-feed').setAttribute('aria-pressed',String(view==='feed'));$('view-grid').setAttribute('aria-pressed',String(view==='grid'));$('view-list').setAttribute('aria-pressed',String(view==='list'));$('search-clear').hidden=!search;
   if(view==='feed'){
-    if(!search&&category!=='favorites')disposeSpotlight=mountSpotlight($('menu-spotlight'),displayList,{lang,name,money,social:cardEngagement});
+    if(!search&&category!=='favorites')disposeSpotlight=mountSpotlight($('menu-spotlight'),displayList,{lang,name,money,overlay:photoOverlay});
     $('spotlight-disclosure').hidden=$('menu-spotlight').hidden;
     const copy=journeyCopy[lang],sections=desireSections(displayList,{category,search,categories});
     const index=sections.length>1?`<details class="journey-index"><summary>${esc(copy.find)}</summary><div class="journey-links">${sections.map(g=>`<button type="button" data-journey-jump="${g.id}">${esc(localizedJourney(g.title,lang))}<small>${g.items.length}</small></button>`).join('')}</div></details>`:'';
@@ -225,9 +224,10 @@ function renderProducts() {
     disposeGalleries=mountGalleries($('products'));startFeedViews();enhanceKioskCards();return;
   }
   $('products').innerHTML=displayList.map(p=>`<article class="product-card" data-product="${p.id}">
-    <div class="product-media" data-view-id="${p.id}"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}>`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${photoKind(p)==='generated'?`<span class="generated-media-label">${esc(journeyCopy[lang].generated)}</span>`:''}${flavorChip(p)}
-${view==='list'?'':productSocial(p)}</div>
-    <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div>${view==='list'?productSocial(p,true):socialStats(p.id)}<div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
+    <div class="product-media photo-surface" data-view-id="${p.id}"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(name(p))}">`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${photoOverlay(p.id,menuPrice(p))}</div>
+    <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p>
+    ${photoKind(p)==='generated'?`<small class="card-photo-note">${esc(journeyCopy[lang].generated)}</small>`:''}${flavorChip(p)}
+    <div class="product-meta">${meta(p)}</div><div class="product-bottom">${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
   enhanceKioskCards();startFeedViews();
 }
 const kioskFor=id=>({430236:'sandwich',430240:'sandwich',431177:'sandwich',431178:'sandwich',431179:'sandwich',431203:'breakfast',431333:'pancake'})[id]||null;
@@ -250,8 +250,6 @@ function enhanceKioskCards(){
     b.type='button';b.className=view==='feed'?'button primary feed-add kiosk-card-cta':'kiosk-card-cta';
     b.dataset.kStart=kind;if(kioskBread(id))b.dataset.kBread=kioskBread(id);
     b.textContent=kioskMessages[lang].build;row.classList.add('kiosk-has-config');prior.replaceWith(b);
-    const priceNode=row.querySelector('.product-price,strong');
-    if(priceNode){priceNode.textContent=menuPrice(byId.get(id));priceNode.classList.remove('ask');}
   }
 }
 function enhanceKioskDetail(id){
@@ -264,32 +262,25 @@ function enhanceKioskDetail(id){
   if(kind==='pancake'){
     const section=$('detail-content').querySelector('.detail-copy > .detail-section');
     if(section?.querySelector('h3')?.textContent===t('ask'))section.remove();
-    const metrics=$('detail-content').querySelector('.detail-metrics');
-    if(metrics)metrics.insertAdjacentHTML('beforeend','<span class="metric detail-price">'+money(25000)+'</span>');
   }
 }
 function feedPost(p) {
   const copy=journeyCopy[lang],qty=cart[p.id]||0,kind=photoKind(p);
   const media=kind==='missing'
     ?`<div class="menu-photo-pending"><span>miora</span><small>${esc(copy.noPhoto)}</small></div>`
-    :hasAlternatePhoto(p)?`<div class="feed-photo generated-photo" data-feed-photo="${p.id}">${galleryMarkup(p,lang,name(p),copy.details)}</div>`
+    :hasAlternatePhoto(p)?`<div class="feed-photo generated-photo" data-feed-photo="${p.id}">${galleryMarkup(p,lang,name(p),copy.details,photoOverlay(p.id,menuPrice(p)))}</div>`
     :`<div class="feed-photo ${kind==='original'?'original-photo original-'+p.id:kind==='generated'?'generated-photo generated-'+p.id:''}" data-feed-photo="${p.id}"><button class="feed-photo-button" type="button" data-detail="${p.id}" aria-label="${esc(copy.details+' · '+name(p))}"><img src="${photo(p)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 24px), (max-width: 960px) 660px, 640px')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(name(p))}"></button>${flavorChip(p)}</div>`;
   return `<article class="product-card feed-post" data-product="${p.id}" aria-labelledby="post-title-${p.id}">
-    <div class="feed-media" data-view-id="${p.id}">${media}<div class="feed-action-rail" role="group" aria-label="${esc(name(p))}">
-      <button class="icon-btn feed-save feed-rail-button" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${esc(t('favorites')+' · '+name(p))}" title="${esc(t('favorites'))}">${icon('heart')}<span class="feed-rail-label" aria-hidden="true">${esc(t('favorites'))}</span></button>
-      <button class="icon-btn feed-rail-button" type="button" data-share="${p.id}" aria-label="${esc(t('share')+' · '+name(p))}" title="${esc(t('share'))}">${icon('share')}<span class="feed-rail-label" aria-hidden="true">${esc(t('share'))}</span></button>
-      <button class="icon-btn feed-rail-button" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}" title="${esc(t('detail'))}">${icon('info')}<span class="feed-rail-label" aria-hidden="true">${esc(t('detail'))}</span></button>
-    </div></div>
+    <div class="feed-media${hasAlternatePhoto(p)?'':' photo-surface'}" data-view-id="${p.id}">${media}${hasAlternatePhoto(p)?'':photoOverlay(p.id,menuPrice(p))}</div>
     ${kind==='missing'||hasAlternatePhoto(p)?'':`<p class="feed-media-note">${kind==='generated'?copy.generated:kind==='illustration'?copy.illustration:copy.photo}</p>`}
     <div class="post-caption"><h3 id="post-title-${p.id}"><button type="button" data-detail="${p.id}">${esc(name(p))}</button></h3>${lang==='tr'?'':`<p class="post-original" lang="tr">${esc(p.name.tr)}</p>`}</div>
-    ${socialStats(p.id)}
-    <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${copy.add}</button>`}</div></article>`;
+    <div class="post-order"><div><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${copy.add}</button>`}</div></article>`;
 }
 function recordView(id) {
   if(!hasSocialCard(id)||viewedThisSession.has(id))return;
   const stored=load('views',{}),current=stored&&Number.isSafeInteger(stored[id])&&stored[id]>=0?stored[id]:0;
   views[id]=Math.min(Math.max(views[id]||0,current)+1,1000000);viewedThisSession.add(id);save('views',views);
-  document.querySelectorAll(`[data-view-count="${id}"]`).forEach(el=>el.textContent=views[id]);
+  document.querySelectorAll(`[data-view-count="${id}"]`).forEach(el=>updateSocialCount(el,views[id]));
 }
 function stopFeedViews() {
   feedObserver?.disconnect();feedObserver=null;
@@ -394,24 +385,24 @@ const cutawayCopy={
   tr:{title:'İç doku (yapay zekâ görseli)',alt:'Ürünün olası iç dokusunun görseli',note:'Yapay zekâ görselidir, gerçek ürün kesiti değildir. Katmanlar, porsiyon ve sunum değişebilir.'}
 };
 function detailPhotoMarkup(product) {
+  const overlay=photoOverlay(product.id,menuPrice(product));
   if(!hasPhoto(product)){
-    return `<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(product))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`;
+    return `<div class="detail-image photo-surface"><div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(product))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>${overlay}</div>`;
   }
   const sizes='(max-width: 620px) calc(100vw - 12px), 540px';
   const picture=`<img class="detail-photo" src="${photo(product,640,detailVariant)}" ${photoSet(product,sizes,detailVariant)} width="640" height="640" decoding="async" alt="${esc(name(product))}">`;
   const frameStyle=dishFrameStyle(product,detailVariant);
-  if(!frameStyle)return picture;
-  return `<div class="detail-photo-frame" ${frameStyle}>${picture}</div>
+  if(!frameStyle)return `<div class="detail-image photo-surface">${picture}${overlay}</div>`;
+  return `<div class="detail-photo-frame detail-image photo-surface" ${frameStyle}>${picture}${overlay}</div>
     <div class="detail-photo-tools"><button class="detail-photo-switch" type="button" data-action="full-dish-photo" aria-pressed="${detailFullPhoto}">${icon('expand')}${esc(detailCopy[lang].fullPhoto)}</button></div>`;
 }
 function renderDetail() {
   const keepDetailsOpen=$('detail-dialog').open && $('detail-content').querySelector('.detail-more')?.open===true;
   const p=byId.get(detailId),c=categories.find(c=>c.id===p.cat);if(!p)return;
   $('detail-content').innerHTML=`<div class="detail-top"><button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button>${detailPhotoMarkup(p)}</div>
-    <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2><div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}${p.price!==null?`<span class="metric detail-price">${money(p.price)}</span>`:''}</div>
+    <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2><div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}</div>
     <p class="photo-provenance">${esc(photoKind(p,detailVariant)==='generated'&&!hasRestagedPhoto(p)?(lang==='ru'?'AI-пример подачи, созданный по названию и составу меню; это не фотография блюда Miora.':lang==='en'?'AI serving illustration created from the menu name and ingredients; not a photograph of the actual Miora dish.':'Menü adı ve içeriğine göre oluşturulmuş yapay zekâ servis örneğidir; gerçek Miora ürün fotoğrafı değildir.'):(photoKind(p,detailVariant)==='illustration'||hasRestagedPhoto(p)&&detailVariant!=='original')?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
     <p class="detail-allergen-quick">${p.allergens.length?`${esc(detailCopy[lang].allergen)}: ${esc(p.allergens.map(a=>t(a)).join(", "))} · ${esc(detailCopy[lang].check)}`:esc(detailCopy[lang].unknown)}</p>
-    ${socialStats(p.id)}
     ${p.price===null?`<section class="detail-section"><h3>${t('ask')}</h3><p>${t('priceMissing')}</p></section>`:''}
     <details class="detail-more"><summary>${esc(detailCopy[lang].more)}</summary><div class="detail-more-body">
       ${lang!=='tr'?`<p class="original-name" lang="tr">${esc(p.name.tr)}</p>`:''}
@@ -419,10 +410,10 @@ function renderDetail() {
     ${hasCuratedCutaway(p)?`<details class="detail-cutaway"><summary>${esc(cutawayCopy[lang].title)}</summary><div class="detail-cutaway-content"><img src="${photo(p,640,'inside')}" ${photoSet(p,'(max-width: 620px) calc(100vw - 64px), 460px','inside')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(cutawayCopy[lang].alt)}"><p>${esc(cutawayCopy[lang].note)}</p></div></details>`:''}
     ${p.id==='430356'?videoStory('croissant',lang,{compact:true,social:cardEngagement}):p.id==='431203'?videoStory('breakfast',lang,{compact:true,social:cardEngagement}):''}
     <section class="detail-section"><h3>${t('ingredients')}</h3>${p.description?`<p lang="tr">${esc(p.description)}</p>${lang!=='tr'?`<p class="detail-disclaimer">${t('originalRecipe')}</p>`:''}`:`<p>${t('noIngredients')}</p>`}</section>
-    <section class="detail-section"><h3>${t('allergens')}</h3>${p.allergens.length?`<div class="allergens">${p.allergens.map(a=>`<span>${t(a)}</span>`).join('')}</div>`:`<p>${t('noAllergens')}</p>`}<p class="detail-disclaimer">${t('allergenNote')}</p>${p.kcal?`<p class="detail-disclaimer">${p.calorieReview?t('reviewCalorie'):t('calorieNote')}</p>`:''}</section><div class="views">${icon('eye')}${views[p.id]||0} · ${t('localViews')}</div>
+    <section class="detail-section"><h3>${t('allergens')}</h3>${p.allergens.length?`<div class="allergens">${p.allergens.map(a=>`<span>${t(a)}</span>`).join('')}</div>`:`<p>${t('noAllergens')}</p>`}<p class="detail-disclaimer">${t('allergenNote')}</p>${p.kcal?`<p class="detail-disclaimer">${p.calorieReview?t('reviewCalorie'):t('calorieNote')}</p>`:''}</section>
     </div></details>
     </div>
-    <div class="detail-actions">${p.price!==null?`<button class="button primary" type="button" data-add="${p.id}">${icon('plus')}${t('addToOrder')} · ${money(p.price)}</button>`:`<button class="button secondary" type="button" data-close="detail-dialog">${t('backToMenu')}</button>`}<button class="icon-btn" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${t('favorites')}">${icon('heart')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${t('share')}">${icon('share')}</button></div>`;
+    <div class="detail-actions">${p.price!==null?`<button class="button primary" type="button" data-add="${p.id}">${icon('plus')}${t('addToOrder')}</button>`:`<button class="button secondary" type="button" data-close="detail-dialog">${t('backToMenu')}</button>`}</div>`;
   if(keepDetailsOpen)$('detail-content').querySelector('.detail-more').open=true;
   enhanceKioskDetail(detailId);
 }
@@ -687,7 +678,7 @@ const storySizeObserver=new ResizeObserver(()=>{
   if(height)document.documentElement.style.setProperty('--stories-h',height+'px');
 });
 storySizeObserver.observe($('feed-stories'));
-const kioskMenu=mountKioskMode({byId,getLanguage:()=>lang,name,money,t,esc,icon,kioskFor,kioskBread,menuPrice,quantity:id=>cart[id]||0,social:cardEngagement,onCardsRendered:startFeedViews});
+const kioskMenu=mountKioskMode({byId,getLanguage:()=>lang,name,money,t,esc,icon,kioskFor,kioskBread,menuPrice,quantity:id=>cart[id]||0,overlay:photoOverlay,onCardsRendered:startFeedViews});
 kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null,social:cardEngagement,
   onOpen:(kind,idea)=>{stopFeedViews();recordView(idea?'idea-'+kind+'-'+idea:'build-'+kind);}});
 renderLanguage();updateUrl();

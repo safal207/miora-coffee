@@ -109,7 +109,12 @@ export async function verifyKioskMode(browser, origin) {
     await cart.locator('[data-action="next-guest"]').click();
     assert.equal(await page.locator('#cart-open .cart-count').innerText(), '0');
     assert.equal(await menu.locator('[data-quick-group="coffee"]').getAttribute('aria-pressed'), 'true');
-    await menu.locator('[data-add="428976"]').click();
+    const espresso=menu.locator('.quick-espresso');
+    assert.equal(await espresso.locator('.photo-price').innerText(),'75 ₺');
+    await espresso.locator('[data-quick-shot="428976"]').click();
+    assert.equal(await espresso.locator('.photo-price').innerText(),'130 ₺');
+    assert.equal(await espresso.locator('.photo-price').count(),1);
+    await espresso.locator('[data-add="428976"]').click();
     await page.locator('#cart-open').click();
     assert.equal(await total.innerText(), '130 ₺');
     assert.equal(await cart.locator('[data-service="dineIn"]').getAttribute('aria-pressed'), 'true');

@@ -20,14 +20,15 @@
   <link rel="stylesheet" href="desire-journey.css?v=20261112-generated1">
   <link rel="stylesheet" href="menu-motion.css?v=20261113-cakes1">
   <link rel="stylesheet" href="dessert-angles.css?v=20261115-angles1">
-  <link rel="stylesheet" href="robys-feed-ux.css?v=20261117-counts1">
+  <link rel="stylesheet" href="robys-feed-ux.css?v=20261122-photo1">
   <link rel="stylesheet" href="interaction-polish.css?v=20261122-framing1">
-  <link rel="stylesheet" href="responsive-layout-fix.css?v=20261117-fix1">
+  <link rel="stylesheet" href="responsive-layout-fix.css?v=20261122-photo1">
   <link rel="stylesheet" href="kiosk-mode.css?v=20261122-family1">
   <link rel="stylesheet" href="family-visit.css?v=20261122-family1">
+  <link rel="stylesheet" href="photo-card.css?v=20261122-photo1">
   <script src="theme.js"></script>
   <script src="assets/qr.js" defer></script>
-  <script type="module" src="app.js?v=20261122-family1"></script>
+  <script type="module" src="app.js?v=20261122-photo1"></script>
 </head>
 <body>
   <a class="skip" href="#menu">Menüye geç / Skip to menu</a>
@@ -84,7 +85,7 @@
         <nav id="categories" class="categories" aria-label="Menü kategorileri"></nav>
       </div>
       <p id="category-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
-      <div class="result-heading"><h3 id="result-title">Miora seçkisi</h3><span id="result-count" role="status"></span></div>
+      <div class="result-heading"><div><h3 id="result-title">Miora seçkisi</h3><small class="photo-scope" id="catalog-social-scope"></small></div><span id="result-count" role="status"></span></div>
       <details class="spotlight-disclosure" id="spotlight-disclosure" hidden><summary id="spotlight-disclosure-label">Lezzete yakından bak</summary><div id="menu-spotlight" hidden></div></details>
       <div id="products" class="product-grid"></div>
       <div id="dessert-video" hidden></div>
@@ -93,8 +94,8 @@
     </section>
     <section class="family-section shell" id="family" aria-labelledby="family-title"></section>
     <section class="pairing shell" id="pairing" aria-labelledby="pairing-title">
-      <div class="pairing-visual" data-view-id="pair-cappuccino"><img src="assets/enhanced/430226-640.webp" srcset="assets/enhanced/430226-640.webp 640w, assets/enhanced/430226-1200.webp 1200w" sizes="(max-width: 620px) 100vw, 540px" width="500" height="400" loading="lazy" alt="San Sebastian"><span class="pairing-stamp" aria-hidden="true">better<br><em>together</em></span></div>
-      <div class="pairing-copy"><p class="eyebrow" data-i18n="pairingKicker">MİORA EŞLEŞTİRMESİ</p><h2 id="pairing-title" data-i18n="pairingTitle">Bazı şeyler<br>birlikte daha güzel.</h2><p data-i18n="pairingText">Cappuccino’nun yumuşacık köpüğü, San Sebastian’ın kremamsı dokusu. Kendine küçük bir iyilik.</p><div class="pairing-price"><span>Cappuccino + San Sebastian</span><b>430 ₺</b></div><button class="button primary" type="button" data-action="add-pair"><span data-i18n="addPair">İkisini de ekle</span><span aria-hidden="true">+</span></button><small data-i18n="pairingNote">İki ürünün normal toplam fiyatı. İndirim içermez.</small><div id="pairing-social"></div></div>
+      <div class="pairing-visual photo-surface" data-view-id="pair-cappuccino"><img src="assets/enhanced/430226-640.webp" srcset="assets/enhanced/430226-640.webp 640w, assets/enhanced/430226-1200.webp 1200w" sizes="(max-width: 620px) 100vw, 540px" width="500" height="400" loading="lazy" alt="San Sebastian"><div class="photo-surface" id="pairing-overlay"></div></div>
+      <div class="pairing-copy"><p class="eyebrow" data-i18n="pairingKicker">MİORA EŞLEŞTİRMESİ</p><h2 id="pairing-title" data-i18n="pairingTitle">Bazı şeyler<br>birlikte daha güzel.</h2><p data-i18n="pairingText">Cappuccino’nun yumuşacık köpüğü, San Sebastian’ın kremamsı dokusu. Kendine küçük bir iyilik.</p><div class="pairing-price"><span>Cappuccino + San Sebastian</span></div><button class="button primary" type="button" data-action="add-pair"><span data-i18n="addPair">İkisini de ekle</span><span aria-hidden="true">+</span></button><small data-i18n="pairingNote">İki ürünün normal toplam fiyatı. İndirim içermez.</small></div>
     </section>
     <section class="closing shell"><p data-i18n="closing">Bir fincanın etrafında buluşalım.</p><a href="https://www.instagram.com/mioracoffeetr/" target="_blank" rel="noopener">@mioracoffeetr <span aria-hidden="true">↗</span></a></section>
   </main>
