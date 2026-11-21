@@ -1,5 +1,20 @@
 import assert from 'node:assert/strict';
 
+async function verifyQuickOverlays(menu, width) {
+  const invalid = await menu.locator('.quick-card > .photo-surface').evaluateAll(photos =>
+    photos.filter(photo => {
+      const bounds = photo.getBoundingClientRect();
+      const rail = photo.querySelector('.photo-actions').getBoundingClientRect();
+      const price = photo.querySelector('.photo-price').getBoundingClientRect();
+      const rows = [...photo.querySelector('.photo-actions').children].map(item => item.getBoundingClientRect());
+      return rail.bottom > bounds.bottom + 1 || rail.right > bounds.right + 1 ||
+        price.left < bounds.left - 1 || price.right > bounds.right + 1 ||
+        (price.right > rail.left && price.top < rail.bottom) ||
+        rows.some((row,index) => index > 0 && row.top < rows[index-1].bottom - .5);
+    }).map(photo => photo.closest('.quick-card').dataset.quickItem || photo.closest('.quick-card').id || 'espresso'));
+  assert.deepEqual(invalid, [], `kiosk prices and vertical reactions fit each photo at ${width}px`);
+}
+
 async function verifyDishPreview(page, menu, lang, width) {
   const sandwich = menu.locator('[data-quick-item="430356"] .quick-photo');
   const cardBox = await sandwich.boundingBox();
@@ -47,6 +62,7 @@ export async function verifyKioskMode(browser, origin) {
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'header and menu fit on entry');
     assert.equal(new URL(page.url()).searchParams.get('view'), 'kiosk');
     assert.equal(await menu.locator('#quick-groups button').count(), 3);
+    await verifyQuickOverlays(menu, width);
     await menu.locator('#quick-results img').evaluateAll(images => Promise.all(images.map(img => img.decode())));
     await page.screenshot({path:`artifacts/kiosk-${lang}-${width}.png`});
     await addLatte.click();
@@ -67,6 +83,7 @@ export async function verifyKioskMode(browser, origin) {
     assert.equal(await page.locator('#cart-open .cart-count').innerText(), '2');
     await menu.locator('[data-quick-group="all"]').click();
     assert.equal(await menu.locator('[data-quick-item]').count(), 93);
+    await verifyQuickOverlays(menu, width);
     await menu.locator('#quick-category').selectOption('46818');
     assert.equal(await menu.locator('[data-quick-item]').count(), 24);
     await menu.locator('#quick-search').fill('does-not-exist');
@@ -91,6 +108,7 @@ export async function verifyKioskMode(browser, origin) {
     assert(await page.locator('#kiosk-dialog').isVisible());
     await page.locator('#kiosk-dialog [data-k-close]').click();
     await menu.locator('[data-quick-group="pairs"]').click();
+    await verifyQuickOverlays(menu, width);
     const pairPhotos = menu.locator('.quick-pair').first().locator('.quick-photo');
     const [first, second] = await Promise.all([pairPhotos.nth(0).boundingBox(), pairPhotos.nth(1).boundingBox()]);
     assert(first && second && Math.abs(first.y - second.y) < 1 && first.x + first.width <= second.x, 'pair photos remain side by side');

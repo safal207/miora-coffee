@@ -23,9 +23,9 @@ export const familyCombos = Object.freeze({
 });
 
 export const familyCopy = {
-  tr: {entry:'Çocuk menüleri', title:'Çocuklarla MIORA', room:'Bebek bakım odası', roomText:'Tuvalet ve alt değiştirme masası olan ayrı bir bebek bakım odası var.', roomPhoto:'Bebek Bakım Odası tabelası', check:'İçerik ve alerjen bilgisi için ürüne dokunun veya ekibe sorun.', add:'Menüyü ekle', welcome:'Miora’yı yanına al'},
-  ru: {entry:'Детские комбо', title:'С детьми в MIORA', room:'Комната для ухода за малышом', roomText:'Есть туалет и отдельная комната с пеленальным столиком.', roomPhoto:'Табличка «Baby Care Room» в MIORA', check:'Нажмите на блюдо, чтобы узнать состав. Аллергены можно уточнить у сотрудника.', add:'Добавить комбо', welcome:'Возьми MIORA с собой'},
-  en: {entry:'Kids’ combos', title:'With kids at MIORA', room:'Baby care room', roomText:'There’s a restroom and a separate baby care room with a changing table.', roomPhoto:'Baby Care Room sign at MIORA', check:'Tap an item for ingredients. Ask the team about allergens.', add:'Add combo', welcome:'Take MIORA with you'}
+  tr: {entry:'Çocuk menüleri', title:'Çocuklarla MIORA', room:'Bebek bakım odası', roomText:'Tuvalet ve alt değiştirme masası olan ayrı bir bebek bakım odası var.', roomPhoto:'Bebek Bakım Odası tabelası', check:'İçerik ve alerjen bilgisi için ürüne dokunun veya ekibe sorun.', add:'Menüyü ekle'},
+  ru: {entry:'Детские комбо', title:'С детьми в MIORA', room:'Комната для ухода за малышом', roomText:'Есть туалет и отдельная комната с пеленальным столиком.', roomPhoto:'Табличка «Baby Care Room» в MIORA', check:'Нажмите на блюдо, чтобы узнать состав. Аллергены можно уточнить у сотрудника.', add:'Добавить комбо'},
+  en: {entry:'Kids’ combos', title:'With kids at MIORA', room:'Baby care room', roomText:'There’s a restroom and a separate baby care room with a changing table.', roomPhoto:'Baby Care Room sign at MIORA', check:'Tap an item for ingredients. Ask the team about allergens.', add:'Add combo'}
 };
 
 export function renderFamilyVisit(root, {byId, lang, money, esc, name, overlay, scope}) {

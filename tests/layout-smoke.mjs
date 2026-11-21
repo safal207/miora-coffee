@@ -15,6 +15,21 @@ const rect=locator=>locator.boundingBox();
 const within=(child,parent,tolerance=2)=>!!child&&!!parent&&
  child.x>=parent.x-tolerance&&child.x+child.width<=parent.x+parent.width+tolerance&&
  child.y>=parent.y-tolerance&&child.y+child.height<=parent.y+parent.height+tolerance;
+const overlap=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+a.height>b.y;
+async function checkPhotoSocial(photo, context) {
+ const rail=photo.locator(':scope > .photo-actions');
+ const [photoRect,railRect,priceRect,views,like,share]=await Promise.all([
+  photo,rail,photo.locator(':scope > .photo-price'),rail.locator('.card-views'),
+  rail.locator('button[data-favorite]'),rail.locator('button[data-share]')
+ ].map(rect));
+ assert(within(railRect,photoRect),context+' reaction column outside photo');
+ assert(within(priceRect,photoRect),context+' price outside photo');
+ assert(!overlap(railRect,priceRect),context+' price overlaps reactions');
+ assert(views&&like&&share&&Math.abs(views.x-like.x)<1&&Math.abs(like.x-share.x)<1&&
+  views.y+views.height<=like.y+.5&&like.y+like.height<=share.y+.5,
+  context+' views, like and share must be stacked vertically in order');
+ assertions+=4;
+}
 async function checkOverflow(page,context){
  const diff=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
  assert(diff<=2,context+' horizontal overflow '+diff);
@@ -46,21 +61,14 @@ try{
    const media=card.locator('.product-media'),body=card.locator('.product-body');
    const cardRect=await rect(card),imageRect=await rect(media),bodyRect=await rect(body);
    const titleRect=await rect(card.locator('.product-title'));
-   const priceRect=await rect(card.locator('.photo-price'));
    const addRect=await rect(card.locator('.product-bottom button'));
-   assert(cardRect&&imageRect&&bodyRect&&titleRect&&priceRect&&addRect);
+   assert(cardRect&&imageRect&&bodyRect&&titleRect&&addRect);
    assert(imageRect.width<=cardRect.width*.43,'media too wide at '+width+' card '+i);
    assert(imageRect.x+imageRect.width<=bodyRect.x+2,'media overlaps text column at '+width+' card '+i);
    assert(within(titleRect,bodyRect),'title outside body at '+width+' card '+i);
-   assert(within(priceRect,imageRect),'price outside photo at '+width+' card '+i);
    assert(within(addRect,bodyRect),'add outside body at '+width+' card '+i);
-   const rail=card.locator('.product-media > .photo-actions');
-   assert.equal(await rail.locator('button').count(),2,'two list reactions');
-   assert.equal(await rail.locator('[data-view-count]').count(),1,'local view count');
-   for(const button of await rail.locator('button').all()){
-    assert(within(await rect(button),imageRect),'social outside photo at '+width+' card '+i);
-   }
-   assertions+=9;
+   await checkPhotoSocial(media,'list '+width+' / '+i);
+   assertions+=5;
   }
   if(width<=620){
    const search=await rect(page.locator('.toolbar .search'));
@@ -69,7 +77,10 @@ try{
    const controls=page.locator('#view-grid');
    assert(await controls.isVisible(),'grid switch visible');
   }
-  await capture(page,'layout-list',{width,lang});
+  if([320,390,768,1440].includes(width)&&lang==='ru'){
+   await page.locator('#products .product-card').first().scrollIntoViewIfNeeded();
+   await capture(page,'layout-list',{width,lang});
+  }
 
   // All layout modes use the same page, preserving cart/local state.
   await page.locator('#view-grid').click();
@@ -78,16 +89,7 @@ try{
   await checkOverflow(page,'grid '+width+' '+lang);
   const gridCards=page.locator('.product-card');
   for(const i of [0,1,4,30,92]){
-   const card=gridCards.nth(i);
-   const cardRect=await rect(card);
-   const priceRect=await rect(card.locator('.photo-price'));
-   const social=card.locator('.product-media .photo-actions');
-   assert.equal(await social.locator('button').count(),2);
-   const socialRect=await rect(social),photoRect=await rect(card.locator('.product-media'));
-   assert(within(socialRect,photoRect),'grid actions escape photo '+width+' / '+i);
-   assert(within(priceRect,photoRect),'grid price escapes photo '+width+' / '+i);
-   assert(socialRect.y+socialRect.height<=priceRect.y,'price overlaps the reactions '+width+' / '+i);
-   assertions+=3;
+   await checkPhotoSocial(gridCards.nth(i).locator('.product-media'),'grid '+width+' / '+i);
   }
   await capture(page,'layout-grid',{width,lang});
 
@@ -95,12 +97,12 @@ try{
   assert.equal(await page.locator('body').getAttribute('data-view'),'feed');
   await page.locator('.feed-post').first().waitFor();
   await checkOverflow(page,'feed '+width+' '+lang);
-  const feed=page.locator('.feed-post').first();
-  const rail=await rect(feed.locator('.photo-actions'));
-  const photo=await rect(feed.locator('.feed-media'));
-  assert(within(rail,photo),'feed reactions outside photo at '+width);
-  assert(within(await rect(feed.locator('.photo-price')),photo),'feed price outside photo at '+width);
+  await checkPhotoSocial(page.locator('.feed-post').first().locator('.photo-surface'),'feed '+width);
   await capture(page,'layout-feed',{width,lang});
+  if(width===320||width===1440) {
+   await page.locator('#spotlight-disclosure > summary').click();
+   await checkPhotoSocial(page.locator('.spotlight-picture').first(),'spotlight '+width);
+  }
   assert.deepEqual(errors,[],'runtime browser errors '+width+' '+lang);
   if(width===390&&lang==='ru'){
    // Regression for user's screenshot with a nonempty floating order bar.
