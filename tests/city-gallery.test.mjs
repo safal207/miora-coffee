@@ -44,7 +44,7 @@ test('source-photo map remains separate, and original logo/menu are not overwrit
   const app=readFileSync(new URL('../dist/app.js',import.meta.url),'utf8');
   const html=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');
   assert.match(app,/CITY_ASSETS\.panorama/);
-  assert.match(app,/galleryMarkup\(\)/);
+  assert.match(app,/cityGalleryMarkup\(\)/);
   assert.match(app,/data-city-gallery-open/);
   assert.match(html,/city-gallery\.css\?v=20261122-v1/);
   assert.match(html,/assets\/logo-source\.jpg/);
