@@ -80,3 +80,36 @@ responses, age, family data or choices. The browser smoke asserts that reopening
 works after reload, the menu heading receives keyboard focus, the tour has no
 horizontal overflow at 320 px and the panorama is not oversized on desktop.
 Images remain cropped to exclude recognizable children.
+
+## Living City / interactive venue tour (follow-up)
+
+The play-town photo is a real three-panel montage provided by the project
+owner, showing the façades, indoor slide and adult coffee counter. On the
+`town` step, **four explicit landmark buttons** let a visitor explore the
+same physical spaces without leaving the page:
+
+- Houses: the pastel building façades and small windows.
+- Shop: the SHOP storefront visible in the yellow façade.
+- Slide: the visible indoor climbing and slide area; adults should
+  supervise children during play.
+- Coffee corner: the real café counter and Rocket espresso machine.
+
+Every hotspot appears as a numbered overlay on the genuine photo and a
+separate labeled button with a 44px touch target. Buttons use `aria-pressed`
+for selection, provide a politely announced localized description, and
+support keyboard interaction. A "Next stop" control cycles through all four
+places. The four stories and labels are available in Turkish, Russian and
+English.
+
+The tour does not generate new images or claim equipment, operating hours,
+supervision, reservations, admission, or play facilities not grounded in
+the provided photographs. It collects no child or family responses, and
+no hotspot interaction adds food or drinks to the cart. Adults can still
+open the regular menu or skip the experience at any time. All previously
+implemented favorites, saved-order and normal pricing functions remain
+unchanged.
+
+Automated coverage: `tests/city-tour.test.mjs`, updated
+`tests/city-guide-smoke.mjs` across TR/390, RU/320, EN/1280, and the
+repository-wide regression suite. Release requires passing CI and
+reviewing mobile screenshots before the stacked draft PR can be merged.
