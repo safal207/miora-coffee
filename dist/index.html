@@ -23,9 +23,10 @@
   <link rel="stylesheet" href="robys-feed-ux.css?v=20261117-counts1">
   <link rel="stylesheet" href="interaction-polish.css?v=20261117-curated1">
   <link rel="stylesheet" href="responsive-layout-fix.css?v=20261117-fix1">
+  <link rel="stylesheet" href="kiosk-mode.css">
   <script src="theme.js"></script>
   <script src="assets/qr.js" defer></script>
-  <script type="module" src="app.js?v=20261117-layout1"></script>
+  <script type="module" src="app.js?v=20261121-kiosk1"></script>
 </head>
 <body>
   <a class="skip" href="#menu">Menüye geç / Skip to menu</a>
@@ -33,12 +34,26 @@
     <a class="brand" href="./" aria-label="Miora Coffee"><img src="assets/logo-source.jpg" width="64" height="64" alt="Miora Coffee"><span>miora<small>COFFEE · FOOD · PLAY</small></span></a>
     <nav class="desktop-nav" aria-label="Main"><a href="#menu" data-i18n="menu">Menü</a><a href="#pairing" data-i18n="pairings">Birlikte güzel</a><a href="https://www.instagram.com/mioracoffeetr/" target="_blank" rel="noopener" >Instagram ↗</a></nav>
     <div class="header-actions">
+      <a class="kiosk-toggle" id="kiosk-toggle" href="?view=kiosk">Kiosk</a>
       <button class="icon-btn" type="button" id="theme-toggle" aria-label="Koyu tema"></button>
       <label class="language"><span class="sr-only">Dil / Language / Язык</span><select id="language" aria-label="Dil / Language / Язык"><option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option></select></label>
       <button class="header-cart" type="button" id="cart-open" aria-label="Sipariş listesi"></button>
     </div>
   </div></header>
   <main>
+    <section class="quick-menu shell" id="kiosk-menu" aria-labelledby="quick-title" hidden>
+      <div class="quick-heading">
+        <h1 id="quick-title" tabindex="-1"></h1>
+        <button class="quick-all" type="button" data-quick-group="all" aria-controls="quick-results"></button>
+      </div>
+      <div class="quick-groups" id="quick-groups" role="group" aria-labelledby="quick-title"></div>
+      <div class="quick-filters" id="quick-filters" hidden>
+        <input type="search" id="quick-search" autocomplete="off">
+        <select id="quick-category"></select>
+      </div>
+      <div class="quick-results-heading"><h2 id="quick-section"></h2><span id="quick-count" role="status"></span></div>
+      <div class="quick-results" id="quick-results" aria-labelledby="quick-section"></div>
+    </section>
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy"><p class="eyebrow"><span class="green-dot"></span> COFFEE, FOOD & A LITTLE JOY</p>
         <h1 id="hero-title">Bir kahve.<br><em>Güzel bir an.</em></h1>
