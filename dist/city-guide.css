@@ -29,3 +29,9 @@
 @media(max-width:620px){.city-guide{margin-top:12px;margin-bottom:18px}.city-guide-inner{padding:16px;border-radius:17px}.city-guide h2{font-size:22px}.city-guide-question{font-size:13px}.city-guide-choice{flex:1 1 140px;min-height:44px;font-size:12px;padding:10px}.city-guide-photos{gap:6px}.city-guide-photos img{height:100px}.city-guide-photos figcaption{font-size:9px;padding:6px}.city-guide-privacy{font-size:10px}.city-guide-product{flex-basis:146px}}
 @media(max-width:359px){.city-guide-inner{padding:12px}.city-guide h2{font-size:19px}.city-guide-photos{grid-template-columns:repeat(2,minmax(0,1fr))}.city-guide-photos figure:last-child{display:none}.city-guide-actions{gap:6px}}
 @media(prefers-reduced-motion:reduce){.city-guide *, .city-guide-open{animation:none!important;transition:none!important}}
+
+/* One safe, authentic three-scene panorama rather than stock imagery. */
+.city-guide-mosaic{grid-column:1/-1;margin:0;background:var(--paper);border-radius:14px;overflow:hidden}
+.city-guide-mosaic img{display:block;width:100%;height:auto;max-height:350px;object-fit:contain;background:var(--paper)}
+.city-guide-mosaic figcaption{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px 12px;font-size:10px;line-height:1.4;color:var(--muted)}
+@media(max-width:620px){.city-guide-mosaic figcaption{font-size:9px;padding:8px;gap:5px}}
