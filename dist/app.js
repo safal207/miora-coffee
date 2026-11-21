@@ -6,6 +6,7 @@ import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto,photoKind,hasAlternatePhoto,photoVariants,hasRestagedPhoto} from './photos.js?v=20261117-curated1';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
 import {selectCartOffer,recordGrowthEvent} from './growth-engine.js?v=20261121-v1';
+import {readTasteMemory,setTasteMemoryEnabled,rememberTasteChoice,tasteSuggestions,TASTE_STORAGE_KEY} from './taste-memory.js?v=20261121-v1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
@@ -86,6 +87,21 @@ const money = value => new Intl.NumberFormat(lang==='tr'?'tr-TR':lang==='ru'?'ru
 function notify(text) {clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,2600);}
 function updateUrl() {const url=new URL(location.href);url.searchParams.set('lang',lang);url.searchParams.set('view',view);url.searchParams.set('category',category);history.replaceState(null,'',url);}
 function renderTheme() {const dark=document.documentElement.dataset.theme==='dark';$('theme-toggle').innerHTML=icon(dark?'sun':'moon');$('theme-toggle').setAttribute('aria-label',lang==='ru'?(dark?'Светлая тема':'Тёмная тема'):lang==='en'?(dark?'Light theme':'Dark theme'):(dark?'Açık tema':'Koyu tema'));$('theme-toggle').setAttribute('aria-pressed',String(dark));}
+const tasteCopy={
+  tr:{title:'Sevdiğin tatlar',note:'Kalple kaydettiklerin burada. Önceki seçimleri yalnızca izin verirsen hatırlarız.',on:'Hatırlama açık',off:'Seçimlerimi hatırla',disable:'Hatırlamayı kapat ve geçmişi sil',add:'Yeniden ekle',empty:'Favori eklemek için kalbe dokun. Seçim geçmişi isteğe bağlıdır.'},
+  ru:{title:'Твои любимые вкусы',note:'Избранное с этого устройства. Последние добавления запоминаются только с разрешения.',on:'Запоминание включено',off:'Запоминать мой выбор',disable:'Выключить и удалить историю',add:'Добавить снова',empty:'Нажми сердечко на блюде. История выбора — только по желанию.'},
+  en:{title:'Your favorite flavors',note:'Favorites saved on this device. Recent selections are remembered only if you opt in.',on:'Remembering on',off:'Remember my picks',disable:'Turn off and erase recent history',add:'Add again',empty:'Tap the heart to save a favorite. Remembering recent picks is optional.'}
+};
+function renderTasteMemory(){
+  const container=$('taste-memory'),memory=readTasteMemory(localStorage,byId);
+  const picks=tasteSuggestions({favorites,memory,catalog:byId});
+  const c=tasteCopy[lang],focusKey=document.activeElement?.dataset?.tasteToggle!==undefined?'tasteToggle':document.activeElement?.dataset?.tasteAdd!==undefined?'tasteAdd':null;
+  const focusId=focusKey==='tasteAdd'?document.activeElement.dataset.tasteAdd:null;
+  container.setAttribute('aria-label',c.title);
+  const items=picks.map(p=>`<article class="taste-card"><img src="${photo(p,160)}" width="60" height="60" alt="" loading="lazy" decoding="async"><div class="taste-card-info"><b>${esc(name(p))}</b><small>${money(p.price)}</small></div><button type="button" data-taste-add="${p.id}" aria-label="${esc(c.add+' · '+name(p))}">${esc(c.add)} +</button></article>`).join('');
+  container.innerHTML=`<div class="taste-head"><div><h3>${esc(c.title)}</h3><p>${esc(c.note)}</p></div><button type="button" class="taste-toggle" data-taste-toggle aria-pressed="${memory.enabled}" aria-label="${esc(memory.enabled?c.disable:c.off)}">${esc(memory.enabled?c.on:c.off)}</button></div>${items?`<div class="taste-list">${items}</div>`:`<p class="taste-empty">${esc(c.empty)}</p>`}`;
+  if(focusKey)container.querySelector(focusKey==='tasteToggle'?'[data-taste-toggle]':`[data-taste-add="${focusId}"]`)?.focus({preventScroll:true});
+}
 function renderLanguage() {
   document.documentElement.lang=lang;$('language').value=lang;
   document.querySelectorAll('[data-i18n]').forEach(e=>{const k=e.dataset.i18n;if(['heroDescription','pairingTitle'].includes(k))e.innerHTML=t(k);else e.textContent=t(k);});
@@ -94,7 +110,7 @@ function renderLanguage() {
   $('feed-stories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',[t('feed'),t('grid'),t('list')].join(' / '));
   document.querySelectorAll('[data-close]').forEach(e=>e.setAttribute('aria-label',t('close')));
   document.querySelectorAll('[data-journey-copy]').forEach(node=>node.textContent=journeyCopy[lang][node.dataset.journeyCopy]);
-  renderTheme();renderCategories();renderProducts();renderCartCount();kioskUI?.refresh();
+  renderTheme();renderCategories();renderProducts();renderTasteMemory();renderCartCount();kioskUI?.refresh();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
 function renderCategories() {
@@ -287,6 +303,7 @@ function add(id) {
     cartButton.addEventListener('animationend',()=>cartButton.classList.remove('miora-cart-pulse'),{once:true});
   }
   trackGrowth('cart_add',id);
+  rememberTasteChoice(localStorage,id,byId);renderTasteMemory();
   notify(`${t('added')} · ${name(byId.get(id))}`);
   return true;
 }
@@ -296,6 +313,7 @@ function toggleFavorite(id) {
   save('favorites',[...favorites]);document.querySelectorAll(`[data-favorite="${id}"]`).forEach(b=>b.setAttribute('aria-pressed',String(favorites.has(id))));syncSocialStats();
   document.querySelectorAll(`[data-saved="${id}"]`).forEach(el=>el.hidden=!favorites.has(id));
   if(category==='favorites')renderProducts();
+  renderTasteMemory();
 }
 function openDetail(id,variant='focus') {
   if(!byId.has(id))return;
@@ -492,6 +510,12 @@ document.addEventListener('click',async event=>{
   const d=button.dataset;
   if(d.close){$(d.close).close();return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
+  if(d.tasteToggle!==undefined){
+    const enabled=!readTasteMemory(localStorage,byId).enabled;
+    if(!setTasteMemoryEnabled(localStorage,enabled,byId)){notify(t('storageError'));return;}
+    renderTasteMemory();return;
+  }
+  if(d.tasteAdd){add(d.tasteAdd);return;}
   if(d.growthDismiss){growthOfferSuppressed=true;trackGrowth('offer_dismissed',d.growthDismiss);renderCart();return;}
   if(d.growthAdd){const accepted=add(d.growthAdd);if(accepted){growthOfferSuppressed=true;trackGrowth('offer_accepted',d.growthAdd);renderCart();}return;}
   if(d.add){const added=add(d.add);if(added&&button.closest('#detail-dialog')&&$('detail-dialog').open)$('detail-dialog').close();return;}
@@ -514,7 +538,7 @@ document.addEventListener('click',async event=>{
   if(d.step){refreshCart();commitCart(updateCart(cart,d.stepId,Number(d.step),byId));return;}
   if(d.service){service=d.service;save('service',service);renderCart();return;}
   if(d.action==='reset'){search='';$('search').value='';selectCategory('all');return;}
-  if(d.action==='add-pair'){refreshCart();const next=addPair(cart,['428772','430226'],byId);if(!next){notify(t('limit'));return;}commitCart(next);trackGrowth('cart_add');notify(t('added')+' · Cappuccino + San Sebastian');return;}
+  if(d.action==='add-pair'){refreshCart();const next=addPair(cart,['428772','430226'],byId);if(!next){notify(t('limit'));return;}commitCart(next);trackGrowth('cart_add');rememberTasteChoice(localStorage,'428772',byId);rememberTasteChoice(localStorage,'430226',byId);renderTasteMemory();notify(t('added')+' · Cappuccino + San Sebastian');return;}
   if(d.action==='show-staff'){staffMode=true;trackGrowth('staff_preview');renderCart();$('cart-content').scrollTop=0;$('cart-title').setAttribute('tabindex','-1');$('cart-title').focus();return;}
   if(d.action==='edit-order'){staffMode=false;renderCart();return;}
   if(d.action==='clear-cart'){commitConfigured([]);commitCart({});growthOfferSuppressed=false;growthOffersSeen.clear();trackGrowth('cart_cleared');return;}
@@ -546,7 +570,8 @@ document.addEventListener('error',event=>{
 window.addEventListener('storage',event=>{
   if(event.key==='miora:cart'||event.key===null){refreshCart();renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
-  if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();if($('detail-dialog').open)renderDetail();}
+  if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();renderTasteMemory();if($('detail-dialog').open)renderDetail();}
+  if(event.key===TASTE_STORAGE_KEY||event.key===null)renderTasteMemory();
   if(event.key==='miora:views'||event.key==='miora:shares'||event.key===null){const nextViews=load('views',{}),nextShares=load('shares',{});views=Object.fromEntries(Object.entries(nextViews&&typeof nextViews==='object'&&!Array.isArray(nextViews)?nextViews:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));shareCounts=Object.fromEntries(Object.entries(nextShares&&typeof nextShares==='object'&&!Array.isArray(nextShares)?nextShares:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));syncSocialStats();}
 });
 // Translated category labels can change the sticky row height.
