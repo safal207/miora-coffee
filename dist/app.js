@@ -263,7 +263,7 @@ function renderStickerAlbum(){
   const root=$('sticker-collection'),entries=personalStickerAlbum(stickers,byId,lang);
   if(!entries.length){root.hidden=true;root.innerHTML='';return;}
   const wasOpen=root.querySelector('details')?.open===true,c=STICKER_COPY[lang];
-  root.hidden=false;
+  root.hidden=false;root.setAttribute('aria-label',c.album);
   root.innerHTML=`<details class="miora-sticker-album" ${wasOpen?'open':''}><summary>${esc(c.album)} <b>${entries.length}</b></summary><p>${esc(c.albumNote)}</p><div class="miora-sticker-list">${entries.map(({id,product,sticker})=>`<button type="button" data-detail="${id}" aria-label="${esc(name(product)+' · '+sticker.label)}"><span aria-hidden="true">${sticker.emoji}</span><span>${esc(name(product))}</span></button>`).join('')}</div></details>`;
 }
 function refreshStickerButtons(id){
