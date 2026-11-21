@@ -1,0 +1,10 @@
+/* Growth Engine v1: optional, transparent cart companion. */
+.order-bump.growth-offer{flex-wrap:wrap;align-items:center;gap:12px;border:1px solid var(--line)}
+.growth-offer .growth-offer-copy{flex:1 1 140px;min-width:110px}
+.growth-offer .growth-offer-copy small{display:block;color:var(--muted);font-size:10px;line-height:1.45;margin-top:4px}
+.growth-offer .growth-offer-actions{flex:0 0 auto;display:flex;flex-direction:column;gap:4px;align-items:stretch}
+.order-bump.growth-offer .growth-offer-actions button:first-child{background:var(--accent);color:#fff;border-color:transparent;font-weight:700}
+.order-bump.growth-offer .growth-offer-actions .growth-dismiss{background:transparent;border:0;color:var(--muted);min-height:35px;font-size:11px}
+.order-bump.growth-offer button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+@media(max-width:380px){.growth-offer .growth-offer-actions{width:100%;flex-direction:row;justify-content:space-between}.growth-offer .growth-offer-actions button{flex:1}}
+@media(prefers-reduced-motion:reduce){.growth-offer *{animation:none!important;transition:none!important}}
