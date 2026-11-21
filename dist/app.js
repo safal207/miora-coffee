@@ -11,7 +11,8 @@ import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection} from './sandwich-preview.js';
 import {breakfastVisualForSelection,breakfastCopy} from './breakfast-preview.js';
 import {identityFor,diversifyPhotoOrder,storyCoverIds} from './visual-merchandising.js?v=20261112-covers1';
-import {mountKioskMode,kioskCopy,kioskPairs} from './kiosk-mode.js';
+import {mountKioskMode,kioskCopy,kioskPairs} from './kiosk-mode.js?v=20261122-framing1';
+import {dishFrameStyle} from './photo-framing.js';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -27,6 +28,7 @@ const svgPaths = {
   heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
   bag:'<path d="M5 7h14l1 14H4L5 7Zm3 0V5a4 4 0 0 1 8 0v2"/>',
   back:'<path d="M20 12H4m7-7-7 7 7 7"/>',
+  expand:'<path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',minus:'<path d="M5 12h14"/>',
   grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
   list:'<path d="M8 5h13M8 12h13M8 19h13M3 5h.01M3 12h.01M3 19h.01"/>',
@@ -77,7 +79,7 @@ let pendingShareId=null;
 const viewedThisSession=new Set();
 let feedObserver=null;
 const feedViewTimers=new Map();
-let toastTimer,disposeSpotlight=()=>{},disposeGalleries=()=>{},detailVariant='focus';
+let toastTimer,disposeSpotlight=()=>{},disposeGalleries=()=>{},detailVariant='focus',detailFullPhoto=false;
 const t = key => messages[lang][key]||messages.tr[key]||key;
 const name = item => item.name[lang]||item.name.tr;
 const money = value => new Intl.NumberFormat(lang==='tr'?'tr-TR':lang==='ru'?'ru-RU':'en-GB',{maximumFractionDigits:2}).format(value/100)+' ₺';
@@ -330,6 +332,7 @@ function openDetail(id,variant='focus') {
   detailId=id;
   // Curated front image first: no unsolicited reconstructed 360 or synthetic cutaway.
   detailVariant=variant==='original'?'original':'focus';
+  detailFullPhoto=false;
   stopFeedViews();recordView(id);
   renderDetail();
   if(!$('detail-dialog').open)$('detail-dialog').showModal();
@@ -338,19 +341,30 @@ function openDetail(id,variant='focus') {
 }
 
 const detailCopy = {
-  ru:{more:'Состав, аллергены и дополнительная информация',allergen:'Аллергены по меню',check:'уточните состав у сотрудника',unknown:'Аллергены: уточните у сотрудника'},
-  en:{more:'Ingredients, allergens and more',allergen:'Listed allergens',check:'confirm ingredients with staff',unknown:'Allergens: ask the staff'},
-  tr:{more:'İçindekiler, alerjenler ve ayrıntılar',allergen:'Menüdeki alerjenler',check:'içeriği personele doğrulayın',unknown:'Alerjenler: personele danışın'}
+  ru:{more:'Состав, аллергены и дополнительная информация',allergen:'Аллергены по меню',check:'уточните состав у сотрудника',unknown:'Аллергены: уточните у сотрудника',fullPhoto:'Весь кадр'},
+  en:{more:'Ingredients, allergens and more',allergen:'Listed allergens',check:'confirm ingredients with staff',unknown:'Allergens: ask the staff',fullPhoto:'Full image'},
+  tr:{more:'İçindekiler, alerjenler ve ayrıntılar',allergen:'Menüdeki alerjenler',check:'içeriği personele doğrulayın',unknown:'Alerjenler: personele danışın',fullPhoto:'Tam görsel'}
 };
 const cutawayCopy={
   ru:{title:'Как выглядит внутри (AI-иллюстрация)',alt:'Иллюстрация возможной текстуры разреза',note:'Иллюстрация создана ИИ. Реальные слои, размер порции и подача могут отличаться.'},
   en:{title:'Inside texture (AI illustration)',alt:'Illustration of a possible interior texture',note:'AI illustration, not an actual product cut. Layers, serving size and presentation may differ.'},
   tr:{title:'İç doku (yapay zekâ görseli)',alt:'Ürünün olası iç dokusunun görseli',note:'Yapay zekâ görselidir, gerçek ürün kesiti değildir. Katmanlar, porsiyon ve sunum değişebilir.'}
 };
+function detailPhotoMarkup(product) {
+  if(!hasPhoto(product)){
+    return `<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(product))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`;
+  }
+  const sizes='(max-width: 620px) calc(100vw - 12px), 540px';
+  const picture=`<img class="detail-photo" src="${photo(product,640,detailVariant)}" ${photoSet(product,sizes,detailVariant)} width="640" height="640" decoding="async" alt="${esc(name(product))}">`;
+  const frameStyle=dishFrameStyle(product,detailVariant);
+  if(!frameStyle)return picture;
+  return `<div class="detail-photo-frame" ${frameStyle}>${picture}</div>
+    <div class="detail-photo-tools"><button class="detail-photo-switch" type="button" data-action="full-dish-photo" aria-pressed="${detailFullPhoto}">${icon('expand')}${esc(detailCopy[lang].fullPhoto)}</button></div>`;
+}
 function renderDetail() {
   const keepDetailsOpen=$('detail-dialog').open && $('detail-content').querySelector('.detail-more')?.open===true;
   const p=byId.get(detailId),c=categories.find(c=>c.id===p.cat);if(!p)return;
-  $('detail-content').innerHTML=`<div class="detail-top">${hasPhoto(p)?`<img class="detail-photo${hasPhoto(p)?'':' missing-photo'}" src="${photo(p,480,detailVariant)}" ${photoSet(p,'(max-width: 620px) calc(100vw - 32px), 480px',detailVariant)} width="640" height="640" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}">`:`<div class="menu-photo-pending detail-photo-pending"><span>miora</span><strong>${esc(name(p))}</strong><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}<button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button></div>
+  $('detail-content').innerHTML=`<div class="detail-top"><button class="icon-btn close-btn" type="button" data-close="detail-dialog" aria-label="${t('close')}">×</button>${detailPhotoMarkup(p)}</div>
     <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2><div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}${p.price!==null?`<span class="metric detail-price">${money(p.price)}</span>`:''}</div>
     <p class="photo-provenance">${esc(photoKind(p,detailVariant)==='generated'&&!hasRestagedPhoto(p)?(lang==='ru'?'AI-пример подачи, созданный по названию и составу меню; это не фотография блюда Miora.':lang==='en'?'AI serving illustration created from the menu name and ingredients; not a photograph of the actual Miora dish.':'Menü adı ve içeriğine göre oluşturulmuş yapay zekâ servis örneğidir; gerçek Miora ürün fotoğrafı değildir.'):(photoKind(p,detailVariant)==='illustration'||hasRestagedPhoto(p)&&detailVariant!=='original')?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
     <p class="detail-allergen-quick">${p.allergens.length?`${esc(detailCopy[lang].allergen)}: ${esc(p.allergens.map(a=>t(a)).join(", "))} · ${esc(detailCopy[lang].check)}`:esc(detailCopy[lang].unknown)}</p>
@@ -506,6 +520,11 @@ document.addEventListener('click',async event=>{
   const button=event.target.closest('button,a[data-action]');if(!button)return;
   const d=button.dataset;
   if(d.close){$(d.close).close();return;}
+  if(d.action==='full-dish-photo'){
+    detailFullPhoto=!detailFullPhoto;
+    button.setAttribute('aria-pressed',String(detailFullPhoto));
+    return;
+  }
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
   if(d.add){const added=add(d.add);if(added&&button.closest('#detail-dialog')&&$('detail-dialog').open)$('detail-dialog').close();return;}
   if(d.favorite){

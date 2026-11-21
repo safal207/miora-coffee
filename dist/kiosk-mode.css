@@ -66,8 +66,17 @@ body[data-view="kiosk"] .desktop-nav { display: none; }
   border-radius: 17px;
   background: var(--card);
 }
-.quick-photo { position: relative; display: block; width: 100%; aspect-ratio: 1.5; padding: 0; overflow: hidden; background: var(--soft); }
-.quick-photo img { width: 100%; height: 100%; }
+.quick-photo { position: relative; display: block; width: 100%; aspect-ratio: 1; padding: 0; overflow: hidden; background: var(--soft); }
+.quick-results.quick-catalog .quick-photo { aspect-ratio: 4 / 3; }
+.quick-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-position: var(--dish-position, center);
+  transform: scale(var(--dish-scale, 1));
+}
+.quick-photo img:is([data-photo-fallback], .missing-photo) { object-fit: contain; object-position: center; transform: none; }
 .quick-photo-note { position: absolute; bottom: 5px; left: 5px; padding: 2px 6px; border-radius: 4px; color: #fff; background: #32251ecc; font: 10px/1.3 Arial,sans-serif; }
 .quick-card-body { display: flex; flex: 1; flex-direction: column; padding: clamp(10px, 1.5vw, 17px); gap: 8px; }
 .quick-card h3, .quick-card h3 button { font: 600 clamp(14px, 1.4vw, 18px)/1.25 Arial,sans-serif; text-align: left; overflow-wrap: anywhere; }
@@ -81,7 +90,6 @@ body[data-view="kiosk"] .desktop-nav { display: none; }
 .quick-shots strong { margin-inline-start: auto; white-space: nowrap; }
 .quick-shots svg { width: 13px; flex-shrink: 0; }
 .quick-pair-photos { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 2px; }
-.quick-pair-photos .quick-photo { aspect-ratio: .98; }
 .quick-filters { display: flex; gap: 8px; margin-block: -6px 18px; }
 .quick-filters input, .quick-filters select {
   border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink);
@@ -102,7 +110,7 @@ body[data-view="kiosk"]:has(.mobile-cart:not([hidden])) .toast { bottom: 82px; }
 .quick-menu :focus-visible, .kiosk-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .quick-card .quick-photo:focus-visible { outline-offset: -3px; }
 @media (max-width: 800px) {
-  .quick-results { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .quick-results, .quick-results.quick-pairs { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 @media (max-width: 620px) {
   .kiosk-toggle { gap: 4px; padding-inline: 9px; font-size: 12px; }
@@ -112,10 +120,7 @@ body[data-view="kiosk"]:has(.mobile-cart:not([hidden])) .toast { bottom: 82px; }
   .quick-choice img { width: 100%; height: clamp(48px, 14vw, 76px); border-radius: 8px; }
   .quick-choice span { padding: 7px 2px; margin-block: auto; }
   .quick-results.quick-pairs { grid-template-columns: minmax(0,1fr); }
-  .quick-pair { display: grid; grid-template-columns: minmax(100px, 35%) minmax(0,1fr); }
-  .quick-pair-photos { grid-template-columns: 1fr; grid-template-rows: repeat(2,1fr); }
-  .quick-pair-photos .quick-photo { aspect-ratio: auto; min-height: 60px; height: 100%; }
-  .quick-pair-photos img { position: absolute; inset: 0; }
+  .quick-pair-photos .quick-photo { aspect-ratio: 6 / 5; }
   .quick-pair .quick-card-body { padding: 14px; }
   .quick-filters { flex-wrap: wrap; }
   .quick-filters input { flex-basis: 100%; }
