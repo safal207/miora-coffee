@@ -29,7 +29,7 @@ export const CITY_COPY=Object.freeze({
     hello:'Merhaba! Miora’ya hoş geldiniz. Bugün nasıl bir mola planlıyorsunuz?',
     family:'Minik kaşifler için oyun, büyükler için kahve. Önce neye bakalım?',
     adults:'Kendine bir mola mı veriyorsun? Ne yapmak istersin?',
-    town:'Burası oyun şehrimizden gerçek kareler: küçük dükkânlar, evler ve kaydırak. Fotoğraflar örnektir; oyun alanını ziyaretinizde keşfedebilirsiniz.',
+    town:'İşte Miora’nın gerçek oyun şehri: minik dükkânlar, evler ve kaydırak. Şimdi sana da güzel bir lezzet bulalım mı?',
     choose:'Şimdi ne istersin? Menüden gerçek seçenekleri göstereyim.',
     coffee:'Mis gibi kahve zamanı! Güncel menüden birkaç seçenek:',
     dessert:'Tatlı bir mola? Güncel menüden birkaç seçenek:',
@@ -39,14 +39,14 @@ export const CITY_COPY=Object.freeze({
     openCategory:'Menüde göster',skip:'Tüm menüye geç',back:'Geri',restart:'Baştan başla',
     reopen:'Miora ile tanış',usual:'Kaydettiğim listeyi ekle',favorites:'Favorilerime bak',notChat:'Bu, canlı sohbet değil; kısa bir menü rehberi. Yanıtlar gönderilmez ve kaydedilmez.',
     photoTown:'Miora oyun alanında küçük dükkân cepheleri',photoPlay:'Miora oyun alanında kaydırak ve oyuncaklar',
-    photoCoffee:'Miora kahve tezgâhı',panorama:'Oyun şehri, kaydırak ve kahve tezgâhı · Miora',privacy:'Çocukların yüzlerini göstermeyen, mekândan gerçek fotoğraflar.'
+    photoCoffee:'Miora kahve tezgâhı',shortTown:'Evler',shortPlay:'Kaydırak',shortCoffee:'Kahve',panorama:'Oyun şehri, kaydırak ve kahve tezgâhı · Miora',privacy:'Çocukların yüzlerini göstermeyen, mekândan gerçek fotoğraflar.'
   },
   ru:{
     eyebrow:'ГОРОД MIORA · ДАВАЙ ЗНАКОМИТЬСЯ',title:'Маленький город, большой перерыв.',
     hello:'Привет! Добро пожаловать в Miora. Как вы сегодня к нам заглянули?',
     family:'Для маленьких исследователей — игра, для взрослых — кофе. С чего начнём?',
     adults:'Небольшой перерыв для себя? Что хочется посмотреть?',
-    town:'Это настоящие фотографии нашего игрового городка: домики, магазинчики и горка. Прогуляемся по ним?',
+    town:'Вот наш настоящий игровой городок: домики, магазинчик и горка. Теперь подберём что-нибудь вкусное?',
     choose:'А теперь выберем что-нибудь вкусное из настоящего меню.',
     coffee:'Время для кофе! Вот несколько напитков из меню:',
     dessert:'Немного сладкого? Вот варианты из меню:',
@@ -56,14 +56,14 @@ export const CITY_COPY=Object.freeze({
     openCategory:'Открыть в меню',skip:'Сразу в меню',back:'Назад',restart:'Начать заново',
     reopen:'Познакомиться с Miora',usual:'Добавить мой сохранённый список',favorites:'Посмотреть избранное',notChat:'Это не онлайн-чат, а мини-гид по кафе. Ответы никуда не отправляются и не сохраняются.',
     photoTown:'Настоящие фасады домиков игрового городка Miora',photoPlay:'Горка и игрушки в детской зоне Miora',
-    photoCoffee:'Кофейная стойка Miora',panorama:'Домики, горка и кофейная стойка Miora',privacy:'Настоящие фотографии пространства, без публикации детских лиц.'
+    photoCoffee:'Кофейная стойка Miora',shortTown:'Домики',shortPlay:'Горка',shortCoffee:'Кофейня',panorama:'Домики, горка и кофейная стойка Miora',privacy:'Настоящие фотографии пространства, без публикации детских лиц.'
   },
   en:{
     eyebrow:'MIORA TOWN · SAY HELLO',title:'A little town. A lovely break.',
     hello:'Hello! Welcome to Miora. What brings you in today?',
     family:'A play town for little explorers, good coffee for grown-ups. Where shall we start?',
     adults:'Taking a little break? What would you like to explore?',
-    town:'Real photos of our play town: little storefronts, houses and a slide. Take a look!',
+    town:'Here is our real play town: little shops, houses and a slide. Shall we find something tasty too?',
     choose:'Now, shall we find something tasty from the real menu?',
     coffee:'Coffee time! A few choices from the menu:',
     dessert:'Something sweet? A few choices from the menu:',
@@ -73,6 +73,6 @@ export const CITY_COPY=Object.freeze({
     openCategory:'See in menu',skip:'Go straight to menu',back:'Back',restart:'Start again',
     reopen:'Meet Miora',usual:'Add my saved list',favorites:'See my favorites',notChat:'This is a short interactive guide, not a live chat. Answers are not sent or stored.',
     photoTown:'Real storefront facades in the Miora play town',photoPlay:'Slide and toys in the Miora play area',
-    photoCoffee:'Miora coffee counter',panorama:'Miora play town, slide and coffee counter',privacy:'Real venue photos cropped to exclude identifiable children.'
+    photoCoffee:'Miora coffee counter',shortTown:'Play town',shortPlay:'Slide',shortCoffee:'Coffee',panorama:'Miora play town, slide and coffee counter',privacy:'Real venue photos cropped to exclude identifiable children.'
   }
 });
