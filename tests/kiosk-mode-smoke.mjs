@@ -45,6 +45,7 @@ export async function verifyKioskMode(browser, origin) {
     await menu.locator('#quick-search').fill('americano');
     assert(await menu.locator('[data-quick-item="428743"]').isVisible());
     await menu.locator('[data-quick-group="food"]').click();
+    assert(await menu.locator('[data-add="430356"]').isVisible(), 'ready-to-add croissant sandwich');
     await menu.locator('[data-k-start="sandwich"]').click();
     assert(await page.locator('#kiosk-dialog').isVisible());
     await page.locator('#kiosk-dialog [data-k-close]').click();

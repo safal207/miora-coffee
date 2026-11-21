@@ -10,8 +10,8 @@ export const kioskCopy = {
 };
 
 const drinks = ['428743', '428772', '428748'];
-const food = ['430350', '430236', '431742', '431203'];
-const groups = {coffee:'428748', food:'430350', pairs:'430226'};
+const food = ['430356', '430236', '431742', '431203'];
+const groups = {coffee:'428748', food:'430356', pairs:'430226'};
 export const kioskPairs = {
   latte: ['428748', '431293'],
   cappuccino: ['428772', '430226'],
