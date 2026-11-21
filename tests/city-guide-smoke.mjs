@@ -23,20 +23,35 @@ try{
   assert.equal(await guide.locator('[data-city-action="tour"]').count(),1);
   assert.equal(await guide.locator('#city-guide-title').evaluate(el=>el===document.activeElement),true,'keyboard focus follows dialog progress');
   await guide.locator('[data-city-action="tour"]').click();
-  const panorama=guide.locator('.city-guide-mosaic img');
+  const panorama=guide.locator('.city-tour-image > img');
   await panorama.waitFor();
   await panorama.scrollIntoViewIfNeeded();
-  await page.waitForFunction(()=>{const image=document.querySelector('.city-guide-mosaic img');return image?.complete&&image.naturalWidth>0;});
+  await page.waitForFunction(()=>{const image=document.querySelector('.city-tour-image > img');return image?.complete&&image.naturalWidth>0;});
   assert.match(await panorama.getAttribute('src'),/assets\/city\/miora-city\.webp$/);
-  assert.equal(await guide.locator('.city-guide-mosaic figcaption span').count(),3);
-  assert(await guide.locator('.city-guide-mosaic figcaption span').evaluateAll(nodes=>nodes.every(el=>el.textContent.length<20)),
-    'zone captions must be readable on narrow phones');
+  assert.equal(await guide.locator('.city-tour-pin').count(),4);
+  assert.equal(await guide.locator('.city-tour-stop').count(),4);
+  assert.equal(await guide.locator('.city-tour-pin[data-city-spot="houses"]').getAttribute('aria-pressed'),'true');
+  assert.equal(await guide.locator('#city-tour-name').textContent(),
+    lang==='ru'?'Домики':lang==='en'?'Little houses':'Evler');
+  await guide.locator('.city-tour-pin[data-city-spot="shop"]').click();
+  assert.equal(await guide.locator('.city-tour-stop[data-city-spot="shop"]').getAttribute('aria-pressed'),'true');
+  assert.match(await guide.locator('#city-tour-description').textContent(),/SHOP/);
+  await guide.locator('.city-tour-stop[data-city-spot="slide"]').click();
+  assert.equal(await guide.locator('.city-tour-pin[data-city-spot="slide"]').getAttribute('aria-pressed'),'true');
+  await guide.locator('[data-city-tour-next]').click();
+  assert.equal(await guide.locator('.city-tour-stop[data-city-spot="coffee"]').getAttribute('aria-pressed'),'true');
+  assert.equal(await guide.locator('.city-tour-stop[data-city-spot="coffee"]').evaluate(el=>document.activeElement===el),true,
+    'next-stop button should place keyboard focus on the newly selected stop');
   assert(await guide.evaluate(el=>el.scrollWidth<=el.clientWidth+1),
     'guide cannot introduce horizontal overflow');
   const photoSize=await panorama.boundingBox();
   assert(photoSize&&photoSize.width<=500,'do not enlarge a 390px authentic photo into blurry desktop hero');
+  const stopTargets=await guide.locator('.city-tour-stop').evaluateAll(nodes=>nodes.map(el=>({w:el.getBoundingClientRect().width,h:el.getBoundingClientRect().height})));
+  assert(stopTargets.every(r=>r.h>=44&&r.w>=44),'all text hotspot buttons must have 44px touch targets');
   await page.screenshot({path:'artifacts/miora-city-guide-'+lang+'-'+width+'.png'});
 
+  assert.equal(await page.locator('#cart-open .cart-count').textContent(),cartBefore,
+    'exploring interactive landmarks must never add products to the order');
   await guide.locator('[data-city-action="back"]').click();
   assert.equal(await guide.locator('[data-city-action="choose"]').count(),1);
   await guide.locator('[data-city-action="choose"]').click();
