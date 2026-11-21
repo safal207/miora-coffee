@@ -50,3 +50,15 @@
  .city-gallery-actions button{padding:8px}
 }
 @media(prefers-reduced-motion:reduce){.city-gallery *, .city-gallery-dialog *{animation:none!important;transition:none!important}}
+
+/* The map, landmark controls and explanation are one vertically stacked column,
+   independent from the height of the image carousel. */
+.city-tour-left{min-width:0;display:flex;flex-direction:column;gap:12px;align-self:start}
+@media(min-width:801px){
+  .city-guide-step-town .city-tour{align-items:start;grid-template-rows:auto}
+  .city-guide-step-town .city-tour-left{grid-column:1;grid-row:1}
+  .city-guide-step-town .city-gallery{grid-column:2;grid-row:1}
+}
+@media(max-width:800px){
+  .city-guide-step-town .city-tour-left{display:contents}
+}
