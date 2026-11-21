@@ -10,6 +10,7 @@ import {readTasteMemory,setTasteMemoryEnabled,rememberTasteChoice,tasteSuggestio
 import {USUAL_STORAGE_KEY,readUsual,saveUsual,forgetUsual,usualTotals,appendUsual} from './usual-order.js?v=20261121-v1';
 import {CITY_CATEGORY,CITY_ASSETS,CITY_COPY,cityNext,cityProducts} from './city-guide.js?v=20261121-v1';
 import {TOUR_SPOTS,TOUR_COPY,validTourSpot,nextTourSpot,getTourCopy} from './city-tour.js?v=20261121-v1';
+import {STICKER_STORAGE_KEY,STICKER_COPY,stickerOptions,readStickers,chooseSticker,personalStickerAlbum} from './miora-reactions.js?v=20261121-v1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
@@ -70,6 +71,7 @@ let configuredOrders=normalizeOrders(load('configured-orders',[]));
 let kioskUI;
 let favoriteIds=load('favorites',[]); if(!Array.isArray(favoriteIds))favoriteIds=[];
 let favorites=new Set(favoriteIds.filter(id=>byId.has(id)));
+let stickers=readStickers(localStorage,byId);
 let view=resolveView(params.get('view'),load('view',null));
 const requestedCategory=params.get('category');
 let category=['all','featured',...categories.map(c=>c.id)].includes(requestedCategory)?requestedCategory:view==='feed'?'all':'featured', search='', detailId=null, staffMode=false;
@@ -230,7 +232,7 @@ function renderLanguage() {
   $('feed-stories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',[t('feed'),t('grid'),t('list')].join(' / '));
   document.querySelectorAll('[data-close]').forEach(e=>e.setAttribute('aria-label',t('close')));
   document.querySelectorAll('[data-journey-copy]').forEach(node=>node.textContent=journeyCopy[lang][node.dataset.journeyCopy]);
-  renderTheme();renderCategories();renderProducts();renderTasteMemory();renderUsual();renderCityGuide();renderCartCount();kioskUI?.refresh();
+  renderTheme();renderCategories();renderProducts();renderStickerAlbum();renderTasteMemory();renderUsual();renderCityGuide();renderCartCount();kioskUI?.refresh();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
 function renderCategories() {
@@ -249,6 +251,26 @@ const socialCopy={
   tr:{likes:'Beğeniler',shares:'Paylaşılan veya kopyalanan',views:'Görüntüleme',scope:'Bu cihazda'},
   en:{likes:'Likes',shares:'Shared or copied',views:'Views',scope:'On this device'}
 };
+function stickerBar(p){
+  const c=STICKER_COPY[lang],choices=stickerOptions(p.cat,lang);
+  if(!choices.length)return '';
+  return `<div class="miora-reactions" data-reaction-group="${p.id}" role="group" aria-label="${esc(c.title+' · '+name(p))}">
+    <span class="miora-reactions-title">${esc(c.title)}</span>
+    <div class="miora-reactions-choices">${choices.map(ch=>`<button type="button" class="miora-reaction" data-sticker-id="${p.id}" data-sticker-code="${ch.id}" aria-pressed="${stickers[p.id]===ch.id}" aria-label="${esc(ch.label+' · '+name(p))}" title="${esc(ch.label)}"><span aria-hidden="true" class="miora-reaction-emoji">${ch.emoji}</span><span class="miora-reaction-label">${esc(ch.label)}</span></button>`).join('')}</div>
+    <small class="miora-reactions-scope">${esc(c.scope)}</small></div>`;
+}
+function renderStickerAlbum(){
+  const root=$('sticker-collection'),entries=personalStickerAlbum(stickers,byId,lang);
+  if(!entries.length){root.hidden=true;root.innerHTML='';return;}
+  const wasOpen=root.querySelector('details')?.open===true,c=STICKER_COPY[lang];
+  root.hidden=false;
+  root.innerHTML=`<details class="miora-sticker-album" ${wasOpen?'open':''}><summary>${esc(c.album)} <b>${entries.length}</b></summary><p>${esc(c.albumNote)}</p><div class="miora-sticker-list">${entries.map(({id,product,sticker})=>`<button type="button" data-detail="${id}" aria-label="${esc(name(product)+' · '+sticker.label)}"><span aria-hidden="true">${sticker.emoji}</span><span>${esc(name(product))}</span></button>`).join('')}</div></details>`;
+}
+function refreshStickerButtons(id){
+  document.querySelectorAll('[data-sticker-id="'+id+'"]').forEach(button=>{
+    button.setAttribute('aria-pressed',String(stickers[id]===button.dataset.stickerCode));
+  });
+}
 function socialStats(id) {
   const c=socialCopy[lang],like=favorites.has(id)?1:0,share=shareCounts[id]||0,seen=views[id]||0;
   return `<div class="social-stats" role="group" aria-label="${esc(c.scope)}" title="${esc(c.scope)}">
@@ -308,7 +330,7 @@ function renderProducts() {
   $('products').innerHTML=displayList.map(p=>`<article class="product-card" data-product="${p.id}">
     <div class="product-media" data-view-id="${p.id}"><button class="product-open" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">${hasPhoto(p)?`<img src="${photo(p,view==='list'?160:640)}" ${view==='list'?'':photoSet(p,'(max-width: 620px) calc(50vw - 26px), (max-width: 960px) 30vw, 265px')} width="640" height="640" loading="lazy" decoding="async" alt="${esc(hasPhoto(p)?name(p):t('photoMissing'))}" ${hasPhoto(p)?'':'class="missing-photo"'}>`:`<div class="menu-photo-pending"><span>miora</span><small>${esc(journeyCopy[lang].noPhoto)}</small></div>`}</button>${photoKind(p)==='generated'?`<span class="generated-media-label">${esc(journeyCopy[lang].generated)}</span>`:''}${flavorChip(p)}
 ${view==='list'?'':productSocial(p)}</div>
-    <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div>${view==='list'?productSocial(p,true):socialStats(p.id)}<div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
+    <div class="product-body"><button class="product-title" type="button" data-detail="${p.id}">${esc(name(p))}</button><p class="product-subtitle">${esc(lang==='tr'?p.description||categories.find(c=>c.id===p.cat).name.tr:p.name.tr)}</p><div class="product-meta">${meta(p)}</div>${view==='list'?productSocial(p,true):socialStats(p.id)}${stickerBar(p)}<div class="product-bottom"><strong class="product-price${p.price===null?' ask':''}">${p.price===null?t('ask'):money(p.price)}</strong>${p.price===null?`<button class="add-btn" type="button" data-detail="${p.id}" aria-label="${esc(t('detail')+' · '+name(p))}">↗</button>`:`<button class="add-btn${cart[p.id]?' quantity-badge':''}" type="button" data-add="${p.id}" aria-label="${esc(t('add')+' · '+name(p))}">${cart[p.id]||icon('plus')}</button>`}</div></div></article>`).join('');
   enhanceKioskCards();startFeedViews();
 }
 const kioskFor=id=>({430236:'sandwich',430240:'sandwich',431177:'sandwich',431178:'sandwich',431179:'sandwich',431203:'breakfast',431333:'pancake'})[id]||null;
@@ -358,6 +380,7 @@ function feedPost(p) {
     ${kind==='missing'||hasAlternatePhoto(p)?'':`<p class="feed-media-note">${kind==='generated'?copy.generated:kind==='illustration'?copy.illustration:copy.photo}</p>`}
     <div class="post-caption"><h3 id="post-title-${p.id}"><button type="button" data-detail="${p.id}">${esc(name(p))}</button></h3>${lang==='tr'?'':`<p class="post-original" lang="tr">${esc(p.name.tr)}</p>`}</div>
     ${socialStats(p.id)}
+    ${stickerBar(p)}
     <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${copy.add}</button>`}</div></article>`;
 }
 function recordView(id) {
@@ -475,6 +498,7 @@ function renderDetail() {
     <section class="detail-section"><h3>${t('allergens')}</h3>${p.allergens.length?`<div class="allergens">${p.allergens.map(a=>`<span>${t(a)}</span>`).join('')}</div>`:`<p>${t('noAllergens')}</p>`}<p class="detail-disclaimer">${t('allergenNote')}</p>${p.kcal?`<p class="detail-disclaimer">${p.calorieReview?t('reviewCalorie'):t('calorieNote')}</p>`:''}</section><div class="views">${icon('eye')}${views[p.id]||0} · ${t('localViews')}</div>
     </div></details>
     </div>
+    ${stickerBar(p)}
     <div class="detail-actions">${p.price!==null?`<button class="button primary" type="button" data-add="${p.id}">${icon('plus')}${t('addToOrder')} · ${money(p.price)}</button>`:`<button class="button secondary" type="button" data-close="detail-dialog">${t('backToMenu')}</button>`}<button class="icon-btn" type="button" data-favorite="${p.id}" aria-pressed="${favorites.has(p.id)}" aria-label="${t('favorites')}">${icon('heart')}</button><button class="icon-btn" type="button" data-share="${p.id}" aria-label="${t('share')}">${icon('share')}</button></div>`;
   if(keepDetailsOpen)$('detail-content').querySelector('.detail-more').open=true;
   enhanceKioskDetail(detailId);
@@ -644,6 +668,18 @@ document.addEventListener('click',async event=>{
     renderTasteMemory();return;
   }
   if(d.tasteAdd){add(d.tasteAdd);return;}
+  if(d.stickerId&&d.stickerCode){
+    const result=chooseSticker(localStorage,byId,d.stickerId,d.stickerCode),c=STICKER_COPY[lang];
+    if(!result.ok){notify(c.failed);return;}
+    stickers=result.items;
+    refreshStickerButtons(d.stickerId);renderStickerAlbum();
+    if(result.selected===d.stickerCode&&button.isConnected&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+      button.classList.add('miora-sticker-pop');
+      button.addEventListener('animationend',()=>button.classList.remove('miora-sticker-pop'),{once:true});
+    }
+    notify(result.selected?c.saved:c.removed);
+    return;
+  }
   if(d.usualSave!==undefined){
     refreshCart();
     if(saveUsual(localStorage,{cart,configuredOrders},byId)){renderUsual();renderCityGuide();notify(usualCopy[lang].saved);}
@@ -712,6 +748,7 @@ window.addEventListener('storage',event=>{
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();renderTasteMemory();if($('detail-dialog').open)renderDetail();}
   if(event.key===TASTE_STORAGE_KEY||event.key===null)renderTasteMemory();
+  if(event.key===STICKER_STORAGE_KEY||event.key===null){stickers=readStickers(localStorage,byId);document.querySelectorAll('[data-sticker-id]').forEach(b=>b.setAttribute('aria-pressed',String(stickers[b.dataset.stickerId]===b.dataset.stickerCode)));renderStickerAlbum();}
   if(event.key===USUAL_STORAGE_KEY||event.key===null){renderUsual();renderCityGuide();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:views'||event.key==='miora:shares'||event.key===null){const nextViews=load('views',{}),nextShares=load('shares',{});views=Object.fromEntries(Object.entries(nextViews&&typeof nextViews==='object'&&!Array.isArray(nextViews)?nextViews:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));shareCounts=Object.fromEntries(Object.entries(nextShares&&typeof nextShares==='object'&&!Array.isArray(nextShares)?nextShares:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));syncSocialStats();}
 });
