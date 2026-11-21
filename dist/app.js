@@ -514,7 +514,7 @@ document.addEventListener('click',async event=>{
   if(d.step){refreshCart();commitCart(updateCart(cart,d.stepId,Number(d.step),byId));return;}
   if(d.service){service=d.service;save('service',service);renderCart();return;}
   if(d.action==='reset'){search='';$('search').value='';selectCategory('all');return;}
-  if(d.action==='add-pair'){refreshCart();const next=addPair(cart,['428772','430226'],byId);if(!next){notify(t('limit'));return;}commitCart(next);notify(t('added')+' · Cappuccino + San Sebastian');return;}
+  if(d.action==='add-pair'){refreshCart();const next=addPair(cart,['428772','430226'],byId);if(!next){notify(t('limit'));return;}commitCart(next);trackGrowth('cart_add');notify(t('added')+' · Cappuccino + San Sebastian');return;}
   if(d.action==='show-staff'){staffMode=true;trackGrowth('staff_preview');renderCart();$('cart-content').scrollTop=0;$('cart-title').setAttribute('tabindex','-1');$('cart-title').focus();return;}
   if(d.action==='edit-order'){staffMode=false;renderCart();return;}
   if(d.action==='clear-cart'){commitConfigured([]);commitCart({});growthOfferSuppressed=false;growthOffersSeen.clear();trackGrowth('cart_cleared');return;}
