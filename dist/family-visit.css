@@ -176,8 +176,9 @@ body[data-view="kiosk"] .family-section { padding-bottom: 105px; }
   100% { opacity: 0; transform: translateY(4px); }
 }
 @media (min-width: 801px) {
-  .quick-menu { padding-top: clamp(23px, 3vw, 44px); }
-  .quick-groups { margin-block: 18px 22px; }
+  .quick-menu { padding-top: clamp(18px, 2vw, 34px); }
+  .quick-groups { margin-block: 14px 14px; }
+  .quick-card-body { gap: 5px; }
 }
 @media (max-width: 720px) {
   .family-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

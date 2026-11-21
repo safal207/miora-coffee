@@ -166,8 +166,8 @@ try {
     console.log('PASS: ' + lang + ' ' + width + 'px feed/grid views, favorite and shared-copy counts');
   }
   console.log('PASS: ' + tests + ' browser viewport + locale configurations');
-  await verifyKioskMode(browser, origin);
   await verifyFamilyVisit(browser, origin);
+  await verifyKioskMode(browser, origin);
 } finally {
   await browser.close();
 }
