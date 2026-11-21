@@ -13,7 +13,7 @@ import {breakfastVisualForSelection,breakfastCopy,breakfastIdeas,localizedBreakf
 import {identityFor,diversifyPhotoOrder,storyCoverIds} from './visual-merchandising.js?v=20261112-covers1';
 import {mountKioskMode,kioskCopy,kioskPairs} from './kiosk-mode.js?v=20261122-photo1';
 import {dishFrameStyle} from './photo-framing.js';
-import {familyCombos,familyCopy,renderFamilyVisit} from './family-visit.js?v=20261122-photo1';
+import {familyCombos,familyCopy,renderFamilyVisit} from './family-visit.js?v=20261122-vertical1';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -130,7 +130,6 @@ function renderLanguage() {
   $('quick-social-scope').textContent=socialCopy[lang].scope;
   $('catalog-social-scope').textContent=socialCopy[lang].scope;
   document.querySelectorAll('[data-builder-card]').forEach(card=>card.lastElementChild.innerHTML=cardEngagement(card.dataset.builderCard));
-  $('welcome-caption').textContent=familyCopy[lang].welcome;
   $('pairing-overlay').innerHTML=photoOverlay('pair-cappuccino',money(kioskPairs.cappuccino.reduce((total,id)=>total+byId.get(id).price,0)));
   renderFamilyVisit($('family'),{byId,lang,money,esc,name,overlay:photoOverlay,scope:socialCopy[lang].scope});
   kioskUI?.refresh();renderTheme();renderCategories();renderProducts();renderCartCount();
@@ -690,7 +689,4 @@ else if(sharedCard){
   const target=$(sharedId);
   if(target)requestAnimationFrame(()=>{target.tabIndex=-1;target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'instant'});});
 }
-const welcome=$('miora-welcome');
-welcome.hidden=false;
-setTimeout(()=>welcome.hidden=true,matchMedia('(prefers-reduced-motion: reduce)').matches?700:1300);
 
