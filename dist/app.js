@@ -10,6 +10,7 @@ import {readTasteMemory,setTasteMemoryEnabled,rememberTasteChoice,tasteSuggestio
 import {USUAL_STORAGE_KEY,readUsual,saveUsual,forgetUsual,usualTotals,appendUsual} from './usual-order.js?v=20261121-v1';
 import {CITY_CATEGORY,CITY_ASSETS,CITY_COPY,cityNext,cityProducts} from './city-guide.js?v=20261121-v1';
 import {TOUR_SPOTS,TOUR_COPY,validTourSpot,nextTourSpot,getTourCopy} from './city-tour.js?v=20261121-v1';
+import {CITY_GALLERY,GALLERY_COPY,gallerySlide,galleryStep,galleryTitle} from './city-gallery.js?v=20261122-v1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
@@ -137,8 +138,39 @@ function repeatUsual(){
 }
 const CITY_DISMISS_KEY='miora:city-guide-dismissed:v1';
 function cityDismissed(){try{return sessionStorage.getItem(CITY_DISMISS_KEY)==='1';}catch{return false;}}
-let cityStep='hello',cityHidden=cityDismissed(),cityTourSpot='houses';
+let cityStep='hello',cityHidden=cityDismissed(),cityTourSpot='houses',cityGalleryIndex=0;
 const cityHistory=[];
+function galleryMarkup(){
+  const words=GALLERY_COPY[lang],slide=gallerySlide(cityGalleryIndex),title=galleryTitle(lang,cityGalleryIndex);
+  const thumbs=CITY_GALLERY.map((item,i)=>`<button type="button" data-city-gallery="${i}" aria-pressed="${i===cityGalleryIndex}" aria-label="${esc(galleryTitle(lang,i))}"><img src="${item.src}" alt="" width="112" height="70" loading="lazy" decoding="async"></button>`).join('');
+  return `<section class="city-gallery" aria-labelledby="city-gallery-title">
+    <div class="city-gallery-header"><div><h3 id="city-gallery-title">${esc(words.heading)}</h3><p>${esc(words.lead)}</p></div><span id="city-gallery-count" class="city-gallery-count">${cityGalleryIndex+1}${words.of}${CITY_GALLERY.length}</span></div>
+    <div class="city-gallery-frame"><button type="button" class="city-gallery-main" data-city-gallery-open aria-label="${esc(words.enlarge+' · '+title)}"><img id="city-gallery-photo" src="${slide.src}" alt="${esc(title)}" width="${slide.width}" height="${slide.height}" loading="lazy" decoding="async"><span>${esc(words.enlarge)} ↗</span></button></div>
+    <div class="city-gallery-thumbs" role="group" aria-label="${esc(words.heading)}">${thumbs}</div>
+    <p id="city-gallery-caption" class="city-gallery-caption">${esc(title)}</p>
+    <div class="city-gallery-actions"><button type="button" data-city-gallery-prev aria-label="${esc(words.previous)}">←</button><button type="button" data-city-gallery-next aria-label="${esc(words.next)}">→</button></div>
+    <p class="city-gallery-disclaimer">${esc(words.disclaimer)}</p>
+    <dialog id="city-gallery-dialog" class="city-gallery-dialog" aria-labelledby="city-gallery-full-title">
+      <div class="city-gallery-dialog-head"><strong id="city-gallery-full-title">${esc(title)}</strong><button type="button" data-city-gallery-close aria-label="${esc(words.close)}">×</button></div>
+      <img id="city-gallery-full-photo" src="${slide.src}" alt="${esc(title)}" width="${slide.width}" height="${slide.height}" decoding="async">
+      <div class="city-gallery-dialog-footer"><button type="button" data-city-gallery-prev>${esc(words.previous)}</button><span class="city-gallery-count" id="city-gallery-full-count">${cityGalleryIndex+1}${words.of}${CITY_GALLERY.length}</span><button type="button" data-city-gallery-next>${esc(words.next)}</button></div>
+      <p>${esc(words.disclaimer)}</p>
+    </dialog>
+  </section>`;
+}
+function updateCityGallery(nextIndex){
+  if(cityStep!=='town'||!Number.isInteger(nextIndex)||nextIndex<0||nextIndex>=CITY_GALLERY.length)return;
+  cityGalleryIndex=nextIndex;
+  const root=$('city-guide'),slide=gallerySlide(nextIndex),title=galleryTitle(lang,nextIndex),words=GALLERY_COPY[lang];
+  const feature=root.querySelector('#city-gallery-photo'),full=root.querySelector('#city-gallery-full-photo');
+  for(const img of [feature,full])if(img){img.src=slide.src;img.alt=title;img.width=slide.width;img.height=slide.height;}
+  for(const [id,text] of [['city-gallery-caption',title],['city-gallery-full-title',title],['city-gallery-count',nextIndex+1+words.of+CITY_GALLERY.length],['city-gallery-full-count',nextIndex+1+words.of+CITY_GALLERY.length]]){
+    const el=root.querySelector('#'+id);if(el)el.textContent=text;
+  }
+  const openButton=root.querySelector('[data-city-gallery-open]');
+  if(openButton)openButton.setAttribute('aria-label',words.enlarge+' · '+title);
+  root.querySelectorAll('[data-city-gallery]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.cityGallery)===nextIndex)));
+}
 function tourMarkup(c){
   const words=TOUR_COPY[lang],selected=getTourCopy(lang,cityTourSpot);
   const spots=TOUR_SPOTS.map((spot,i)=>{
@@ -149,7 +181,7 @@ function tourMarkup(c){
     const title=words[spot].label,pressed=spot===cityTourSpot;
     return `<button type="button" class="city-tour-stop" data-city-spot="${spot}" aria-pressed="${pressed}"><span aria-hidden="true">${i+1}</span>${esc(title)}</button>`;
   }).join('');
-  return `<section class="city-tour" aria-label="${esc(words.prompt)}"><figure class="city-tour-figure"><div class="city-tour-image"><img src="${CITY_ASSETS.panorama}" alt="${esc(words.photo)}" width="390" height="130" decoding="async" loading="lazy">${spots}</div><figcaption>${esc(words.hint)}</figcaption></figure><div class="city-tour-bottom"><div class="city-tour-stops" role="group" aria-label="${esc(words.prompt)}">${choices}</div><div class="city-tour-story" role="status" aria-live="polite" aria-atomic="true"><b id="city-tour-name">${esc(selected.label)}</b><p id="city-tour-description">${esc(selected.story)}</p></div><button class="city-tour-next" type="button" data-city-tour-next>${esc(words.next)} →</button><p class="city-guide-photo-note">${esc(c.privacy)}</p></div></section>`;
+  return `<section class="city-tour" aria-label="${esc(words.prompt)}"><figure class="city-tour-figure"><div class="city-tour-image"><img src="${CITY_ASSETS.panorama}" alt="${esc(words.photo)}" width="390" height="130" decoding="async" loading="lazy">${spots}</div><figcaption>${esc(words.hint)}</figcaption></figure><div class="city-tour-bottom"><div class="city-tour-stops" role="group" aria-label="${esc(words.prompt)}">${choices}</div><div class="city-tour-story" role="status" aria-live="polite" aria-atomic="true"><b id="city-tour-name">${esc(selected.label)}</b><p id="city-tour-description">${esc(selected.story)}</p></div><button class="city-tour-next" type="button" data-city-tour-next>${esc(words.next)} →</button><p class="city-guide-photo-note">${esc(c.privacy)}</p></div>${galleryMarkup()}</section>`;
 }
 function selectTourSpot(spot){
   if(cityStep!=='town'||!validTourSpot(spot))return;
@@ -218,7 +250,7 @@ function cityAction(action){
   }
   const next=cityNext(cityStep,action);
   if(!next)return;
-  if(next==='town')cityTourSpot='houses';
+  if(next==='town'){cityTourSpot='houses';cityGalleryIndex=0;}
   cityHistory.push(cityStep);cityStep=next;
   renderCityGuide(true);
 }
@@ -631,6 +663,11 @@ document.addEventListener('click',async event=>{
   if(d.close){$(d.close).close();return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
   if(d.cityOpen!==undefined){cityStep='hello';cityHistory.length=0;setCityVisibility(true);renderCityGuide(true);$('city-guide').scrollIntoView({block:'start',behavior:'instant'});return;}
+  if(d.cityGallery!==undefined){updateCityGallery(Number(d.cityGallery));return;}
+  if(d.cityGalleryNext!==undefined){updateCityGallery(galleryStep(cityGalleryIndex,1));return;}
+  if(d.cityGalleryPrev!==undefined){updateCityGallery(galleryStep(cityGalleryIndex,-1));return;}
+  if(d.cityGalleryOpen!==undefined){$('city-gallery-dialog')?.showModal();return;}
+  if(d.cityGalleryClose!==undefined){$('city-gallery-dialog')?.close();$('city-guide').querySelector('[data-city-gallery-open]')?.focus({preventScroll:true});return;}
   if(d.citySpot){selectTourSpot(d.citySpot);return;}
   if(d.cityTourNext!==undefined){
     selectTourSpot(nextTourSpot(cityTourSpot));
