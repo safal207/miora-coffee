@@ -29,6 +29,7 @@ jobs:
           node --check dist/taste-memory.js
           node --check dist/usual-order.js
           node --check dist/city-guide.js
+          node --check dist/city-tour.js
           node --check dist/photos.js
           node --check dist/photo-data.js
           node --check dist/menu-data.js
