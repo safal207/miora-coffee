@@ -10,7 +10,7 @@ const frames = new Map([
   ['assets/originals/430356-640.webp', ['50% 49%']], // Croissant and filling
   ['assets/enhanced/430236-640.webp', ['50% 69%', 1.05]], // Sandwich over table setting
   ['assets/originals/431742-640.webp', ['45% 50%', 1.10]], // Muffin texture
-  ['assets/originals/431203-640.webp', ['50% 8%', 1, .86]], // Breakfast tray and sides
+  ['assets/originals/431203-640.webp', ['50% 29%', 1, .86]], // Breakfast tray and sides
   ['assets/enhanced/431293-640.webp', ['50% 65%', 1.04]], // Both date bites
   ['assets/enhanced/430226-640.webp', ['51% 57%']], // Cheesecake slice
   ['assets/originals/431745-640.webp', ['48% 50%', 1.08]] // Cookie and topping
