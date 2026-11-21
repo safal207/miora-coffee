@@ -5,6 +5,7 @@ import {videoStory,dessertStoryVisible} from './video-stories.js';
 import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto,photoKind,hasAlternatePhoto,photoVariants,hasRestagedPhoto} from './photos.js?v=20261117-curated1';
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
+import {selectCartOffer,recordGrowthEvent} from './growth-engine.js?v=20261121-v1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
@@ -57,6 +58,10 @@ const params=new URLSearchParams(location.search);
 const savedLanguage=load('language','tr');
 let lang=['tr','en','ru'].includes(params.get('lang'))?params.get('lang'):['tr','en','ru'].includes(savedLanguage)?savedLanguage:'tr';
 let cart=normalizeCart(load('cart',{}),byId);
+let growthOfferSuppressed=false;
+let growthOfferObserver=null;
+const growthOffersSeen=new Set();
+function trackGrowth(type,productId=null){try{return recordGrowthEvent(localStorage,type,productId);}catch{return false;}}
 let configuredOrders=normalizeOrders(load('configured-orders',[]));
 let kioskUI;
 let favoriteIds=load('favorites',[]); if(!Array.isArray(favoriteIds))favoriteIds=[];
@@ -249,7 +254,7 @@ function addConfigured(order,drink){
   if(drink&&(cart['428772']||0)>=99){notify(t('limit'));return false;}
   commitConfigured(next);
   if(drink)commitCart(updateCart(cart,'428772',1,byId));
-  notify(t('added'));return true;
+  trackGrowth('cart_add');notify(t('added'));return true;
 }
 function estimatedBasket(){return configuredOrders.some(item=>recipes[item.kind].estimated);}
 function updatedConfigured(order,index){
@@ -281,6 +286,7 @@ function add(id) {
     cartButton.classList.add('miora-cart-pulse');
     cartButton.addEventListener('animationend',()=>cartButton.classList.remove('miora-cart-pulse'),{once:true});
   }
+  trackGrowth('cart_add',id);
   notify(`${t('added')} · ${name(byId.get(id))}`);
   return true;
 }
@@ -297,7 +303,7 @@ function openDetail(id,variant='focus') {
   detailId=id;
   // Curated front image first: no unsolicited reconstructed 360 or synthetic cutaway.
   detailVariant=variant==='original'?'original':'focus';
-  stopFeedViews();recordView(id);
+  stopFeedViews();recordView(id);if(!switching)trackGrowth('product_open',id);
   renderDetail();
   if(!$('detail-dialog').open)$('detail-dialog').showModal();
   $('detail-dialog').scrollTop=0;
@@ -336,11 +342,29 @@ function renderDetail() {
   enhanceKioskDetail(detailId);
 }
 function recommend() {
-  const items=Object.keys(cart).map(id=>byId.get(id));if(!items.length&&!configuredOrders.length)return null;
-  const hasFood=configuredOrders.length>0||items.some(p=>['46818','46885'].includes(p.cat));
-  const hasDrink=items.some(p=>!['46818','46885'].includes(p.cat));
-  const id=!hasFood?'430226':!hasDrink?'428772':null;
-  return id&&!cart[id]?byId.get(id):null;
+  return selectCartOffer({cart,configuredOrders,catalog:byId,suppressed:growthOfferSuppressed});
+}
+const growthLabels={
+  tr:{regular:'Normal menü fiyatı · indirim yok',dismiss:'Hayır, teşekkürler'},
+  ru:{regular:'Обычная цена меню · без скидки',dismiss:'Нет, спасибо'},
+  en:{regular:'Regular menu price · no discount',dismiss:'No, thanks'}
+};
+function observeGrowthOffer(id){
+  growthOfferObserver?.disconnect();
+  growthOfferObserver=null;
+  if(!id||growthOffersSeen.has(id))return;
+  const body=$('cart-content'),offer=body.querySelector('[data-growth-offer]');
+  if(!offer)return;
+  const mark=()=>{if(growthOffersSeen.has(id))return;growthOffersSeen.add(id);trackGrowth('offer_visible',id);growthOfferObserver?.disconnect();growthOfferObserver=null;};
+  if(typeof IntersectionObserver==='function'){
+    growthOfferObserver=new IntersectionObserver(entries=>{
+      if(entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>=.5))mark();
+    },{root:body,threshold:.5});
+    growthOfferObserver.observe(offer);
+  }else{
+    const r=offer.getBoundingClientRect(),v=body.getBoundingClientRect();
+    if(r.top<v.bottom&&r.bottom>v.top)mark();
+  }
 }
 function orderText() {
   const lines=Object.entries(cart).map(([id,qty])=>`${qty} x ${byId.get(id).name.tr} — ${money(byId.get(id).price*qty)}`);
@@ -355,6 +379,7 @@ function drawQR(canvas,text) {
   for(let y=0;y<modules;y++)for(let x=0;x<modules;x++)if(code.isDark(y,x))ctx.fillRect((x+4)*unit,(y+4)*unit,unit,unit);
 }
 function renderCart() {
+  growthOfferObserver?.disconnect();growthOfferObserver=null;
   const body=$('cart-content'),top=body.scrollTop,active=document.activeElement,focusId=active?.dataset?.stepId,focusDelta=active?.dataset?.step;
   const sum=orderTotals();$('cart-title').textContent=t(staffMode?'staffTitle':'cart');$('cart-kicker').textContent=t(staffMode?'staffKicker':'cartKicker');
   if(!sum.count){body.innerHTML=`<div class="cart-empty">${icon('bag')}<p>${t('emptyCart')}</p></div>`;$('cart-footer').innerHTML=`<button class="button primary" type="button" data-action="back-menu">${t('backToMenu')}</button>`;return;}
@@ -430,14 +455,15 @@ function renderCart() {
   }).join('');
   const kioskCaution=configuredOrders.some(o=>recipes[o.kind].estimated)?`<p class="kiosk-order-note">${esc(kioskMessages[lang].confirm)}</p>`:'';
   const extra=!staffMode&&recommend();
-  body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}${configuredLines}</ul>${kioskCaution}${extra?`<section class="order-bump"><img src="${photo(extra,160)}" width="64" height="70" alt="${esc(name(extra))}"><div><p>${t('bump')}</p><b>${esc(name(extra))}</b></div><button type="button" data-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra))}">+ ${money(extra.price)}</button></section>`:''}
+  body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}${configuredLines}</ul>${kioskCaution}${extra?`<section class="order-bump growth-offer" data-growth-offer="${extra.id}"><img src="${photo(extra,160)}" width="64" height="70" alt=""><div class="growth-offer-copy"><p>${t('bump')}</p><b>${esc(name(extra))}</b><small>${growthLabels[lang].regular}</small></div><div class="growth-offer-actions"><button type="button" data-growth-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra))}">+ ${money(extra.price)}</button><button type="button" class="growth-dismiss" data-growth-dismiss="${extra.id}">${growthLabels[lang].dismiss}</button></div></section>`:''}
     ${staffMode?`<details class="order-qr"><summary>${t('qr')}</summary><canvas id="order-qr" role="img" aria-label="${t('qr')}"></canvas><small>${t('qrNote')}</small></details>`:`<div class="serve-select" role="group" aria-label="${t('dineIn')} / ${t('takeaway')}"><button type="button" data-service="dineIn" aria-pressed="${service==='dineIn'}">${t('dineIn')}</button><button type="button" data-service="takeaway" aria-pressed="${service==='takeaway'}">${t('takeaway')}</button></div>`}`;
   $('cart-footer').innerHTML=`<div class="total-line"><span>${estimatedBasket()?kioskMessages[lang].estimated:t('total')}</span><strong>${estimatedBasket()?kioskMessages[lang].from+' ':''}${money(sum.price)}</strong></div>${staffMode?`<button class="button primary" type="button" data-action="edit-order">${t('editOrder')}</button><button class="clear-cart" type="button" data-action="copy-order">${t('copyOrder')}</button>`:`<button class="button primary" type="button" data-action="show-staff">${t('showStaff')} <span aria-hidden="true">↗</span></button><button class="clear-cart" type="button" data-action="clear-cart">${t('clearCart')}</button>`}<p class="checkout-note">${t('orderNote')}</p>`;
   if(staffMode){try{drawQR($('order-qr'),orderText());}catch{$('order-qr').parentElement.innerHTML=`<p class="qr-error">${t('qrError')}</p>`;}}
   body.scrollTop=top;
+  observeGrowthOffer(extra?.id);
   if(focusId&&focusDelta)body.querySelector(`[data-step-id="${focusId}"][data-step="${focusDelta}"]`)?.focus({preventScroll:true});
 }
-function openCart() {refreshCart();staffMode=false;renderCart();$('cart-dialog').showModal();}
+function openCart() {refreshCart();staffMode=false;renderCart();$('cart-dialog').showModal();trackGrowth('cart_open');}
 async function copyText(text,success,fallback) {try {if(!navigator.clipboard?.writeText)throw new Error('clipboard');await navigator.clipboard.writeText(text);notify(success);return true;}catch{fallback?.();return false;}}
 async function shareItem(id) {
   const p=byId.get(id);if(!p)return;const url=new URL(location.href);url.hash='';url.search='';url.searchParams.set('item',id);url.searchParams.set('lang',lang);url.searchParams.set('view',view);
@@ -466,6 +492,8 @@ document.addEventListener('click',async event=>{
   const d=button.dataset;
   if(d.close){$(d.close).close();return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
+  if(d.growthDismiss){growthOfferSuppressed=true;trackGrowth('offer_dismissed',d.growthDismiss);renderCart();return;}
+  if(d.growthAdd){const accepted=add(d.growthAdd);if(accepted){growthOfferSuppressed=true;trackGrowth('offer_accepted',d.growthAdd);renderCart();}return;}
   if(d.add){const added=add(d.add);if(added&&button.closest('#detail-dialog')&&$('detail-dialog').open)$('detail-dialog').close();return;}
   if(d.favorite){
     const wasLiked=favorites.has(d.favorite);
@@ -487,11 +515,11 @@ document.addEventListener('click',async event=>{
   if(d.service){service=d.service;save('service',service);renderCart();return;}
   if(d.action==='reset'){search='';$('search').value='';selectCategory('all');return;}
   if(d.action==='add-pair'){refreshCart();const next=addPair(cart,['428772','430226'],byId);if(!next){notify(t('limit'));return;}commitCart(next);notify(t('added')+' · Cappuccino + San Sebastian');return;}
-  if(d.action==='show-staff'){staffMode=true;renderCart();$('cart-content').scrollTop=0;$('cart-title').setAttribute('tabindex','-1');$('cart-title').focus();return;}
+  if(d.action==='show-staff'){staffMode=true;trackGrowth('staff_preview');renderCart();$('cart-content').scrollTop=0;$('cart-title').setAttribute('tabindex','-1');$('cart-title').focus();return;}
   if(d.action==='edit-order'){staffMode=false;renderCart();return;}
-  if(d.action==='clear-cart'){commitConfigured([]);commitCart({});return;}
+  if(d.action==='clear-cart'){commitConfigured([]);commitCart({});growthOfferSuppressed=false;growthOffersSeen.clear();trackGrowth('cart_cleared');return;}
   if(d.action==='back-menu'){$('cart-dialog').close();$('menu').scrollIntoView({block:'start'});return;}
-  if(d.action==='copy-order')await copyText(orderText(),t('orderCopied'),()=>{const text=document.createElement('textarea');text.className='copy-order-fallback';text.value=orderText();text.setAttribute('aria-label',t('copyOrder'));$('cart-content').append(text);text.focus();text.select();notify(t('selectCopy'));});
+  if(d.action==='copy-order'){const copied=await copyText(orderText(),t('orderCopied'),()=>{const text=document.createElement('textarea');text.className='copy-order-fallback';text.value=orderText();text.setAttribute('aria-label',t('copyOrder'));$('cart-content').append(text);text.focus();text.select();notify(t('selectCopy'));});if(copied)trackGrowth('order_copied');}
 });
 $('cart-open').addEventListener('click',openCart);$('mobile-cart-open').addEventListener('click',openCart);
 $('search-icon').innerHTML=icon('search');
@@ -528,6 +556,6 @@ const storySizeObserver=new ResizeObserver(()=>{
 });
 storySizeObserver.observe($('feed-stories'));
 kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null});
-renderLanguage();updateUrl();
+renderLanguage();updateUrl();trackGrowth('menu_visit');
 const linked=params.get('item');if(byId.has(linked))openDetail(linked,params.get('photo'));
 
