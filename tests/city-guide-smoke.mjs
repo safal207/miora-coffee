@@ -52,6 +52,14 @@ try{
   await page.waitForFunction(()=>{const image=document.querySelector('#city-gallery-photo');return image?.complete&&image.naturalWidth>0;});
   await gallery.scrollIntoViewIfNeeded();
   await page.screenshot({path:'artifacts/miora-four-gallery-'+lang+'-'+width+'.png'});
+  if(width>=800){
+    const gap=await page.evaluate(()=>{
+      const map=document.querySelector('.city-tour-figure').getBoundingClientRect();
+      const details=document.querySelector('.city-tour-bottom').getBoundingClientRect();
+      return details.top-map.bottom;
+    });
+    assert(gap>=0&&gap<36,'tour map and landmark story must stay visually adjacent on desktop');
+  }
   assert(await gallery.evaluate(el=>el.scrollWidth<=el.clientWidth+1),
     'gallery cannot create horizontal overflow on phone or desktop');
   assert.equal(await page.locator('#cart-open .cart-count').textContent(),cartBefore,
