@@ -8,6 +8,8 @@ import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from
 import {selectCartOffer,recordGrowthEvent} from './growth-engine.js?v=20261121-v1';
 import {readTasteMemory,setTasteMemoryEnabled,rememberTasteChoice,tasteSuggestions,TASTE_STORAGE_KEY} from './taste-memory.js?v=20261121-v1';
 import {USUAL_STORAGE_KEY,readUsual,saveUsual,forgetUsual,usualTotals,appendUsual} from './usual-order.js?v=20261121-v1';
+import {CITY_CATEGORY,CITY_ASSETS,CITY_COPY,cityNext,cityProducts} from './city-guide.js?v=20261121-v1';
+import {TOUR_SPOTS,TOUR_COPY,validTourSpot,nextTourSpot,getTourCopy} from './city-tour.js?v=20261121-v1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
@@ -123,7 +125,7 @@ function repeatUsual(){
   refreshCart();
   const saved=readUsual(localStorage,byId);
   const combined=appendUsual({cart,configuredOrders},saved,byId);
-  if(!combined){notify(usualCopy[lang].full);return;}
+  if(!combined){notify(usualCopy[lang].full);return false;}
   // Validate all quantities before either existing commit; nothing is silently dropped.
   commitCart(combined.cart);
   commitConfigured(combined.configuredOrders);
@@ -131,6 +133,94 @@ function repeatUsual(){
   renderTasteMemory();
   renderUsual();
   notify(t('added'));
+  return true;
+}
+const CITY_DISMISS_KEY='miora:city-guide-dismissed:v1';
+function cityDismissed(){try{return sessionStorage.getItem(CITY_DISMISS_KEY)==='1';}catch{return false;}}
+let cityStep='hello',cityHidden=cityDismissed(),cityTourSpot='houses';
+const cityHistory=[];
+function tourMarkup(c){
+  const words=TOUR_COPY[lang],selected=getTourCopy(lang,cityTourSpot);
+  const spots=TOUR_SPOTS.map((spot,i)=>{
+    const title=words[spot].label,pressed=spot===cityTourSpot;
+    return `<button type="button" class="city-tour-pin city-tour-pin-${spot}" data-city-spot="${spot}" aria-pressed="${pressed}" aria-label="${esc(title)}" title="${esc(title)}"><b aria-hidden="true">${i+1}</b></button>`;
+  }).join('');
+  const choices=TOUR_SPOTS.map((spot,i)=>{
+    const title=words[spot].label,pressed=spot===cityTourSpot;
+    return `<button type="button" class="city-tour-stop" data-city-spot="${spot}" aria-pressed="${pressed}"><span aria-hidden="true">${i+1}</span>${esc(title)}</button>`;
+  }).join('');
+  return `<section class="city-tour" aria-label="${esc(words.prompt)}"><figure class="city-tour-figure"><div class="city-tour-image"><img src="${CITY_ASSETS.panorama}" alt="${esc(words.photo)}" width="390" height="130" decoding="async" loading="lazy">${spots}</div><figcaption>${esc(words.hint)}</figcaption></figure><div class="city-tour-bottom"><div class="city-tour-stops" role="group" aria-label="${esc(words.prompt)}">${choices}</div><div class="city-tour-story" role="status" aria-live="polite" aria-atomic="true"><b id="city-tour-name">${esc(selected.label)}</b><p id="city-tour-description">${esc(selected.story)}</p></div><button class="city-tour-next" type="button" data-city-tour-next>${esc(words.next)} →</button><p class="city-guide-photo-note">${esc(c.privacy)}</p></div></section>`;
+}
+function selectTourSpot(spot){
+  if(cityStep!=='town'||!validTourSpot(spot))return;
+  cityTourSpot=spot;
+  const root=$('city-guide'),c=getTourCopy(lang,spot);
+  root.querySelectorAll('[data-city-spot]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.citySpot===spot)));
+  const title=root.querySelector('#city-tour-name'),detail=root.querySelector('#city-tour-description');
+  if(title)title.textContent=c.label;
+  if(detail)detail.textContent=c.story;
+}
+function setCityVisibility(visible){
+  cityHidden=!visible;
+  try{if(visible)sessionStorage.removeItem(CITY_DISMISS_KEY);
+      else sessionStorage.setItem(CITY_DISMISS_KEY,'1');}catch{}
+  renderCityGuide();
+}
+function focusCityDestination(){
+  $('result-title').setAttribute('tabindex','-1');
+  $('result-title').focus({preventScroll:true});
+}
+function renderCityGuide(focus=false){
+  const root=$('city-guide'),opener=$('city-open'),c=CITY_COPY[lang];
+  opener.textContent=c.reopen;
+  opener.hidden=!cityHidden;
+  root.hidden=cityHidden;
+  if(cityHidden){root.innerHTML='';return;}
+  const labels={
+    hello:[['family',c.familyChoice],['adults',c.adultChoice]],
+    family:[['tour',c.tour],['choose',c.pick]],
+    adults:[['choose',c.pick],['tour',c.tour]],
+    town:[['choose',c.pick]],
+    choose:[['coffee',c.coffeeChoice],['dessert',c.dessertChoice],['food',c.foodChoice]],
+    coffee:[['category',c.openCategory],['choose',c.pick]],
+    dessert:[['category',c.openCategory],['choose',c.pick]],
+    food:[['category',c.openCategory],['choose',c.pick]]
+  };
+  if(cityStep==='hello'&&readUsual(localStorage,byId))labels.hello.push(['usual',c.usual]);
+  if(favorites.size&&['family','adults','choose'].includes(cityStep))labels[cityStep].push(['favorites',c.favorites]);
+  const photos=cityStep==='town'
+    ?tourMarkup(c)
+    :cityStep==='hello'
+      ?`<img class="city-guide-preview" src="${CITY_ASSETS.panorama}" width="390" height="130" alt="${esc(c.panorama)}" loading="lazy">`:'';
+  const suggestions=['coffee','dessert','food'].includes(cityStep)
+    ?cityProducts(cityStep,products).map(p=>`<button type="button" class="city-guide-product" data-detail="${p.id}" aria-label="${esc(name(p)+' · '+money(p.price))}"><img src="${photo(p,160)}" alt="" width="60" height="60" loading="lazy"><span><b>${esc(name(p))}</b><small>${money(p.price)}</small></span></button>`).join(''):'';
+  const actions=(labels[cityStep]||[]).map(([action,label])=>`<button class="city-guide-choice" type="button" data-city-action="${action}">${esc(label)}</button>`).join('');
+  root.innerHTML=`<div class="city-guide-inner city-guide-step-${cityStep}"><div class="city-guide-copy"><p class="city-guide-eyebrow">${esc(c.eyebrow)}</p><h2 id="city-guide-title" tabindex="-1">${esc(c.title)}</h2><div class="city-guide-dialogue"><img src="assets/logo-source.jpg" alt="" width="38" height="38" decoding="async"><p class="city-guide-question">${esc(c[cityStep])}</p></div>${suggestions?`<div class="city-guide-products">${suggestions}</div>`:''}<div class="city-guide-actions">${actions}</div><div class="city-guide-secondary">${cityHistory.length?`<button type="button" data-city-action="back">${esc(c.back)}</button>`:''}<button type="button" data-city-action="skip">${esc(c.skip)}</button></div><p class="city-guide-privacy">${esc(c.notChat)}</p></div>${photos}</div>`;
+  root.setAttribute('aria-label',c.title);
+  if(focus)root.querySelector('#city-guide-title')?.focus({preventScroll:true});
+}
+function cityAction(action){
+  if(action==='usual'){
+    if(!readUsual(localStorage,byId)||!repeatUsual())return;
+    setCityVisibility(false);openCart();return;
+  }
+  if(action==='favorites'){
+    if(!favorites.size)return;
+    setCityVisibility(false);selectCategory('favorites');focusCityDestination();return;
+  }
+  if(action==='skip'||action==='category'){
+    const nextCategory=action==='category'?CITY_CATEGORY[cityStep]:'all';
+    setCityVisibility(false);
+    selectCategory(nextCategory||'all');focusCityDestination();return;
+  }
+  if(action==='back'){
+    cityStep=cityHistory.pop()||'hello';renderCityGuide(true);return;
+  }
+  const next=cityNext(cityStep,action);
+  if(!next)return;
+  if(next==='town')cityTourSpot='houses';
+  cityHistory.push(cityStep);cityStep=next;
+  renderCityGuide(true);
 }
 function renderLanguage() {
   document.documentElement.lang=lang;$('language').value=lang;
@@ -140,7 +230,7 @@ function renderLanguage() {
   $('feed-stories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',[t('feed'),t('grid'),t('list')].join(' / '));
   document.querySelectorAll('[data-close]').forEach(e=>e.setAttribute('aria-label',t('close')));
   document.querySelectorAll('[data-journey-copy]').forEach(node=>node.textContent=journeyCopy[lang][node.dataset.journeyCopy]);
-  renderTheme();renderCategories();renderProducts();renderTasteMemory();renderUsual();renderCartCount();kioskUI?.refresh();
+  renderTheme();renderCategories();renderProducts();renderTasteMemory();renderUsual();renderCityGuide();renderCartCount();kioskUI?.refresh();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
 function renderCategories() {
@@ -343,7 +433,7 @@ function toggleFavorite(id) {
   save('favorites',[...favorites]);document.querySelectorAll(`[data-favorite="${id}"]`).forEach(b=>b.setAttribute('aria-pressed',String(favorites.has(id))));syncSocialStats();
   document.querySelectorAll(`[data-saved="${id}"]`).forEach(el=>el.hidden=!favorites.has(id));
   if(category==='favorites')renderProducts();
-  renderTasteMemory();
+  renderTasteMemory();renderCityGuide();
 }
 function openDetail(id,variant='focus') {
   if(!byId.has(id))return;
@@ -540,6 +630,14 @@ document.addEventListener('click',async event=>{
   const d=button.dataset;
   if(d.close){$(d.close).close();return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
+  if(d.cityOpen!==undefined){cityStep='hello';cityHistory.length=0;setCityVisibility(true);renderCityGuide(true);$('city-guide').scrollIntoView({block:'start',behavior:'instant'});return;}
+  if(d.citySpot){selectTourSpot(d.citySpot);return;}
+  if(d.cityTourNext!==undefined){
+    selectTourSpot(nextTourSpot(cityTourSpot));
+    $('city-guide').querySelector('.city-tour-stops [data-city-spot="'+cityTourSpot+'"]')?.focus({preventScroll:true});
+    return;
+  }
+  if(d.cityAction){cityAction(d.cityAction);return;}
   if(d.tasteToggle!==undefined){
     const enabled=!readTasteMemory(localStorage,byId).enabled;
     if(!setTasteMemoryEnabled(localStorage,enabled,byId)){notify(t('storageError'));return;}
@@ -548,7 +646,7 @@ document.addEventListener('click',async event=>{
   if(d.tasteAdd){add(d.tasteAdd);return;}
   if(d.usualSave!==undefined){
     refreshCart();
-    if(saveUsual(localStorage,{cart,configuredOrders},byId)){renderUsual();notify(usualCopy[lang].saved);}
+    if(saveUsual(localStorage,{cart,configuredOrders},byId)){renderUsual();renderCityGuide();notify(usualCopy[lang].saved);}
     else notify(usualCopy[lang].failure);
     return;
   }
@@ -614,7 +712,7 @@ window.addEventListener('storage',event=>{
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();renderTasteMemory();if($('detail-dialog').open)renderDetail();}
   if(event.key===TASTE_STORAGE_KEY||event.key===null)renderTasteMemory();
-  if(event.key===USUAL_STORAGE_KEY||event.key===null){renderUsual();if($('cart-dialog').open)renderCart();}
+  if(event.key===USUAL_STORAGE_KEY||event.key===null){renderUsual();renderCityGuide();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:views'||event.key==='miora:shares'||event.key===null){const nextViews=load('views',{}),nextShares=load('shares',{});views=Object.fromEntries(Object.entries(nextViews&&typeof nextViews==='object'&&!Array.isArray(nextViews)?nextViews:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));shareCounts=Object.fromEntries(Object.entries(nextShares&&typeof nextShares==='object'&&!Array.isArray(nextShares)?nextShares:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));syncSocialStats();}
 });
 // Translated category labels can change the sticky row height.
