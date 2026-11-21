@@ -64,3 +64,19 @@ browser errors. Screenshots are uploaded for manual visual review.
 Release is stacked on draft PR #36 (Usual Order), #35 (Taste Memory)
 and #34 (Growth Engine). Main and production remain unchanged until
 the individual PRs have passed CI and review.
+
+## Visual QA follow-up (21 November 2026)
+
+The first CI screenshots revealed that the 390 px photo montage was stretched
+across a 1,000+ px desktop panel and that long three-column captions were too
+small on 320 px devices. The follow-up patch caps the image at 440 px on
+desktop, changes each region caption to one or two localized words, and gives
+the dialogue a small real Miora logo avatar and distinct speech surface.
+
+Choosing **Go straight to menu** or a category stores only a boolean in the
+current tab's `sessionStorage`: `miora:city-guide-dismissed:v1 = '1'`.
+It is deleted if the visitor explicitly reopens the guide. We do not store
+responses, age, family data or choices. The browser smoke asserts that reopening
+works after reload, the menu heading receives keyboard focus, the tour has no
+horizontal overflow at 320 px and the panorama is not oversized on desktop.
+Images remain cropped to exclude recognizable children.
