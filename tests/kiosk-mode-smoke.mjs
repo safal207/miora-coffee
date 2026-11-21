@@ -80,7 +80,7 @@ export async function verifyKioskMode(browser, origin) {
       const actions = await menu.locator('.quick-card-foot .quick-add').evaluateAll(buttons =>
         buttons.map(button => button.getBoundingClientRect().bottom));
       const cartBar = await page.locator('#mobile-cart-open').boundingBox();
-      assert(cartBar && Math.max(...actions) <= cartBar.y, 'food actions sit above the desktop cart bar');
+      assert(cartBar && Math.max(...actions) <= cartBar.y, `food actions end at ${Math.max(...actions)}, desktop cart bar starts at ${cartBar?.y}`);
     }
     if((lang === 'ru' && width === 320) || width === 390 || width === 1280) {
       await menu.locator('#quick-results img').evaluateAll(images => Promise.all(images.map(img => img.decode())));

@@ -25,7 +25,7 @@ test('one-column feed and mobile social controls do not replace the grid, galler
   assert.match(css, /@media \(max-width: 620px\)/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(html, /robys-feed-ux\.css\?v=20261117-counts1/);
-  assert.match(html, /app\.js\?v=20261122-framing1/);
+  assert.match(html, /app\.js\?v=20261122-family1/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
   assert.match(app, /if\(d\.favorite\)\{[\s\S]*?toggleFavorite\(d\.favorite\)/);
@@ -49,7 +49,10 @@ test('Instagram-style paper airplane and right-side actions are used on every ca
   assert.match(app, /data-share="\$\{p\.id\}" aria-label="\$\{esc\(t\('share'\)/);
   assert.match(css, /body:not\(\[data-view="feed"\]\) \.product-media \.product-social \{/);
   assert.match(css, /body\[data-view="list"\] \.product-media \.product-social button:first-child \{\s*display: flex;/);
-  assert.equal((app.match(/\$\{icon\('share'\)\}/g) || []).length, 4, 'share also appears in the statistics row');
+  const extra = app.slice(app.indexOf('function cardEngagement(id)'), app.indexOf('function socialStats(id)'));
+  assert.match(extra, /data-share-count=/);
+  assert.match(extra, /data-view-count=/);
+  assert.match(extra, /data-like-count=/);
 });
 
 test('per-device counters are explicit, and each card mode includes likes, shares and impressions', () => {

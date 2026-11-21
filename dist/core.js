@@ -19,11 +19,18 @@ export function updateCart(cart, id, delta, catalog) {
   if (qty <= 0) delete next[id]; else next[id] = qty;
   return next;
 }
-export function addPair(cart, ids, catalog) {
-  let next = normalizeCart(cart,catalog);
-  if (ids.some(id => !catalog.get(id)?.price || (next[id] || 0) >= 99)) return null;
-  for (const id of ids) next = updateCart(next,id,1,catalog);
+export function addBundle(cart, lines, catalog) {
+  const next = normalizeCart(cart, catalog);
+  for (const [id, quantity] of lines) {
+    const price = catalog.get(id)?.price;
+    const total = (next[id] || 0) + quantity;
+    if (!Number.isSafeInteger(price) || price <= 0 || !Number.isInteger(quantity) || quantity < 1 || total > 99) return null;
+    next[id] = total;
+  }
   return next;
+}
+export function addPair(cart, ids, catalog) {
+  return addBundle(cart, ids.map(id => [id, 1]), catalog);
 }
 export function fold(value) {return String(value).toLocaleLowerCase('tr').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i');}
 export function resolveView(requested, saved) {

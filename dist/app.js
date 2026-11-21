@@ -1,21 +1,32 @@
 import {hasCuratedCutaway} from './media-merchandising.js?v=20261117-curated1';
-import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261117-curated1';
+import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261122-family1';
 import {desireSections,journeyCopy,localizedJourney} from './desire-journey.js?v=20261112-generated1';
-import {videoStory,dessertStoryVisible} from './video-stories.js';
+import {videoStory,dessertStoryVisible,stories} from './video-stories.js?v=20261122-family1';
 import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto,photoKind,hasAlternatePhoto,photoVariants,hasRestagedPhoto} from './photos.js?v=20261117-curated1';
-import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
-import {mountKiosk} from './kiosk.js?v=20261112-videos1';
+import {normalizeCart,totals,updateCart,addPair,addBundle,filterProducts,resolveView} from './core.js?v=20261122-family1';
+import {mountKiosk} from './kiosk.js?v=20261122-family1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
-import {previewForSelection} from './sandwich-preview.js';
-import {breakfastVisualForSelection,breakfastCopy} from './breakfast-preview.js';
+import {previewForSelection,sandwichIdeas,localizedIdea} from './sandwich-preview.js';
+import {breakfastVisualForSelection,breakfastCopy,breakfastIdeas,localizedBreakfastIdea} from './breakfast-preview.js';
 import {identityFor,diversifyPhotoOrder,storyCoverIds} from './visual-merchandising.js?v=20261112-covers1';
-import {mountKioskMode,kioskCopy,kioskPairs} from './kiosk-mode.js?v=20261122-framing1';
+import {mountKioskMode,kioskCopy,kioskPairs} from './kiosk-mode.js?v=20261122-family1';
 import {dishFrameStyle} from './photo-framing.js';
+import {familyCombos,familyCopy,renderFamilyVisit} from './family-visit.js';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
+const socialCards = new Map([
+  ...Object.entries(familyCombos).map(([id,combo]) => [id,{title:lang=>combo.title[lang]}]),
+  ['family-care',{title:lang=>familyCopy[lang].room}],
+  ...Object.entries(kioskPairs).map(([key,ids]) => ['pair-'+key,{pairs:true,title:lang=>ids.map(id=>byId.get(id).name[lang]).join(' + ')}]),
+  ...Object.entries(recipes).map(([kind,recipe]) => ['build-'+kind,{kind,title:lang=>localized(recipe.name,lang)}]),
+  ...sandwichIdeas.map(idea => ['idea-sandwich-'+idea.id,{kind:'sandwich',idea:idea.id,title:lang=>localizedIdea(idea,lang).name}]),
+  ...breakfastIdeas.map(idea => ['idea-breakfast-'+idea.id,{kind:'breakfast',idea:idea.id,title:lang=>localizedBreakfastIdea(idea,lang)}]),
+  ...Object.entries(stories).map(([key,story]) => ['video-'+key,{title:lang=>story.title[lang],url:'https://www.instagram.com/p/'+story.code+'/'}])
+]);
+const hasSocialCard = id => byId.has(id) || socialCards.has(id);
 const svgPaths = {
   coffee:'<path d="M4 8h12v6a6 6 0 0 1-12 0V8Zm12 1h2a3 3 0 0 1 0 6h-2M3 21h15M7 2v3m5-3v3"/>',
   tea:'<path d="M4 10h13v5a6.5 6.5 0 0 1-13 0v-5Zm13 1h2a3 3 0 0 1 0 6h-2M8 2c-3 3 3 3 0 6m5-6c-3 3 3 3 0 6"/>',
@@ -64,17 +75,18 @@ let cart=normalizeCart(load('cart',{}),byId);
 let configuredOrders=normalizeOrders(load('configured-orders',[]));
 let kioskUI;
 let favoriteIds=load('favorites',[]); if(!Array.isArray(favoriteIds))favoriteIds=[];
-let favorites=new Set(favoriteIds.filter(id=>byId.has(id)));
+let favorites=new Set(favoriteIds.filter(hasSocialCard));
 let view=resolveView(params.get('view'),load('view',null));
 let kioskActive=params.get('view')==='kiosk';
 const requestedCategory=params.get('category');
 let category=['all','featured',...categories.map(c=>c.id)].includes(requestedCategory)?requestedCategory:view==='feed'?'all':'featured', search='', detailId=null, staffMode=false;
 let service=load('service','dineIn'); if(!['dineIn','takeaway'].includes(service))service='dineIn';
-let views=load('views',{}); if(!views||typeof views!=='object'||Array.isArray(views))views={};
-views=Object.fromEntries(Object.entries(views).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));
-let shareCounts=load('shares',{});
-if(!shareCounts||typeof shareCounts!=='object'||Array.isArray(shareCounts))shareCounts={};
-shareCounts=Object.fromEntries(Object.entries(shareCounts).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));
+function loadCounts(key) {
+  const value=load(key,{});
+  if(!value||typeof value!=='object'||Array.isArray(value))return {};
+  return Object.fromEntries(Object.entries(value).filter(([id,n])=>hasSocialCard(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));
+}
+let views=loadCounts('views'),shareCounts=loadCounts('shares');
 let pendingShareId=null;
 const viewedThisSession=new Set();
 let feedObserver=null;
@@ -82,6 +94,7 @@ const feedViewTimers=new Map();
 let toastTimer,disposeSpotlight=()=>{},disposeGalleries=()=>{},detailVariant='focus',detailFullPhoto=false;
 const t = key => messages[lang][key]||messages.tr[key]||key;
 const name = item => item.name[lang]||item.name.tr;
+const socialName = id => byId.has(id) ? name(byId.get(id)) : socialCards.get(id)?.title(lang);
 const money = value => new Intl.NumberFormat(lang==='tr'?'tr-TR':lang==='ru'?'ru-RU':'en-GB',{maximumFractionDigits:2}).format(value/100)+' ₺';
 function notify(text) {clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,2600);}
 function menuUrl(kiosk) {
@@ -97,6 +110,7 @@ function updateUrl() {
   target.hash='';
   target.searchParams.delete('item');
   target.searchParams.delete('photo');
+  target.searchParams.delete('card');
   const link=$('kiosk-toggle');
   link.href=target.href;
   link.setAttribute('aria-label',kioskCopy[lang][kioskActive?'exit':'entry']);
@@ -112,7 +126,13 @@ function renderLanguage() {
   $('feed-stories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',[t('feed'),t('grid'),t('list')].join(' / '));
   document.querySelectorAll('[data-close]').forEach(e=>e.setAttribute('aria-label',t('close')));
   document.querySelectorAll('[data-journey-copy]').forEach(node=>node.textContent=journeyCopy[lang][node.dataset.journeyCopy]);
-  renderTheme();renderCategories();renderProducts();renderCartCount();kioskUI?.refresh();
+  document.querySelectorAll('[data-family-entry]').forEach(link=>link.textContent=familyCopy[lang].entry);
+  $('quick-social-scope').textContent=socialCopy[lang].scope;
+  document.querySelectorAll('[data-builder-card]').forEach(card=>card.lastElementChild.innerHTML=cardEngagement(card.dataset.builderCard));
+  $('welcome-caption').textContent=familyCopy[lang].welcome;
+  $('pairing-social').innerHTML=cardEngagement('pair-cappuccino');
+  renderFamilyVisit($('family'),{byId,lang,money,esc,name,social:cardEngagement});
+  kioskUI?.refresh();renderTheme();renderCategories();renderProducts();renderCartCount();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
 function renderCategories() {
@@ -127,10 +147,20 @@ const flavorChip=item=>{
  return name?'<span class="miora-photo-identity">'+esc(name)+'</span>':'';
 };
 const socialCopy={
-  ru:{likes:'Лайки',shares:'Поделились или скопировали',views:'Просмотры',scope:'На этом устройстве'},
-  tr:{likes:'Beğeniler',shares:'Paylaşılan veya kopyalanan',views:'Görüntüleme',scope:'Bu cihazda'},
-  en:{likes:'Likes',shares:'Shared or copied',views:'Views',scope:'On this device'}
+  ru:{likes:'Лайки',shares:'Поделились или скопировали',views:'Просмотры',scope:'На этом устройстве',like:'Нравится',liked:'Лайк сохранён',unliked:'Лайк снят'},
+  tr:{likes:'Beğeniler',shares:'Paylaşılan veya kopyalanan',views:'Görüntüleme',scope:'Bu cihazda',like:'Beğen',liked:'Beğenildi',unliked:'Beğeni kaldırıldı'},
+  en:{likes:'Likes',shares:'Shared or copied',views:'Views',scope:'On this device',like:'Like',liked:'Liked',unliked:'Like removed'}
 };
+function cardEngagement(id) {
+  const label=socialName(id),c=socialCopy[lang];
+  if(!label)return '';
+  return `<div class="card-engagement" role="group" aria-label="${esc(label+' · '+c.scope)}" title="${esc(c.scope)}">
+    <span class="card-views" title="${esc(c.views)}">${icon('eye')}<b data-view-count="${id}">${views[id]||0}</b><span class="sr-only">${esc(c.views)}</span></span>
+    <button type="button" data-favorite="${id}" aria-pressed="${favorites.has(id)}" aria-label="${esc(c.like+' · '+label)}">${icon('heart')}<b data-like-count="${id}">${favorites.has(id)?1:0}</b></button>
+    <button type="button" data-share="${id}" title="${esc(c.shares)}" aria-label="${esc(t('share')+' · '+label)}">${icon('share')}<b data-share-count="${id}">${shareCounts[id]||0}</b></button>
+    <small class="engagement-scope">${esc(c.scope)}</small>
+  </div>`;
+}
 function socialStats(id) {
   const c=socialCopy[lang],like=favorites.has(id)?1:0,share=shareCounts[id]||0,seen=views[id]||0;
   return `<div class="social-stats" role="group" aria-label="${esc(c.scope)}" title="${esc(c.scope)}">
@@ -140,13 +170,14 @@ function socialStats(id) {
     <span class="social-stats-scope">${esc(c.scope)}</span></div>`;
 }
 function syncSocialStats() {
+  document.querySelectorAll('[data-favorite]').forEach(el=>el.setAttribute('aria-pressed',String(favorites.has(el.dataset.favorite))));
   document.querySelectorAll('[data-like-count]').forEach(el=>el.textContent=favorites.has(el.dataset.likeCount)?1:0);
   document.querySelectorAll('[data-share-count]').forEach(el=>el.textContent=shareCounts[el.dataset.shareCount]||0);
   document.querySelectorAll('[data-view-count]').forEach(el=>el.textContent=views[el.dataset.viewCount]||0);
 }
 function recordShare(id) {
-  if(!byId.has(id))return;
-  shareCounts[id]=Math.min((shareCounts[id]||0)+1,1000000);
+  if(!hasSocialCard(id))return;
+  shareCounts[id]=Math.min(Math.max(shareCounts[id]||0,loadCounts('shares')[id]||0)+1,1000000);
   save('shares',shareCounts);
   syncSocialStats();
 }
@@ -169,7 +200,7 @@ function renderProducts() {
   }
   const videoSlot=$('dessert-video');
   videoSlot.hidden=!dessertStoryVisible(category,search);
-  videoSlot.innerHTML=videoSlot.hidden?'':videoStory('dessert',lang,{compact:true});
+  videoSlot.innerHTML=videoSlot.hidden?'':videoStory('dessert',lang,{compact:true,social:cardEngagement});
   const list=filterProducts(products,{category,search,favorites:[...favorites],featured});
   const displayList=!search&&!['all','featured','favorites'].includes(category)?diversifyPhotoOrder(list):list;
   const label=category==='featured'?t('featured'):category==='all'?(search?t('searchResults'):t('all')):category==='favorites'?t('favorites'):categories.find(c=>c.id===category)?.name[lang]||t('all');
@@ -183,7 +214,7 @@ function renderProducts() {
   $('empty-state').hidden=list.length>0;$('products').className='product-grid'+(view==='list'?' list-view':view==='feed'?' feed-view':'');
   $('view-feed').setAttribute('aria-pressed',String(view==='feed'));$('view-grid').setAttribute('aria-pressed',String(view==='grid'));$('view-list').setAttribute('aria-pressed',String(view==='list'));$('search-clear').hidden=!search;
   if(view==='feed'){
-    if(!search&&category!=='favorites')disposeSpotlight=mountSpotlight($('menu-spotlight'),displayList,{lang,name,money});
+    if(!search&&category!=='favorites')disposeSpotlight=mountSpotlight($('menu-spotlight'),displayList,{lang,name,money,social:cardEngagement});
     $('spotlight-disclosure').hidden=$('menu-spotlight').hidden;
     const copy=journeyCopy[lang],sections=desireSections(displayList,{category,search,categories});
     const index=sections.length>1?`<details class="journey-index"><summary>${esc(copy.find)}</summary><div class="journey-links">${sections.map(g=>`<button type="button" data-journey-jump="${g.id}">${esc(localizedJourney(g.title,lang))}<small>${g.items.length}</small></button>`).join('')}</div></details>`:'';
@@ -255,7 +286,7 @@ function feedPost(p) {
     <div class="post-order"><div><strong>${p.price===null?t('ask'):money(p.price)}</strong><span data-post-qty="${p.id}" ${qty?'':'hidden'}>${t('inOrder')}: ${qty}</span></div>${p.price===null?`<button class="button secondary feed-add" type="button" data-detail="${p.id}">${t('detail')}</button>`:`<button class="button primary feed-add" type="button" data-add="${p.id}" aria-label="${esc(t('addToOrder')+' · '+name(p))}">${copy.add}</button>`}</div></article>`;
 }
 function recordView(id) {
-  if(!byId.has(id)||viewedThisSession.has(id))return;
+  if(!hasSocialCard(id)||viewedThisSession.has(id))return;
   const stored=load('views',{}),current=stored&&Number.isSafeInteger(stored[id])&&stored[id]>=0?stored[id]:0;
   views[id]=Math.min(Math.max(views[id]||0,current)+1,1000000);viewedThisSession.add(id);save('views',views);
   document.querySelectorAll(`[data-view-count="${id}"]`).forEach(el=>el.textContent=views[id]);
@@ -266,10 +297,19 @@ function stopFeedViews() {
 }
 function startFeedViews() {
   stopFeedViews();
-  if(kioskActive||!('IntersectionObserver' in window))return;
-  feedObserver=new IntersectionObserver(entries=>{for(const entry of entries){const id=entry.target.dataset.viewId;clearTimeout(feedViewTimers.get(id));feedViewTimers.delete(id);
-    if(entry.intersectionRatio>=.65&&!document.hidden&&!document.querySelector('dialog[open]')&&!viewedThisSession.has(id))feedViewTimers.set(id,setTimeout(()=>{feedViewTimers.delete(id);if(!document.hidden&&!document.querySelector('dialog[open]')&&entry.target.isConnected)recordView(id);},1000));
-  }},{threshold:[0,.65],rootMargin:`-${document.querySelector('.header').offsetHeight+$('toolbar').offsetHeight}px 0px 0px 0px`});
+  if(!('IntersectionObserver' in window)||document.hidden||document.querySelector('dialog[open]'))return;
+  feedObserver=new IntersectionObserver(entries=>{
+    for(const {target,intersectionRatio} of entries){
+      const id=target.dataset.viewId;
+      clearTimeout(feedViewTimers.get(target));
+      feedViewTimers.delete(target);
+      if(intersectionRatio<.65||viewedThisSession.has(id))continue;
+      feedViewTimers.set(target,setTimeout(()=>{
+        feedViewTimers.delete(target);
+        if(!document.hidden&&!document.querySelector('dialog[open]')&&target.isConnected)recordView(id);
+      },1000));
+    }
+  },{threshold:[0,.65],rootMargin:`-${document.querySelector('.header').offsetHeight}px 0px 0px 0px`});
   document.querySelectorAll('[data-view-id]').forEach(el=>feedObserver.observe(el));
 }
 function likePhoto(id,button) {
@@ -320,9 +360,12 @@ function add(id) {
   return true;
 }
 function toggleFavorite(id) {
-  if(!byId.has(id))return;
-  if(favorites.has(id)){favorites.delete(id);notify(t('favoriteRemoved'));}else{favorites.add(id);notify(t('favoriteAdded'));}
-  save('favorites',[...favorites]);document.querySelectorAll(`[data-favorite="${id}"]`).forEach(b=>b.setAttribute('aria-pressed',String(favorites.has(id))));syncSocialStats();
+  if(!hasSocialCard(id))return;
+  const saved=load('favorites',null);
+  if(Array.isArray(saved))favorites=new Set(saved.filter(hasSocialCard));
+  if(favorites.has(id)){favorites.delete(id);notify(byId.has(id)?t('favoriteRemoved'):socialCopy[lang].unliked);}
+  else{favorites.add(id);notify(byId.has(id)?t('favoriteAdded'):socialCopy[lang].liked);}
+  save('favorites',[...favorites]);syncSocialStats();
   document.querySelectorAll(`[data-saved="${id}"]`).forEach(el=>el.hidden=!favorites.has(id));
   if(category==='favorites')renderProducts();
 }
@@ -368,12 +411,13 @@ function renderDetail() {
     <div class="detail-copy"><p class="eyebrow">${esc(c.name[lang])}</p><h2 id="detail-title">${esc(name(p))}</h2><div class="detail-metrics">${p.kcal&&!p.calorieReview?`<span class="metric">${icon('flame')}${esc(p.kcal)}</span>`:''}${p.time?`<span class="metric">${icon('clock')}${p.time} ${t('minutes')}</span>`:''}${p.price!==null?`<span class="metric detail-price">${money(p.price)}</span>`:''}</div>
     <p class="photo-provenance">${esc(photoKind(p,detailVariant)==='generated'&&!hasRestagedPhoto(p)?(lang==='ru'?'AI-пример подачи, созданный по названию и составу меню; это не фотография блюда Miora.':lang==='en'?'AI serving illustration created from the menu name and ingredients; not a photograph of the actual Miora dish.':'Menü adı ve içeriğine göre oluşturulmuş yapay zekâ servis örneğidir; gerçek Miora ürün fotoğrafı değildir.'):(photoKind(p,detailVariant)==='illustration'||hasRestagedPhoto(p)&&detailVariant!=='original')?(lang==='ru'?'Изображение из меню переработано с помощью ИИ; подача и выбранный вариант могут отличаться.':lang==='en'?'AI-restyled source-menu image; serving and recipe variant may differ.':'Kaynak menü görseli yapay zekâ ile düzenlenmiştir; servis ve tarif seçeneği farklı olabilir.'):hasPhoto(p)?journeyCopy[lang].photo:journeyCopy[lang].noPhoto)}</p>
     <p class="detail-allergen-quick">${p.allergens.length?`${esc(detailCopy[lang].allergen)}: ${esc(p.allergens.map(a=>t(a)).join(", "))} · ${esc(detailCopy[lang].check)}`:esc(detailCopy[lang].unknown)}</p>
+    ${socialStats(p.id)}
     ${p.price===null?`<section class="detail-section"><h3>${t('ask')}</h3><p>${t('priceMissing')}</p></section>`:''}
     <details class="detail-more"><summary>${esc(detailCopy[lang].more)}</summary><div class="detail-more-body">
       ${lang!=='tr'?`<p class="original-name" lang="tr">${esc(p.name.tr)}</p>`:''}
     ${photoVariants(p).includes('original')?`<button type="button" class="detail-source-toggle" data-detail="${p.id}" data-source-view="${detailVariant==='original'?'focus':'original'}">${motionCopy[lang][detailVariant==='original'?'cover':'source']}</button>`:''}
     ${hasCuratedCutaway(p)?`<details class="detail-cutaway"><summary>${esc(cutawayCopy[lang].title)}</summary><div class="detail-cutaway-content"><img src="${photo(p,640,'inside')}" ${photoSet(p,'(max-width: 620px) calc(100vw - 64px), 460px','inside')} width="640" height="480" loading="lazy" decoding="async" alt="${esc(cutawayCopy[lang].alt)}"><p>${esc(cutawayCopy[lang].note)}</p></div></details>`:''}
-    ${p.id==='430356'?videoStory('croissant',lang,{compact:true}):p.id==='431203'?videoStory('breakfast',lang,{compact:true}):''}
+    ${p.id==='430356'?videoStory('croissant',lang,{compact:true,social:cardEngagement}):p.id==='431203'?videoStory('breakfast',lang,{compact:true,social:cardEngagement}):''}
     <section class="detail-section"><h3>${t('ingredients')}</h3>${p.description?`<p lang="tr">${esc(p.description)}</p>${lang!=='tr'?`<p class="detail-disclaimer">${t('originalRecipe')}</p>`:''}`:`<p>${t('noIngredients')}</p>`}</section>
     <section class="detail-section"><h3>${t('allergens')}</h3>${p.allergens.length?`<div class="allergens">${p.allergens.map(a=>`<span>${t(a)}</span>`).join('')}</div>`:`<p>${t('noAllergens')}</p>`}<p class="detail-disclaimer">${t('allergenNote')}</p>${p.kcal?`<p class="detail-disclaimer">${p.calorieReview?t('reviewCalorie'):t('calorieNote')}</p>`:''}</section><div class="views">${icon('eye')}${views[p.id]||0} · ${t('localViews')}</div>
     </div></details>
@@ -495,9 +539,16 @@ function renderCart() {
 function openCart() {refreshCart();staffMode=false;renderCart();$('cart-dialog').showModal();}
 async function copyText(text,success,fallback) {try {if(!navigator.clipboard?.writeText)throw new Error('clipboard');await navigator.clipboard.writeText(text);notify(success);return true;}catch{fallback?.();return false;}}
 async function shareItem(id) {
-  const p=byId.get(id);if(!p)return;const url=new URL(location.href);url.hash='';url.search='';url.searchParams.set('item',id);url.searchParams.set('lang',lang);url.searchParams.set('view',view);
-  if(navigator.share){try{await navigator.share({title:'Miora Coffee · '+name(p),text:name(p),url:url.href});recordShare(id);return;}catch(e){if(e.name==='AbortError')return;}}
-  pendingShareId=id;$('share-title').textContent=t('share')+' · Miora';$('share-description').textContent=name(p)+' — '+t('shareDescription');$('share-link').value=url.href;$('copy-link').textContent=t('copy');$('share-dialog').showModal();
+  const label=socialName(id);if(!label)return;
+  const card=socialCards.get(id),url=new URL(card?.url||location.href);
+  if(!card?.url){
+    url.hash='';url.search='';
+    url.searchParams.set(byId.has(id)?'item':'card',id);
+    url.searchParams.set('lang',lang);
+    url.searchParams.set('view',card?.pairs||kioskActive?'kiosk':view);
+  }
+  if(navigator.share){try{await navigator.share({title:'Miora Coffee · '+label,text:label,url:url.href});recordShare(id);return;}catch(e){if(e.name==='AbortError')return;}}
+  pendingShareId=id;$('share-title').textContent=t('share')+' · Miora';$('share-description').textContent=label+' — '+t('shareDescription');$('share-link').value=url.href;$('copy-link').textContent=t('copy');$('share-dialog').showModal();
 }
 function showCategoryResults() {
   const header=document.querySelector('.header').offsetHeight;
@@ -517,6 +568,8 @@ function selectCategory(id) {
 }
 
 document.addEventListener('click',async event=>{
+  const video=event.target.closest('a.video-story-open');
+  if(video)recordView('video-'+video.closest('[data-video-story]').dataset.videoStory);
   const button=event.target.closest('button,a[data-action]');if(!button)return;
   const d=button.dataset;
   if(d.close){$(d.close).close();return;}
@@ -537,6 +590,15 @@ document.addEventListener('click',async event=>{
     return;
   }
   if(d.share){await shareItem(d.share);return;}
+  if(Object.hasOwn(familyCombos,d.familyAdd)){
+    const id=d.familyAdd;
+    refreshCart();
+    const next=addBundle(cart,familyCombos[id].lines,byId);
+    if(!next){notify(t('limit'));return;}
+    commitCart(next);
+    notify(t('added')+' · '+socialName(id));
+    return;
+  }
   if(button.hasAttribute('data-video-desserts')){selectCategory('46818');$('result-title').setAttribute('tabindex','-1');$('result-title').focus({preventScroll:true});return;}
   if(d.journeyJump){const section=$('collection-'+d.journeyJump);if(section){const offset=document.querySelector('.header').offsetHeight+(view==='feed'?$('feed-stories').offsetHeight:0)+$('toolbar').offsetHeight+8;window.scrollTo({top:Math.max(0,section.getBoundingClientRect().top+scrollY-offset),behavior:'instant'});section.querySelector('h3')?.setAttribute('tabindex','-1');section.querySelector('h3')?.focus({preventScroll:true});}return;}
   if(d.category){selectCategory(d.category);return;}
@@ -616,8 +678,8 @@ document.addEventListener('error',event=>{
 window.addEventListener('storage',event=>{
   if(event.key==='miora:cart'||event.key===null){refreshCart();renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
-  if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();if($('detail-dialog').open)renderDetail();}
-  if(event.key==='miora:views'||event.key==='miora:shares'||event.key===null){const nextViews=load('views',{}),nextShares=load('shares',{});views=Object.fromEntries(Object.entries(nextViews&&typeof nextViews==='object'&&!Array.isArray(nextViews)?nextViews:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));shareCounts=Object.fromEntries(Object.entries(nextShares&&typeof nextShares==='object'&&!Array.isArray(nextShares)?nextShares:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));syncSocialStats();}
+  if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(hasSocialCard):[]);if(category==='favorites')renderProducts();syncSocialStats();}
+  if(event.key==='miora:views'||event.key==='miora:shares'||event.key===null){views=loadCounts('views');shareCounts=loadCounts('shares');syncSocialStats();}
 });
 // Translated category labels can change the sticky row height.
 const storySizeObserver=new ResizeObserver(()=>{
@@ -625,8 +687,19 @@ const storySizeObserver=new ResizeObserver(()=>{
   if(height)document.documentElement.style.setProperty('--stories-h',height+'px');
 });
 storySizeObserver.observe($('feed-stories'));
-const kioskMenu=mountKioskMode({byId,getLanguage:()=>lang,name,money,t,esc,icon,kioskFor,kioskBread,menuPrice,quantity:id=>cart[id]||0});
-kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null});
+const kioskMenu=mountKioskMode({byId,getLanguage:()=>lang,name,money,t,esc,icon,kioskFor,kioskBread,menuPrice,quantity:id=>cart[id]||0,social:cardEngagement,onCardsRendered:startFeedViews});
+kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null,social:cardEngagement,
+  onOpen:(kind,idea)=>{stopFeedViews();recordView(idea?'idea-'+kind+'-'+idea:'build-'+kind);}});
 renderLanguage();updateUrl();
 const linked=params.get('item');if(byId.has(linked))openDetail(linked,params.get('photo'));
+const sharedId=params.get('card'),sharedCard=socialCards.get(sharedId);
+if(sharedCard?.kind)kioskUI.open(sharedCard.kind,null,null,null,sharedCard.idea);
+else if(sharedCard){
+  if(sharedCard.pairs&&kioskActive)kioskMenu.showPairs();
+  const target=$(sharedId);
+  if(target)requestAnimationFrame(()=>{target.tabIndex=-1;target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'instant'});});
+}
+const welcome=$('miora-welcome');
+welcome.hidden=false;
+setTimeout(()=>welcome.hidden=true,matchMedia('(prefers-reduced-motion: reduce)').matches?700:1300);
 

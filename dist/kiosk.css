@@ -238,14 +238,14 @@
 .kiosk-feature p{font-size:13px;color:#f5f1e8;line-height:1.5;max-width:300px}
 .kiosk-feature-button{background:#f3d6ab;color:#182d24;display:inline-flex;align-items:center;justify-content:space-between;gap:24px;border-radius:99px;min-height:49px;padding:11px 23px;font-weight:800;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
 .kiosk-feature-button:hover{background:#fff0d2;transform:translateY(-1px)}
-.kiosk-feature-button:focus-visible,.kiosk-idea button:focus-visible{outline:3px solid #eac78d;outline-offset:3px}
+.kiosk-feature-button:focus-visible,.kiosk-idea>button:focus-visible{outline:3px solid #eac78d;outline-offset:3px}
 .kiosk-idea-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:6px 0 11px}
 .kiosk-idea-head h4{font:normal clamp(22px,4vw,28px)/1.2 Georgia,serif}
 .kiosk-idea-head p{color:var(--muted);font-size:11px;margin-top:4px}
 .kiosk-idea-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
 .kiosk-idea{min-width:0}
-.kiosk-idea button{display:flex;flex-direction:column;text-align:left;width:100%;height:100%;min-height:220px;padding:0 0 11px;border-radius:15px;overflow:hidden;border:1px solid var(--line);background:var(--card);transition:transform .16s,border-color .16s}
-.kiosk-idea button:hover{border-color:var(--teal);transform:translateY(-2px)}
+.kiosk-idea>button{display:flex;flex-direction:column;text-align:left;width:100%;height:100%;min-height:220px;padding:0 0 11px;border-radius:15px;overflow:hidden;border:1px solid var(--line);background:var(--card);transition:transform .16s,border-color .16s}
+.kiosk-idea>button:hover{border-color:var(--teal);transform:translateY(-2px)}
 .kiosk-idea img{width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--soft)}
 .kiosk-idea-name{font-size:12px;font-weight:800;line-height:1.25;margin:11px 10px 0}
 .kiosk-idea small{color:var(--muted);font-size:10px;line-height:1.35;overflow-wrap:anywhere;margin:5px 10px}
@@ -261,7 +261,7 @@
  .kiosk-idea-list{display:flex;overflow-x:auto;padding-bottom:8px;gap:9px;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
  .kiosk-idea-list::-webkit-scrollbar{display:none}
  .kiosk-idea{flex:0 0 clamp(158px,48vw,207px);scroll-snap-align:start}
- .kiosk-idea button{min-height:210px}
+ .kiosk-idea>button{min-height:210px}
 }
 @media(max-width:620px){
  .kiosk-feature{min-height:280px;margin:2px 0 18px;border-radius:17px;align-items:flex-end}
@@ -283,7 +283,7 @@
  .kiosk-feature{min-height:260px}
  .kiosk-finished>img{max-height:205px}
 }
-@media(prefers-reduced-motion:reduce){.kiosk-feature-button,.kiosk-idea button{transition:none;transform:none}}
+@media(prefers-reduced-motion:reduce){.kiosk-feature-button,.kiosk-idea>button{transition:none;transform:none}}
 
 /* Make the sandwich builder discoverable above the fold without replacing Miora's original cafe hero. */
 .hero-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -469,15 +469,15 @@
 .kiosk-breakfast-idea-heading h4{font:normal clamp(22px,4vw,27px)/1.1 Georgia,serif}
 .kiosk-breakfast-ideas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:27px}
 .kiosk-breakfast-idea{min-width:0}
-.kiosk-breakfast-idea button{
+.kiosk-breakfast-idea>button{
   width:100%;height:100%;min-height:203px;text-align:left;display:flex;flex-direction:column;
   padding:0 0 12px;background:var(--card);border:1px solid var(--line);
   border-radius:14px;overflow:hidden;transition:transform .16s,border-color .16s;
 }
-.kiosk-breakfast-idea button:hover{transform:translateY(-2px);border-color:var(--teal)}
-.kiosk-breakfast-idea button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.kiosk-breakfast-idea>button:hover{transform:translateY(-2px);border-color:var(--teal)}
+.kiosk-breakfast-idea>button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .kiosk-breakfast-idea img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--soft)}
-.kiosk-breakfast-idea button span{padding:9px 11px 0;color:var(--ink);font-weight:700;font-size:12px;line-height:1.35}
+.kiosk-breakfast-idea>button span{padding:9px 11px 0;color:var(--ink);font-weight:700;font-size:12px;line-height:1.35}
 .kiosk-breakfast-finished figcaption{gap:6px}
 .kiosk-breakfast-included{font-size:11px!important;line-height:1.5;color:var(--muted);padding:1px 0 7px}
 .kiosk-cart-breakfast:not(.kiosk-cart-staff) .kiosk-cart-showcase>img{object-position:center 54%}
@@ -493,7 +493,7 @@
   .kiosk-breakfast-ideas{display:flex;overflow-x:auto;gap:9px;padding:0 0 8px;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none}
   .kiosk-breakfast-ideas::-webkit-scrollbar{display:none}
   .kiosk-breakfast-idea{flex:0 0 clamp(164px,54vw,216px);scroll-snap-align:start}
-  .kiosk-breakfast-idea button{min-height:190px}
+  .kiosk-breakfast-idea>button{min-height:190px}
   .kiosk-breakfast-included{font-size:10px!important}
 }
 @media(max-width:360px){
@@ -502,7 +502,7 @@
   .kiosk-breakfast-idea{flex-basis:164px}
 }
 @media(prefers-reduced-motion:reduce){
-  .kiosk-breakfast-idea button{transition:none;transform:none}
+  .kiosk-breakfast-idea>button{transition:none;transform:none}
 }
 
 
