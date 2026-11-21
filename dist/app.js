@@ -398,7 +398,7 @@ function toggleFavorite(id) {
   save('favorites',[...favorites]);document.querySelectorAll(`[data-favorite="${id}"]`).forEach(b=>b.setAttribute('aria-pressed',String(favorites.has(id))));syncSocialStats();
   document.querySelectorAll(`[data-saved="${id}"]`).forEach(el=>el.hidden=!favorites.has(id));
   if(category==='favorites')renderProducts();
-  renderTasteMemory();
+  renderTasteMemory();renderCityGuide();
 }
 function openDetail(id,variant='focus') {
   if(!byId.has(id))return;
@@ -605,7 +605,7 @@ document.addEventListener('click',async event=>{
   if(d.tasteAdd){add(d.tasteAdd);return;}
   if(d.usualSave!==undefined){
     refreshCart();
-    if(saveUsual(localStorage,{cart,configuredOrders},byId)){renderUsual();notify(usualCopy[lang].saved);}
+    if(saveUsual(localStorage,{cart,configuredOrders},byId)){renderUsual();renderCityGuide();notify(usualCopy[lang].saved);}
     else notify(usualCopy[lang].failure);
     return;
   }
@@ -671,7 +671,7 @@ window.addEventListener('storage',event=>{
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();renderTasteMemory();if($('detail-dialog').open)renderDetail();}
   if(event.key===TASTE_STORAGE_KEY||event.key===null)renderTasteMemory();
-  if(event.key===USUAL_STORAGE_KEY||event.key===null){renderUsual();if($('cart-dialog').open)renderCart();}
+  if(event.key===USUAL_STORAGE_KEY||event.key===null){renderUsual();renderCityGuide();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:views'||event.key==='miora:shares'||event.key===null){const nextViews=load('views',{}),nextShares=load('shares',{});views=Object.fromEntries(Object.entries(nextViews&&typeof nextViews==='object'&&!Array.isArray(nextViews)?nextViews:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));shareCounts=Object.fromEntries(Object.entries(nextShares&&typeof nextShares==='object'&&!Array.isArray(nextShares)?nextShares:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));syncSocialStats();}
 });
 // Translated category labels can change the sticky row height.
