@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 async function verifyDishPreview(page, menu, lang, width) {
   const sandwich = menu.locator('[data-quick-item="430356"] .quick-photo');
   const cardBox = await sandwich.boundingBox();
-  assert(Math.abs(cardBox.width - cardBox.height) <= 1, 'the quick pick reserves a square photo');
+  assert(Math.abs(cardBox.width - cardBox.height * (width > 800 ? 1.25 : 1)) <= 1, 'the quick pick reserves space for the photo');
   assert.equal(await sandwich.locator('img').evaluate(img => getComputedStyle(img).objectPosition), '50% 49%');
   await sandwich.click();
   const dialog = page.locator('#detail-dialog[open]');
@@ -76,6 +76,12 @@ export async function verifyKioskMode(browser, origin) {
     assert(await menu.locator('[data-quick-item="428743"]').isVisible());
     await menu.locator('[data-quick-group="food"]').click();
     assert(await menu.locator('[data-add="430356"]').isVisible(), 'ready-to-add croissant sandwich');
+    if(width === 1280) {
+      const actions = await menu.locator('.quick-card-foot .quick-add').evaluateAll(buttons =>
+        buttons.map(button => button.getBoundingClientRect().bottom));
+      const cartBar = await page.locator('#mobile-cart-open').boundingBox();
+      assert(cartBar && Math.max(...actions) <= cartBar.y, 'food actions sit above the desktop cart bar');
+    }
     if((lang === 'ru' && width === 320) || width === 390 || width === 1280) {
       await menu.locator('#quick-results img').evaluateAll(images => Promise.all(images.map(img => img.decode())));
       await page.screenshot({path:`artifacts/kiosk-food-${lang}-${width}.png`});

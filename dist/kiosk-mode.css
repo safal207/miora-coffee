@@ -109,6 +109,9 @@ body[data-view="kiosk"] .mobile-cart svg { width: 18px; height: 18px; }
 body[data-view="kiosk"]:has(.mobile-cart:not([hidden])) .toast { bottom: 82px; }
 .quick-menu :focus-visible, .kiosk-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .quick-card .quick-photo:focus-visible { outline-offset: -3px; }
+@media (min-width: 801px) {
+  .quick-results:not(.quick-pairs):not(.quick-catalog) .quick-photo { aspect-ratio: 5 / 4; }
+}
 @media (max-width: 800px) {
   .quick-results, .quick-results.quick-pairs { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
