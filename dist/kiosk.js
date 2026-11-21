@@ -1,4 +1,4 @@
-import {videoStory} from './video-stories.js';
+import {videoStory} from './video-stories.js?v=20261122-family1';
 import {recipes,ui,localized} from './kiosk-data.js';
 import {initialSelection,choose,validSelection,orderPrice} from './kiosk-core.js';
 import {sandwichIdeas,previewForSelection,ideaSelection,localizedIdea,selectedIngredients} from './sandwich-preview.js';
@@ -48,7 +48,7 @@ const itemVisual=(step,item,getPhoto)=>{
   }
   return '<span class="kiosk-option-glyph" aria-hidden="true">'+(glyphs[item.id]||'✳')+'</span>';
 };
-export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto}){
+export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto,social=()=>'',onOpen}){
   const strip=document.getElementById('kiosk-strip');
   const dialog=document.getElementById('kiosk-dialog');
   if(!strip||!dialog)return {refresh(){},open(){},edit(){}};
@@ -69,43 +69,44 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto})
     const top=document.getElementById('hero-kiosk-cta');
     if(top){top.innerHTML=esc(v('heroButton'))+' <span aria-hidden="true">→</span>';top.setAttribute('aria-label',v('heroTitle'));}
     const featured='assets/sandwich-salmon.webp';
-    const hero='<div class="kiosk-feature"><img src="'+featured+'" alt="" loading="lazy" decoding="async" class="kiosk-feature-photo">'+
+    const hero='<div class="kiosk-feature" data-view-id="build-sandwich"><img src="'+featured+'" alt="" loading="lazy" decoding="async" class="kiosk-feature-photo">'+
       '<div class="kiosk-feature-content"><span class="kiosk-feature-tag">'+esc(v('heroTag'))+'</span>'+
       '<h3>'+esc(v('heroTitle'))+'</h3><p>'+esc(v('heroBody'))+'</p>'+
-      '<button type="button" class="kiosk-feature-button" data-k-start="sandwich">'+esc(v('heroButton'))+' <span aria-hidden="true">→</span></button></div></div>';
+      '<button type="button" class="kiosk-feature-button" data-k-start="sandwich">'+esc(v('heroButton'))+' <span aria-hidden="true">→</span></button><div class="builder-card-social">'+social('build-sandwich')+'</div></div></div>';
     const ideas='<div class="kiosk-idea-head"><div><h4>'+esc(v('ideas'))+'</h4><p>'+esc(v('ideasNote'))+'</p></div></div>'+
       '<div class="kiosk-idea-list" role="list">'+sandwichIdeas.map(idea=>{
         const words=localizedIdea(idea,lang());
-        return '<div class="kiosk-idea" role="listitem"><button type="button" data-k-idea="'+idea.id+'" aria-label="'+esc(words.name+' · '+v('configure'))+'">'+
+        return '<div class="kiosk-idea" role="listitem" data-view-id="idea-sandwich-'+idea.id+'"><button type="button" data-k-idea="'+idea.id+'" aria-label="'+esc(words.name+' · '+v('configure'))+'">'+
           '<img src="assets/sandwich-'+idea.id+'.webp" alt="" loading="lazy" decoding="async" width="220" height="147">'+
           '<span class="kiosk-idea-name">'+esc(words.name)+'</span><small>'+esc(words.desc)+'</small>'+
-          '<span class="kiosk-idea-action">'+esc(v('configure'))+' →</span></button></div>';
+          '<span class="kiosk-idea-action">'+esc(v('configure'))+' →</span></button>'+social('idea-sandwich-'+idea.id)+'</div>';
       }).join('')+'</div>';
     const bc=breakfastCopy[lang()]||breakfastCopy.tr;
-    const breakfastHero='<section class="kiosk-breakfast-feature">'+
+    const breakfastHero='<section class="kiosk-breakfast-feature" data-view-id="build-breakfast">'+
       '<img src="assets/breakfast-large-omelette-ai.webp" alt="" width="1200" height="800" loading="lazy" decoding="async">'+
       '<div class="kiosk-breakfast-feature-content"><span class="kiosk-feature-tag">'+esc(bc.tag)+'</span>'+
       '<h3>'+esc(bc.title)+'</h3><p>'+esc(bc.body)+'</p>'+
-      '<button type="button" class="kiosk-feature-button" data-k-start="breakfast">'+esc(bc.cta)+' →</button></div></section>'+
+      '<button type="button" class="kiosk-feature-button" data-k-start="breakfast">'+esc(bc.cta)+' →</button><div class="builder-card-social">'+social('build-breakfast')+'</div></div></section>'+
       '<p class="kiosk-feature-disclosure">'+esc(bc.ai)+'</p>';
     const breakfastIdeasHtml='<div class="kiosk-breakfast-idea-heading"><h4>'+esc(bc.ideas)+'</h4></div>'+
       '<div class="kiosk-breakfast-ideas" role="list">'+breakfastIdeas.map(idea=>{
         const img=breakfastVisualForSelection(breakfastIdeaSelection(idea.id));
         const src=img.src||getPhoto('431203')||'favicon.svg';
         const txt=localizedBreakfastIdea(idea,lang());
-        return '<div role="listitem" class="kiosk-breakfast-idea"><button type="button" data-k-breakfast-idea="'+esc(idea.id)+'">'+
+        return '<div role="listitem" class="kiosk-breakfast-idea" data-view-id="idea-breakfast-'+esc(idea.id)+'"><button type="button" data-k-breakfast-idea="'+esc(idea.id)+'">'+
           '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async" width="210" height="135">'+
-          '<span>'+esc(txt)+'</span></button></div>';
+          '<span>'+esc(txt)+'</span></button>'+social('idea-breakfast-'+idea.id)+'</div>';
       }).join('')+'</div>';
-    const other=Object.entries(recipes).filter(([kind])=>kind!=='sandwich'&&kind!=='breakfast').map(([kind,r])=>'<button type="button" class="kiosk-entry" data-k-start="'+kind+'">'+
+    const other=Object.entries(recipes).filter(([kind])=>kind!=='sandwich'&&kind!=='breakfast').map(([kind,r])=>'<div class="builder-shortcut-card" data-view-id="build-'+kind+'"><button type="button" class="kiosk-entry" data-k-start="'+kind+'">'+
       '<span class="kiosk-entry-image">'+recipeImg(r)+'</span><span class="kiosk-entry-copy"><b>'+esc(title(r.name))+'</b><small>'+esc(title(r.short))+'</small><strong>'+esc(t('from'))+' '+esc(label(r.steps.length?orderPrice(kind,initialSelection(kind)):r.price))+'</strong></span>'+
-      '<span class="kiosk-entry-arrow" aria-hidden="true">↗</span></button>').join('');
-    strip.innerHTML=hero+videoStory('croissant',lang())+ideas+'<p class="kiosk-feature-disclosure">'+esc(v('photoNote'))+'</p>'+breakfastHero+videoStory('breakfast',lang())+breakfastIdeasHtml+
+      '<span class="kiosk-entry-arrow" aria-hidden="true">↗</span></button>'+social('build-'+kind)+'</div>').join('');
+    strip.innerHTML=hero+videoStory('croissant',lang(),{social})+ideas+'<p class="kiosk-feature-disclosure">'+esc(v('photoNote'))+'</p>'+breakfastHero+videoStory('breakfast',lang(),{social})+breakfastIdeasHtml+
       '<div class="kiosk-intro"><div><p class="eyebrow">'+esc(t('kicker'))+'</p><h3>'+esc(t('title'))+'</h3><p>'+esc(t('subtitle'))+'</p></div></div>'+
       '<div class="kiosk-entry-list">'+other+'</div>';
   }
   function open(kind,seedBread,existing=null,lineIndex=null,idea=null){
     if(!Object.hasOwn(recipes,kind))return;
+    onOpen?.(kind,idea);
     lastFocus=document.activeElement;current=kind;
     selection=existing?structuredClone(existing):idea?(kind==='breakfast'?breakfastIdeaSelection(idea):ideaSelection(idea)):initialSelection(kind);
     index=(existing||idea)?recipes[kind].steps.length:0;

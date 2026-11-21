@@ -21,7 +21,7 @@ export const kioskPairs = {
   americano: ['428743', '431745']
 };
 
-export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, kioskFor, kioskBread, menuPrice, quantity}) {
+export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, kioskFor, kioskBread, menuPrice, quantity, social, onCardsRendered}) {
   const root = document.getElementById('kiosk-menu');
   const find = id => root.querySelector('#' + id);
   const search = find('quick-search');
@@ -48,12 +48,13 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     const action = kind ? journeyCopy[getLanguage()].build : t(item.price === null ? 'detail' : 'add');
     const label = esc(action + ' · ' + name(item));
     return `<article class="quick-card" data-quick-item="${id}">
-      <button type="button" class="quick-photo" data-detail="${id}" aria-label="${esc(t('detail'))} · ${title}">
+      <button type="button" class="quick-photo" data-view-id="${id}" data-detail="${id}" aria-label="${esc(t('detail'))} · ${title}">
         ${picture(item, cardSizes)}
       </button>
       <div class="quick-card-body">
         <h3><button type="button" data-detail="${id}">${title}</button></h3>
         <small data-post-qty="${id}" ${count ? '' : 'hidden'}>${esc(t('inOrder'))}: ${count}</small>
+        ${social(id)}
         <div class="quick-card-foot"><strong>${esc(menuPrice(item))}</strong>
           <button class="quick-add" type="button" ${attrs} aria-label="${label}" title="${label}">${kind || item.price === null ? esc(action) : icon('plus')}</button>
         </div>
@@ -65,19 +66,20 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     const options = [[single, copy.single], [double, copy.double]].map(([item, label]) =>
       `<button type="button" data-add="${item.id}" aria-label="${esc(t('add') + ' · ' + name(item) + ' · ' + money(item.price))}">
         <span>${esc(label)}</span><strong>${money(item.price)}</strong>${icon('plus')}</button>`).join('');
-    return `<article class="quick-card quick-espresso"><button type="button" class="quick-photo" data-detail="${single.id}" aria-label="${esc(t('detail') + ' · ' + copy.portion)}">
+    return `<article class="quick-card quick-espresso"><button type="button" class="quick-photo" data-view-id="${single.id}" data-detail="${single.id}" aria-label="${esc(t('detail') + ' · ' + copy.portion)}">
       ${picture(single, cardSizes)}</button>
-      <div class="quick-card-body"><h3>${esc(copy.portion)}</h3><div class="quick-shots">${options}</div></div></article>`;
+      <div class="quick-card-body"><h3>${esc(copy.portion)}</h3>${social(single.id)}<div class="quick-shots">${options}</div></div></article>`;
   }
 
   function pairCard(key, ids, copy) {
+    const id = 'pair-' + key;
     const items = ids.map(id => byId.get(id));
     if (!items.every(item => item?.price > 0)) return '';
     const title = items.map(name).join(' + ');
     const photos = items.map(item =>
       `<button type="button" class="quick-photo" data-detail="${item.id}" aria-label="${esc(t('detail') + ' · ' + name(item))}">${picture(item, pairSizes)}</button>`).join('');
-    return `<article class="quick-card quick-pair"><div class="quick-pair-photos">${photos}</div>
-      <div class="quick-card-body"><h3>${esc(title)}</h3><div class="quick-card-foot"><strong>${money(items[0].price + items[1].price)}</strong>
+    return `<article class="quick-card quick-pair share-target" id="${id}"><div class="quick-pair-photos" data-view-id="${id}">${photos}</div>
+      <div class="quick-card-body"><h3>${esc(title)}</h3>${social(id)}<div class="quick-card-foot"><strong>${money(items[0].price + items[1].price)}</strong>
       <button type="button" class="quick-add" data-quick-pair="${key}" aria-label="${esc(copy.pairAdd + ' · ' + title)}">${esc(copy.pairAdd)}</button></div></div></article>`;
   }
 
@@ -93,6 +95,7 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     results.classList.toggle('quick-catalog', all);
     if (group === 'pairs') {
       results.innerHTML = Object.entries(kioskPairs).map(([key, ids]) => pairCard(key, ids, copy)).join('');
+      onCardsRendered();
       return;
     }
     const items = all ? filterProducts(products, {category:category.value, search:search.value})
@@ -102,6 +105,7 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     if (!items.length) {
       results.innerHTML = `<div class="quick-empty"><p>${esc(t('noResults'))}</p><button type="button" class="quick-all" data-quick-reset>${esc(t('seeAll'))}</button></div>`;
     }
+    onCardsRendered();
   }
 
   function render() {
@@ -142,5 +146,5 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
   });
   search.addEventListener('input', renderResults);
   category.addEventListener('change', renderResults);
-  return {render, reset};
+  return {render, reset, showPairs(){ group = 'pairs'; renderResults(); }};
 }

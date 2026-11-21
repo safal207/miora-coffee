@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { verifyKioskMode } from './kiosk-mode-smoke.mjs';
+import { verifyFamilyVisit } from './family-visit-smoke.mjs';
 
 // Local PR preview: all tests run against the checked-out dist, never production.
 const origin = process.env.SMOKE_ORIGIN || 'http://127.0.0.1:8123';
@@ -166,6 +167,7 @@ try {
   }
   console.log('PASS: ' + tests + ' browser viewport + locale configurations');
   await verifyKioskMode(browser, origin);
+  await verifyFamilyVisit(browser, origin);
 } finally {
   await browser.close();
 }

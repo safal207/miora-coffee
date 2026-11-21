@@ -15,7 +15,7 @@
   font-size: 13px;
 }
 .kiosk-toggle svg, .quick-add svg, .quick-shots svg { width: 19px; height: 19px; }
-body[data-view="kiosk"] main > :not(#kiosk-menu),
+body[data-view="kiosk"] main > :not(#kiosk-menu, #family),
 body[data-view="kiosk"] .desktop-nav { display: none; }
 .quick-menu { max-width: 1100px; min-height: 65vh; padding-block: clamp(24px, 4vw, 56px) 88px; }
 .quick-heading, .quick-results-heading, .quick-card-foot {

@@ -17,16 +17,16 @@ export const videoCopy = {
   en:{watch:'Open Instagram',external:'New tab · Instagram may require sign-in.',privacy:'Video opens on Instagram. No Instagram connection before you click.',cover:'Menu photo · not a video frame',menu:'Explore the croissant sandwich',desserts:'Explore desserts'}
 };
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function videoStory(key,language='tr',{compact=false}={}) {
+export function videoStory(key,language='tr',{compact=false,social}={}) {
   const story=stories[key]; if(!story)return '';
   const lang=Object.hasOwn(videoCopy,language)?language:'tr',copy=videoCopy[lang];
   const action=!compact&&(key==='croissant'||key==='dessert')
     ?`<button type="button" class="video-menu-link" ${key==='croissant'?`data-detail="${story.product}"`:`data-video-desserts`}>${esc(key==='croissant'?copy.menu:copy.desserts)} →</button>`:'';
-  return `<aside class="video-story${compact?' video-story-compact':''}" data-video-story="${key}" aria-label="${esc(story.title[lang])}">
+  return `<aside class="video-story${compact?' video-story-compact':''}" data-video-story="${key}"${social?` data-view-id="video-${key}"`:''} aria-label="${esc(story.title[lang])}">
     ${compact?'':`<figure class="video-story-cover"><img src="${story.cover}" width="160" height="160" loading="lazy" decoding="async" alt=""><figcaption>${esc(copy.cover)}</figcaption></figure>`}
     <div class="video-story-copy"><span class="video-story-source">@mioracoffeetr · Instagram</span><strong>${esc(story.title[lang])}</strong><p>${esc(story.note[lang])}</p>
     <a class="video-story-open" href="https://www.instagram.com/p/${story.code}/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" aria-label="${esc(story.title[lang]+' · '+copy.watch+' · '+copy.external)}"><span aria-hidden="true">▷</span> ${esc(copy.watch)} ↗</a>
-    ${action}<small>${esc(copy.external)} ${esc(copy.privacy)}</small></div></aside>`;
+    ${action}<small>${esc(copy.external)} ${esc(copy.privacy)}</small>${social?.('video-'+key)||''}</div></aside>`;
 }
 export function dessertStoryVisible(category,search='') {
   return !search.trim()&&['all','featured','46818'].includes(category);

@@ -2,8 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {products,categories,featured} from '../dist/menu-data.js';
-import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from '../dist/core.js';
+import {normalizeCart,totals,updateCart,addPair,addBundle,filterProducts,resolveView} from '../dist/core.js';
+import {familyCombos} from '../dist/family-visit.js';
 const catalog=new Map(products.map(p=>[p.id,p]));
+
+test('family combos use the published catalog price and add multiple quantities atomically', () => {
+  assert.deepEqual(Object.values(familyCombos).map(combo=>totals(addBundle({},combo.lines,catalog),catalog).price), [14000,39000,53000]);
+  const share=familyCombos['family-share'].lines;
+  assert.deepEqual(addBundle({},share,catalog),{'430356':1,'431742':1,'431459':2});
+  const almostFull={'431459':98};
+  assert.equal(addBundle(almostFull,share,catalog),null);
+  assert.deepEqual(almostFull,{'431459':98});
+  assert.equal(addPair(almostFull,['431459','431459'],catalog),null);
+  assert.equal(addBundle({},[['431459',1.5]],catalog),null);
+});
 const source=JSON.parse(readFileSync(new URL('../docs/source-menu-2026-11-05.json',import.meta.url)));
 test('all 93 source products retain identity, category and exact price',()=>{
   assert.equal(products.length,93);assert.equal(catalog.size,93);assert.equal(categories.length,8);
