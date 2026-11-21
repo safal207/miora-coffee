@@ -140,7 +140,7 @@ const CITY_DISMISS_KEY='miora:city-guide-dismissed:v1';
 function cityDismissed(){try{return sessionStorage.getItem(CITY_DISMISS_KEY)==='1';}catch{return false;}}
 let cityStep='hello',cityHidden=cityDismissed(),cityTourSpot='houses',cityGalleryIndex=0;
 const cityHistory=[];
-function galleryMarkup(){
+function cityGalleryMarkup(){
   const words=GALLERY_COPY[lang],slide=gallerySlide(cityGalleryIndex),title=galleryTitle(lang,cityGalleryIndex);
   const thumbs=CITY_GALLERY.map((item,i)=>`<button type="button" data-city-gallery="${i}" aria-pressed="${i===cityGalleryIndex}" aria-label="${esc(galleryTitle(lang,i))}"><img src="${item.src}" alt="" width="112" height="70" loading="lazy" decoding="async"></button>`).join('');
   return `<section class="city-gallery" aria-labelledby="city-gallery-title">
@@ -181,7 +181,7 @@ function tourMarkup(c){
     const title=words[spot].label,pressed=spot===cityTourSpot;
     return `<button type="button" class="city-tour-stop" data-city-spot="${spot}" aria-pressed="${pressed}"><span aria-hidden="true">${i+1}</span>${esc(title)}</button>`;
   }).join('');
-  return `<section class="city-tour" aria-label="${esc(words.prompt)}"><figure class="city-tour-figure"><div class="city-tour-image"><img src="${CITY_ASSETS.panorama}" alt="${esc(words.photo)}" width="390" height="130" decoding="async" loading="lazy">${spots}</div><figcaption>${esc(words.hint)}</figcaption></figure><div class="city-tour-bottom"><div class="city-tour-stops" role="group" aria-label="${esc(words.prompt)}">${choices}</div><div class="city-tour-story" role="status" aria-live="polite" aria-atomic="true"><b id="city-tour-name">${esc(selected.label)}</b><p id="city-tour-description">${esc(selected.story)}</p></div><button class="city-tour-next" type="button" data-city-tour-next>${esc(words.next)} →</button><p class="city-guide-photo-note">${esc(c.privacy)}</p></div>${galleryMarkup()}</section>`;
+  return `<section class="city-tour" aria-label="${esc(words.prompt)}"><figure class="city-tour-figure"><div class="city-tour-image"><img src="${CITY_ASSETS.panorama}" alt="${esc(words.photo)}" width="390" height="130" decoding="async" loading="lazy">${spots}</div><figcaption>${esc(words.hint)}</figcaption></figure><div class="city-tour-bottom"><div class="city-tour-stops" role="group" aria-label="${esc(words.prompt)}">${choices}</div><div class="city-tour-story" role="status" aria-live="polite" aria-atomic="true"><b id="city-tour-name">${esc(selected.label)}</b><p id="city-tour-description">${esc(selected.story)}</p></div><button class="city-tour-next" type="button" data-city-tour-next>${esc(words.next)} →</button><p class="city-guide-photo-note">${esc(c.privacy)}</p></div>${cityGalleryMarkup()}</section>`;
 }
 function selectTourSpot(spot){
   if(cityStep!=='town'||!validTourSpot(spot))return;
