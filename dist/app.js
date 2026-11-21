@@ -97,7 +97,8 @@ function updateUrl() {
   target.searchParams.delete('photo');
   const link=$('kiosk-toggle');
   link.href=target.href;
-  link.innerHTML=icon(kioskActive?'back':'grid')+'<span>'+esc(kioskCopy[lang][kioskActive?'exit':'entry'])+'</span>';
+  link.setAttribute('aria-label',kioskCopy[lang][kioskActive?'exit':'entry']);
+  link.innerHTML=icon(kioskActive?'back':'grid')+'<span>'+esc(kioskActive?t('menu'):kioskCopy[lang].entry)+'</span>';
   document.querySelector('.skip').hash=kioskActive?'kiosk-menu':'menu';
 }
 function renderTheme() {const dark=document.documentElement.dataset.theme==='dark';$('theme-toggle').innerHTML=icon(dark?'sun':'moon');$('theme-toggle').setAttribute('aria-label',lang==='ru'?(dark?'Светлая тема':'Тёмная тема'):lang==='en'?(dark?'Light theme':'Dark theme'):(dark?'Açık tema':'Koyu tema'));$('theme-toggle').setAttribute('aria-pressed',String(dark));}

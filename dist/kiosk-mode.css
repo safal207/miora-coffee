@@ -121,8 +121,12 @@ body[data-view="kiosk"]:has(.mobile-cart:not([hidden])) .toast { bottom: 82px; }
   .quick-filters input { flex-basis: 100%; }
   .quick-filters select { width: 100%; }
 }
-@media (max-width: 359px) {
+@media (max-width: 430px) {
+  .header-inner { gap: 6px; }
+  .kiosk-toggle { min-width: 44px; padding-inline: 8px; }
   .kiosk-toggle svg { display: none; }
+}
+@media (max-width: 359px) {
   .quick-all { padding-inline: 11px; font-size: 12px; }
   .quick-card { border-radius: 12px; }
   .quick-shots button { padding-inline: 5px; }

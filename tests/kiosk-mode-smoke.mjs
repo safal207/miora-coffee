@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 export async function verifyKioskMode(browser, origin) {
-  for (const [lang, width] of [['ru',320], ['tr',390], ['ru',768], ['en',1280]]) {
+  for (const [lang, width] of [['ru',320], ['tr',320], ['en',360], ['tr',390], ['ru',768], ['en',1280]]) {
     const context = await browser.newContext({viewport:{width,height:800}, reducedMotion:'reduce'});
     const page = await context.newPage();
     const errors = [];
@@ -15,6 +15,7 @@ export async function verifyKioskMode(browser, origin) {
     assert(box && box.x >= 0 && box.x + box.width <= width && box.height >= 44, 'visible header entrance');
     await toggle.click();
     await menu.waitFor();
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'header and menu fit on entry');
     assert.equal(new URL(page.url()).searchParams.get('view'), 'kiosk');
     assert.equal(await menu.locator('#quick-groups button').count(), 3);
     await page.screenshot({path:`artifacts/kiosk-${lang}-${width}.png`});
@@ -64,25 +65,8 @@ export async function verifyKioskMode(browser, origin) {
     assert.equal(await total.innerText(), '130 ₺');
     assert.equal(await cart.locator('[data-service="dineIn"]').getAttribute('aria-pressed'), 'true');
     await cart.locator('[data-close]').click();
-    const layout = await page.evaluate(() => {
-      const root = document.documentElement;
-      const width = innerWidth, content = root.scrollWidth;
-      if (content <= width) return {width, content};
-      const scroll = scrollX;
-      const elements = [...document.querySelectorAll('body *')].filter(el => el.getClientRects().length);
-      const id = el => el.id || (el.tagName + '.' + String(el.className));
-      const positions = elements.filter(el => el.getBoundingClientRect().right + scroll > width + .5)
-        .map(el => [id(el), Math.round(el.getBoundingClientRect().right + scroll)]).slice(0,20);
-      const isolated = [...document.body.children].filter(el => el.getClientRects().length).map(el => {
-        const css = el.style.cssText;
-        el.style.setProperty('display', 'none', 'important');
-        const without = root.scrollWidth;
-        el.style.cssText = css;
-        return [id(el), without];
-      });
-      return {width, content, scroll, positions, isolated};
-    });
-    assert(layout.content <= layout.width, JSON.stringify(layout));
+    const layoutWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    assert(layoutWidth <= width, `${lang} kiosk width ${layoutWidth} exceeds ${width}`);
     assert.deepEqual(errors, []);
     await context.close();
   }
