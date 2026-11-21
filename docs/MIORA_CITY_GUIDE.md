@@ -29,7 +29,8 @@ never interrupts the page as a modal or hides the menu.
 5. Opening a category uses the exact existing menu navigation.
    Product cards open the existing detail dialog, not an instant
    transaction or hidden add-to-cart.
-6. **Go straight to menu** dismisses the guide at any point.
+6. If the visitor explicitly saved a list previously, the greeting also offers an **Add my saved list** shortcut. Nothing is added until they press it; quantities still pass the atomic overflow guard. If heart favorites exist, a matching **See my favorites** path appears without selling to a child.
+7. **Go straight to menu** dismisses the guide at any point.
    **Meet Miora** reopens and restarts it. Keyboard focus follows the
    guidance; the original cart and menu stay accessible.
 
