@@ -28,9 +28,11 @@
   <link rel="stylesheet" href="usual-order.css?v=20261121-v1">
   <link rel="stylesheet" href="city-guide.css?v=20261121-v1">
   <link rel="stylesheet" href="city-tour.css?v=20261121-v1">
+  <link rel="stylesheet" href="family-events-preview.css?v=20261121-v1">
   <script src="theme.js"></script>
   <script src="assets/qr.js" defer></script>
   <script type="module" src="app.js?v=20261121-citytour1"></script>
+  <script type="module" src="family-events-preview.js?v=20261121-v1"></script>
 </head>
 <body>
   <a class="skip" href="#menu">Menüye geç / Skip to menu</a>
@@ -60,6 +62,8 @@
     </section>
     <section id="city-guide" class="city-guide shell" aria-labelledby="city-guide-title"></section>
     <button id="city-open" class="city-guide-open" type="button" data-city-open hidden></button>
+    <!-- STAKEHOLDER PREVIEW ONLY: explicit ?preview=family-events. Never linked in live menu. -->
+    <section id="family-events-preview" class="events-preview shell" aria-label="Tested events ideas only" hidden></section>
     <div class="marquee" aria-hidden="true"><span>GOOD COFFEE</span><i>✳</i><span>GOOD FOOD</span><i>✳</i><span>GOOD MOOD</span><i>✳</i><span>MIORA MOMENTS</span><i>✳</i><span>GOOD COFFEE</span></div>
     <section id="menu" class="menu-section shell" aria-labelledby="menu-title">
       <div class="section-heading"><div><p class="eyebrow" data-i18n="menuKicker">KÜÇÜK MOLALAR, GÜZEL LEZZETLER</p><h2 id="menu-title" data-i18n="menuTitle">Bugün canın ne istiyor?</h2></div><p class="catalog-note"><span>93</span> <span data-i18n="menuChoices">farklı seçim, senin molan.</span></p></div>
