@@ -7,6 +7,7 @@ import {photoUrl as photo,photoSet,hasPhoto,photoKind,hasAlternatePhoto,photoVar
 import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from './core.js?v=20261106-feed1';
 import {selectCartOffer,recordGrowthEvent} from './growth-engine.js?v=20261121-v1';
 import {readTasteMemory,setTasteMemoryEnabled,rememberTasteChoice,tasteSuggestions,TASTE_STORAGE_KEY} from './taste-memory.js?v=20261121-v1';
+import {USUAL_STORAGE_KEY,readUsual,saveUsual,forgetUsual,usualTotals,appendUsual} from './usual-order.js?v=20261121-v1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
@@ -102,6 +103,35 @@ function renderTasteMemory(){
   container.innerHTML=`<div class="taste-head"><div><h3>${esc(c.title)}</h3><p>${esc(c.note)}</p></div><button type="button" class="taste-toggle" data-taste-toggle aria-pressed="${memory.enabled}" aria-label="${esc(memory.enabled?c.disable:c.off)}">${esc(memory.enabled?c.on:c.off)}</button></div>${items?`<div class="taste-list">${items}</div>`:`<p class="taste-empty">${esc(c.empty)}</p>`}`;
   if(focusKey)container.querySelector(focusKey==='tasteToggle'?'[data-taste-toggle]':`[data-taste-add="${focusId}"]`)?.focus({preventScroll:true});
 }
+const usualCopy={
+  tr:{title:'Her zamanki listem',note:'Bu cihazda senin kaydettiğin liste. Fiyatlar güncel menüden hesaplanır.',repeat:'Listeye tekrar ekle',forget:'Kayıtlı listeyi sil',save:'Bu listeyi her zamanki listem olarak kaydet',saved:'Listen bu cihaza kaydedildi',deleted:'Kayıtlı liste silindi',full:'Ürün sınırına ulaşıldı. Önce mevcut listeyi düzenle.',failure:'Bu cihazda liste kaydedilemedi',count:'ürün',estimated:'Başlangıç ',notSent:'Sipariş gönderilmedi; ödeme alınmadı.'},
+  ru:{title:'Мой обычный заказ',note:'Ты сам сохранил этот список на устройстве. Цены пересчитываются по актуальному меню.',repeat:'Добавить этот заказ',forget:'Удалить сохранённый',save:'Сохранить как мой обычный заказ',saved:'Список сохранён на этом устройстве',deleted:'Сохранённый список удалён',full:'Превышен лимит количества. Сначала измени текущий список.',failure:'Не удалось сохранить на этом устройстве',count:'позиций',estimated:'От ',notSent:'Заказ не отправлен, оплата не списана.'},
+  en:{title:'My usual order',note:'You explicitly saved this list on this device. Prices are recalculated from the current menu.',repeat:'Add this order',forget:'Delete saved order',save:'Save as my usual order',saved:'Your list was saved on this device',deleted:'Saved order removed',full:'Quantity limit reached. Adjust your current list first.',failure:'Could not save on this device',count:'items',estimated:'From ',notSent:'No order was placed or payment taken.'}
+};
+function renderUsual(){
+  const root=$('usual-order'),saved=readUsual(localStorage,byId);
+  if(!saved){root.hidden=true;root.innerHTML='';return;}
+  const copy=usualCopy[lang],sum=usualTotals(saved,byId);
+  const images=[...Object.keys(saved.cart),...saved.configuredOrders.map(row=>recipes[row.kind].image)]
+    .map(id=>byId.get(id)).filter(item=>item&&hasPhoto(item)).slice(0,3)
+    .map(item=>`<img src="${photo(item,160)}" alt="" width="46" height="46" loading="lazy" decoding="async">`).join('');
+  const estimated=saved.configuredOrders.some(row=>recipes[row.kind].estimated);
+  root.hidden=false;
+  root.innerHTML=`<div class="usual-order-heading"><div><h3>${esc(copy.title)}</h3><p>${esc(copy.note)}</p></div><div class="usual-order-photos" aria-hidden="true">${images}</div></div><div class="usual-order-meta"><b>${sum.count} ${esc(copy.count)}</b><strong>${estimated?esc(copy.estimated):''}${money(sum.price)}</strong></div><div class="usual-order-actions"><button type="button" data-usual-repeat>${esc(copy.repeat)}</button><button type="button" data-usual-forget>${esc(copy.forget)}</button></div><p class="usual-order-disclaimer">${esc(copy.notSent)}</p>`;
+}
+function repeatUsual(){
+  refreshCart();
+  const saved=readUsual(localStorage,byId);
+  const combined=appendUsual({cart,configuredOrders},saved,byId);
+  if(!combined){notify(usualCopy[lang].full);return;}
+  // Validate all quantities before either existing commit; nothing is silently dropped.
+  commitCart(combined.cart);
+  commitConfigured(combined.configuredOrders);
+  for(const id of Object.keys(saved.cart))rememberTasteChoice(localStorage,id,byId);
+  renderTasteMemory();
+  renderUsual();
+  notify(t('added'));
+}
 function renderLanguage() {
   document.documentElement.lang=lang;$('language').value=lang;
   document.querySelectorAll('[data-i18n]').forEach(e=>{const k=e.dataset.i18n;if(['heroDescription','pairingTitle'].includes(k))e.innerHTML=t(k);else e.textContent=t(k);});
@@ -110,7 +140,7 @@ function renderLanguage() {
   $('feed-stories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',[t('feed'),t('grid'),t('list')].join(' / '));
   document.querySelectorAll('[data-close]').forEach(e=>e.setAttribute('aria-label',t('close')));
   document.querySelectorAll('[data-journey-copy]').forEach(node=>node.textContent=journeyCopy[lang][node.dataset.journeyCopy]);
-  renderTheme();renderCategories();renderProducts();renderTasteMemory();renderCartCount();kioskUI?.refresh();
+  renderTheme();renderCategories();renderProducts();renderTasteMemory();renderUsual();renderCartCount();kioskUI?.refresh();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
 function renderCategories() {
@@ -400,7 +430,7 @@ function renderCart() {
   growthOfferObserver?.disconnect();growthOfferObserver=null;
   const body=$('cart-content'),top=body.scrollTop,active=document.activeElement,focusId=active?.dataset?.stepId,focusDelta=active?.dataset?.step;
   const sum=orderTotals();$('cart-title').textContent=t(staffMode?'staffTitle':'cart');$('cart-kicker').textContent=t(staffMode?'staffKicker':'cartKicker');
-  if(!sum.count){body.innerHTML=`<div class="cart-empty">${icon('bag')}<p>${t('emptyCart')}</p></div>`;$('cart-footer').innerHTML=`<button class="button primary" type="button" data-action="back-menu">${t('backToMenu')}</button>`;return;}
+  if(!sum.count){body.innerHTML=`<div class="cart-empty">${icon('bag')}<p>${t('emptyCart')}</p></div>`;$('cart-footer').innerHTML=`${readUsual(localStorage,byId)?`<button class="button primary" type="button" data-usual-repeat>${esc(usualCopy[lang].repeat)}</button>`:''}<button class="button secondary" type="button" data-action="back-menu">${t('backToMenu')}</button>`;return;}
   const lines=Object.entries(cart).map(([id,qty])=>{const p=byId.get(id);return `<li class="cart-line"><div class="cart-item"><img src="${photo(p,160)}" alt="" width="58" height="62"><div><b ${staffMode?'lang="tr"':''}>${staffMode?qty+' × ':''}${esc(staffMode?p.name.tr:name(p))}</b><small>${money(p.price)} × ${qty}${staffMode?'':' · '+money(p.price*qty)}</small>${photoKind(p)==='generated'?`<small class="cart-photo-note">${esc(journeyCopy[lang].generated)}</small>`:''}</div></div>${staffMode?`<strong class="order-line-total">${money(p.price*qty)}</strong>`:`<div class="qty"><button type="button" data-step="-1" data-step-id="${id}" aria-label="${esc(t('decrease')+' · '+name(p))}">${icon('minus')}</button><output>${qty}</output><button type="button" data-step="1" data-step-id="${id}" aria-label="${esc(t('increase')+' · '+name(p))}" ${qty>=99?'disabled':''}>${icon('plus')}</button></div>`}</li>`;}).join('');
   const configuredLines=configuredOrders.map((item,i)=>{
     const r=recipes[item.kind];
@@ -475,7 +505,7 @@ function renderCart() {
   const extra=!staffMode&&recommend();
   body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}${configuredLines}</ul>${kioskCaution}${extra?`<section class="order-bump growth-offer" data-growth-offer="${extra.id}"><img src="${photo(extra,160)}" width="64" height="70" alt=""><div class="growth-offer-copy"><p>${t('bump')}</p><b>${esc(name(extra))}</b><small>${growthLabels[lang].regular}</small></div><div class="growth-offer-actions"><button type="button" data-growth-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra))}">+ ${money(extra.price)}</button><button type="button" class="growth-dismiss" data-growth-dismiss="${extra.id}">${growthLabels[lang].dismiss}</button></div></section>`:''}
     ${staffMode?`<details class="order-qr"><summary>${t('qr')}</summary><canvas id="order-qr" role="img" aria-label="${t('qr')}"></canvas><small>${t('qrNote')}</small></details>`:`<div class="serve-select" role="group" aria-label="${t('dineIn')} / ${t('takeaway')}"><button type="button" data-service="dineIn" aria-pressed="${service==='dineIn'}">${t('dineIn')}</button><button type="button" data-service="takeaway" aria-pressed="${service==='takeaway'}">${t('takeaway')}</button></div>`}`;
-  $('cart-footer').innerHTML=`<div class="total-line"><span>${estimatedBasket()?kioskMessages[lang].estimated:t('total')}</span><strong>${estimatedBasket()?kioskMessages[lang].from+' ':''}${money(sum.price)}</strong></div>${staffMode?`<button class="button primary" type="button" data-action="edit-order">${t('editOrder')}</button><button class="clear-cart" type="button" data-action="copy-order">${t('copyOrder')}</button>`:`<button class="button primary" type="button" data-action="show-staff">${t('showStaff')} <span aria-hidden="true">↗</span></button><button class="clear-cart" type="button" data-action="clear-cart">${t('clearCart')}</button>`}<p class="checkout-note">${t('orderNote')}</p>`;
+  $('cart-footer').innerHTML=`<div class="total-line"><span>${estimatedBasket()?kioskMessages[lang].estimated:t('total')}</span><strong>${estimatedBasket()?kioskMessages[lang].from+' ':''}${money(sum.price)}</strong></div>${staffMode?`<button class="button primary" type="button" data-action="edit-order">${t('editOrder')}</button><button class="clear-cart" type="button" data-action="copy-order">${t('copyOrder')}</button>`:`<button class="button primary" type="button" data-action="show-staff">${t('showStaff')} <span aria-hidden="true">↗</span></button><button class="usual-order-save" type="button" data-usual-save>${esc(usualCopy[lang].save)}</button><button class="clear-cart" type="button" data-action="clear-cart">${t('clearCart')}</button>`}<p class="checkout-note">${t('orderNote')}</p>`;
   if(staffMode){try{drawQR($('order-qr'),orderText());}catch{$('order-qr').parentElement.innerHTML=`<p class="qr-error">${t('qrError')}</p>`;}}
   body.scrollTop=top;
   observeGrowthOffer(extra?.id);
@@ -516,6 +546,18 @@ document.addEventListener('click',async event=>{
     renderTasteMemory();return;
   }
   if(d.tasteAdd){add(d.tasteAdd);return;}
+  if(d.usualSave!==undefined){
+    refreshCart();
+    if(saveUsual(localStorage,{cart,configuredOrders},byId)){renderUsual();notify(usualCopy[lang].saved);}
+    else notify(usualCopy[lang].failure);
+    return;
+  }
+  if(d.usualRepeat!==undefined){repeatUsual();return;}
+  if(d.usualForget!==undefined){
+    if(forgetUsual(localStorage)){renderUsual();if($('cart-dialog').open)renderCart();notify(usualCopy[lang].deleted);}
+    else notify(usualCopy[lang].failure);
+    return;
+  }
   if(d.growthDismiss){growthOfferSuppressed=true;trackGrowth('offer_dismissed',d.growthDismiss);renderCart();return;}
   if(d.growthAdd){const accepted=add(d.growthAdd);if(accepted){growthOfferSuppressed=true;trackGrowth('offer_accepted',d.growthAdd);renderCart();}return;}
   if(d.add){const added=add(d.add);if(added&&button.closest('#detail-dialog')&&$('detail-dialog').open)$('detail-dialog').close();return;}
@@ -572,6 +614,7 @@ window.addEventListener('storage',event=>{
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(id=>byId.has(id)):[]);renderProducts();renderTasteMemory();if($('detail-dialog').open)renderDetail();}
   if(event.key===TASTE_STORAGE_KEY||event.key===null)renderTasteMemory();
+  if(event.key===USUAL_STORAGE_KEY||event.key===null){renderUsual();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:views'||event.key==='miora:shares'||event.key===null){const nextViews=load('views',{}),nextShares=load('shares',{});views=Object.fromEntries(Object.entries(nextViews&&typeof nextViews==='object'&&!Array.isArray(nextViews)?nextViews:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0));shareCounts=Object.fromEntries(Object.entries(nextShares&&typeof nextShares==='object'&&!Array.isArray(nextShares)?nextShares:{}).filter(([id,n])=>byId.has(id)&&Number.isSafeInteger(n)&&n>=0&&n<=1000000));syncSocialStats();}
 });
 // Translated category labels can change the sticky row height.
