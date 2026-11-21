@@ -1,0 +1,31 @@
+/* Miora City Guide: low-pressure dialogue, real venue photos, no chat simulation. */
+.city-guide[hidden],.city-guide-open[hidden]{display:none!important}
+.city-guide{margin-top:16px;margin-bottom:26px;scroll-margin-top:calc(var(--header-h,80px) + 16px)}
+.city-guide-inner{background:var(--card);border:1px solid var(--line);border-radius:22px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(200px,.65fr);gap:24px;overflow:hidden;padding:22px 25px}
+.city-guide-copy{min-width:0;align-self:center}
+.city-guide-eyebrow{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--teal);margin:0 0 7px}
+.city-guide h2{font-size:clamp(20px,3vw,32px);line-height:1.14;letter-spacing:-.02em;margin:0 0 9px;color:var(--ink)}
+.city-guide h2:focus{outline:none}
+.city-guide-question{font-size:15px;line-height:1.5;margin:0 0 14px;color:var(--ink);max-width:570px}
+.city-guide-preview{width:100%;height:100%;min-height:200px;max-height:300px;object-fit:cover;border-radius:16px;align-self:stretch}
+.city-guide-photos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;grid-column:1/-1}
+.city-guide-photos figure{margin:0;min-width:0;background:var(--paper);border-radius:12px;overflow:hidden}
+.city-guide-photos img{display:block;width:100%;height:140px;object-fit:cover}
+.city-guide-photos figcaption{font-size:10px;line-height:1.35;padding:9px 10px;color:var(--muted)}
+.city-guide-photo-note{grid-column:1/-1;font-size:11px;color:var(--muted);margin:-7px 0 0}
+.city-guide-actions{display:flex;flex-wrap:wrap;gap:9px}
+.city-guide-choice{min-height:46px;padding:11px 18px;border:1px solid var(--line);border-radius:13px;background:var(--paper);color:var(--ink);font-size:13px;font-weight:700;line-height:1.25;text-align:center}
+.city-guide-choice:first-child{background:var(--accent);border-color:transparent;color:#fff}
+.city-guide-secondary{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.city-guide-secondary button{border:0;background:transparent;text-decoration:underline;text-underline-offset:3px;color:var(--muted);font-size:12px;min-height:38px;padding:5px 9px}
+.city-guide-privacy{font-size:10px;line-height:1.45;color:var(--muted);margin:8px 0 0;max-width:510px}
+.city-guide-products{display:flex;gap:9px;overflow-x:auto;margin:0 0 15px;padding-bottom:5px}
+.city-guide-product{flex:0 0 158px;border:1px solid var(--line);border-radius:11px;padding:7px;background:var(--paper);display:flex;align-items:center;gap:8px;text-align:left;color:var(--ink)}
+.city-guide-product img{width:46px;height:46px;flex-shrink:0;object-fit:cover;border-radius:8px}
+.city-guide-product span{min-width:0}.city-guide-product b{font-size:10px;line-height:1.3;display:block}.city-guide-product small{font-size:10px;color:var(--muted);display:block;margin-top:4px}
+.city-guide-open{display:block;margin:8px auto 25px;padding:10px 18px;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--ink);font-size:12px;min-height:42px}
+.city-guide button:focus-visible,.city-guide-open:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+@media(max-width:800px){.city-guide-inner{grid-template-columns:1fr;gap:12px}.city-guide-preview{height:170px;min-height:0}.city-guide-photos{grid-column:1}.city-guide-photos img{height:120px}.city-guide-photo-note{grid-column:1}}
+@media(max-width:620px){.city-guide{margin-top:12px;margin-bottom:18px}.city-guide-inner{padding:16px;border-radius:17px}.city-guide h2{font-size:22px}.city-guide-question{font-size:13px}.city-guide-choice{flex:1 1 140px;min-height:44px;font-size:12px;padding:10px}.city-guide-photos{gap:6px}.city-guide-photos img{height:100px}.city-guide-photos figcaption{font-size:9px;padding:6px}.city-guide-privacy{font-size:10px}.city-guide-product{flex-basis:146px}}
+@media(max-width:359px){.city-guide-inner{padding:12px}.city-guide h2{font-size:19px}.city-guide-photos{grid-template-columns:repeat(2,minmax(0,1fr))}.city-guide-photos figure:last-child{display:none}.city-guide-actions{gap:6px}}
+@media(prefers-reduced-motion:reduce){.city-guide *, .city-guide-open{animation:none!important;transition:none!important}}
