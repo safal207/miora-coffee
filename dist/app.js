@@ -134,8 +134,20 @@ function repeatUsual(){
   notify(t('added'));
   return true;
 }
-let cityStep='hello',cityHidden=false;
+const CITY_DISMISS_KEY='miora:city-guide-dismissed:v1';
+function cityDismissed(){try{return sessionStorage.getItem(CITY_DISMISS_KEY)==='1';}catch{return false;}}
+let cityStep='hello',cityHidden=cityDismissed();
 const cityHistory=[];
+function setCityVisibility(visible){
+  cityHidden=!visible;
+  try{if(visible)sessionStorage.removeItem(CITY_DISMISS_KEY);
+      else sessionStorage.setItem(CITY_DISMISS_KEY,'1');}catch{}
+  renderCityGuide();
+}
+function focusCityDestination(){
+  $('result-title').setAttribute('tabindex','-1');
+  $('result-title').focus({preventScroll:true});
+}
 function renderCityGuide(focus=false){
   const root=$('city-guide'),opener=$('city-open'),c=CITY_COPY[lang];
   opener.textContent=c.reopen;
@@ -155,29 +167,29 @@ function renderCityGuide(focus=false){
   if(cityStep==='hello'&&readUsual(localStorage,byId))labels.hello.push(['usual',c.usual]);
   if(favorites.size&&['family','adults','choose'].includes(cityStep))labels[cityStep].push(['favorites',c.favorites]);
   const photos=cityStep==='town'
-    ?`<figure class="city-guide-mosaic"><img src="${CITY_ASSETS.panorama}" alt="${esc(c.panorama)}" width="390" height="130" loading="lazy"><figcaption><span>${esc(c.photoTown)}</span><span>${esc(c.photoPlay)}</span><span>${esc(c.photoCoffee)}</span></figcaption></figure><p class="city-guide-photo-note">${esc(c.privacy)}</p>`
+    ?`<figure class="city-guide-mosaic"><img src="${CITY_ASSETS.panorama}" alt="${esc(c.panorama)}" width="390" height="130" loading="lazy"><figcaption><span title="${esc(c.photoTown)}">${esc(c.shortTown)}</span><span title="${esc(c.photoPlay)}">${esc(c.shortPlay)}</span><span title="${esc(c.photoCoffee)}">${esc(c.shortCoffee)}</span></figcaption></figure><p class="city-guide-photo-note">${esc(c.privacy)}</p>`
     :cityStep==='hello'
       ?`<img class="city-guide-preview" src="${CITY_ASSETS.panorama}" width="390" height="130" alt="${esc(c.panorama)}" loading="lazy">`:'';
   const suggestions=['coffee','dessert','food'].includes(cityStep)
     ?cityProducts(cityStep,products).map(p=>`<button type="button" class="city-guide-product" data-detail="${p.id}" aria-label="${esc(name(p)+' · '+money(p.price))}"><img src="${photo(p,160)}" alt="" width="60" height="60" loading="lazy"><span><b>${esc(name(p))}</b><small>${money(p.price)}</small></span></button>`).join(''):'';
   const actions=(labels[cityStep]||[]).map(([action,label])=>`<button class="city-guide-choice" type="button" data-city-action="${action}">${esc(label)}</button>`).join('');
-  root.innerHTML=`<div class="city-guide-inner"><div class="city-guide-copy"><p class="city-guide-eyebrow">${esc(c.eyebrow)}</p><h2 id="city-guide-title" tabindex="-1">${esc(c.title)}</h2><p class="city-guide-question">${esc(c[cityStep])}</p>${suggestions?`<div class="city-guide-products">${suggestions}</div>`:''}<div class="city-guide-actions">${actions}</div><div class="city-guide-secondary">${cityHistory.length?`<button type="button" data-city-action="back">${esc(c.back)}</button>`:''}<button type="button" data-city-action="skip">${esc(c.skip)}</button></div><p class="city-guide-privacy">${esc(c.notChat)}</p></div>${photos}</div>`;
+  root.innerHTML=`<div class="city-guide-inner city-guide-step-${cityStep}"><div class="city-guide-copy"><p class="city-guide-eyebrow">${esc(c.eyebrow)}</p><h2 id="city-guide-title" tabindex="-1">${esc(c.title)}</h2><div class="city-guide-dialogue"><img src="assets/logo-source.jpg" alt="" width="38" height="38" decoding="async"><p class="city-guide-question">${esc(c[cityStep])}</p></div>${suggestions?`<div class="city-guide-products">${suggestions}</div>`:''}<div class="city-guide-actions">${actions}</div><div class="city-guide-secondary">${cityHistory.length?`<button type="button" data-city-action="back">${esc(c.back)}</button>`:''}<button type="button" data-city-action="skip">${esc(c.skip)}</button></div><p class="city-guide-privacy">${esc(c.notChat)}</p></div>${photos}</div>`;
   root.setAttribute('aria-label',c.title);
   if(focus)root.querySelector('#city-guide-title')?.focus({preventScroll:true});
 }
 function cityAction(action){
   if(action==='usual'){
     if(!readUsual(localStorage,byId)||!repeatUsual())return;
-    cityHidden=true;renderCityGuide();openCart();return;
+    setCityVisibility(false);openCart();return;
   }
   if(action==='favorites'){
     if(!favorites.size)return;
-    cityHidden=true;renderCityGuide();selectCategory('favorites');return;
+    setCityVisibility(false);selectCategory('favorites');focusCityDestination();return;
   }
   if(action==='skip'||action==='category'){
     const nextCategory=action==='category'?CITY_CATEGORY[cityStep]:'all';
-    cityHidden=true;renderCityGuide();
-    selectCategory(nextCategory||'all');return;
+    setCityVisibility(false);
+    selectCategory(nextCategory||'all');focusCityDestination();return;
   }
   if(action==='back'){
     cityStep=cityHistory.pop()||'hello';renderCityGuide(true);return;
@@ -595,7 +607,7 @@ document.addEventListener('click',async event=>{
   const d=button.dataset;
   if(d.close){$(d.close).close();return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
-  if(d.cityOpen!==undefined){cityHidden=false;cityStep='hello';cityHistory.length=0;renderCityGuide(true);$('city-guide').scrollIntoView({block:'start',behavior:'instant'});return;}
+  if(d.cityOpen!==undefined){cityStep='hello';cityHistory.length=0;setCityVisibility(true);renderCityGuide(true);$('city-guide').scrollIntoView({block:'start',behavior:'instant'});return;}
   if(d.cityAction){cityAction(d.cityAction);return;}
   if(d.tasteToggle!==undefined){
     const enabled=!readTasteMemory(localStorage,byId).enabled;
