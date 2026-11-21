@@ -28,6 +28,11 @@ export async function verifyFamilyVisit(browser, origin) {
     await page.locator('#kiosk-menu [data-family-entry]').click();
     const combos = page.locator('#family .family-grid article');
     assert.equal(await combos.count(),3);
+    const frames = await combos.locator('.family-photos').evaluateAll(photos => photos.map(photo => {
+      const {width,height}=photo.getBoundingClientRect();
+      return [width,height];
+    }));
+    assert(frames.every(([w,h])=>Math.abs(w-h*1.65)<2),'the photos preserve their frame when portrait images load');
     assert.deepEqual(await combos.locator('[data-family-add]').allTextContents().then(items=>items.map(s=>s.match(/\d+ ₺/)[0])),['140 ₺','390 ₺','530 ₺']);
     const room = page.locator('#family-care');
     assert(await room.locator('img').getAttribute('src'));
