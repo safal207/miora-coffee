@@ -109,6 +109,35 @@ open the regular menu or skip the experience at any time. All previously
 implemented favorites, saved-order and normal pricing functions remain
 unchanged.
 
+## Four-frame visual gallery (22 November 2026)
+
+The owner approved the **first four** images in the five-image batch;
+the fifth (AI-rendered ROCKET coffee station) was explicitly rejected
+and is not included. Four files were uploaded to
+`dist/assets/city/gallery/` as optimized WebP images (~525 KB total).
+
+This gallery is **editorial / AI-assisted illustration**, not a photo
+record of the actual room: the generative edits subtly change furnishings
+and some architectural details. All three languages show a visible
+disclaimer beside the images and in the full-screen viewer. The earlier
+`miora-city.webp` panorama, based on authentic owner-supplied
+photographs with identifiable children's faces cropped out, remains
+the separate interactive four-pin **actual location map**.
+
+Visitors may voluntarily switch between the four frames using thumbnails
+or arrows and open a full-screen image. Native Escape closes the
+viewer, all interactive buttons have accessible names, and no choices
+are saved, sent or used to change the order list. No unauthorized face
+images, invented discounts or claim that the renders document the
+real premises are introduced.
+
+The gallery has a responsive two-column layout beside the real play-town
+tour on desktop and stacks vertically on mobile. Playwright asserts
+four and only four images load, the AI disclaimer is visible in
+TR/RU/EN, lightbox opens and closes, the page doesn't overflow at
+320/390/1280 px, and viewing photos does not change the cart.
+Unit tests also check WebP integrity, image size and the absent fifth.
+
 Automated coverage: `tests/city-tour.test.mjs`, updated
 `tests/city-guide-smoke.mjs` across TR/390, RU/320, EN/1280, and the
 repository-wide regression suite. Release requires passing CI and
