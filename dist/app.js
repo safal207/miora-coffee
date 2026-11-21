@@ -11,6 +11,7 @@ import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection} from './sandwich-preview.js';
 import {breakfastVisualForSelection,breakfastCopy} from './breakfast-preview.js';
 import {identityFor,diversifyPhotoOrder,storyCoverIds} from './visual-merchandising.js?v=20261112-covers1';
+import {mountKioskMode,kioskCopy,kioskPairs} from './kiosk-mode.js';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
@@ -25,6 +26,7 @@ const svgPaths = {
   croissant:'<path d="m3 15 2-7 4-3h6l4 3 2 7-4-1-3 5h-4l-3-5-4 1ZM9 5l1 14m5-14-1 14M5 8l2 6m12-6-2 6"/>',
   heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
   bag:'<path d="M5 7h14l1 14H4L5 7Zm3 0V5a4 4 0 0 1 8 0v2"/>',
+  back:'<path d="M20 12H4m7-7-7 7 7 7"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',minus:'<path d="M5 12h14"/>',
   grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
   list:'<path d="M8 5h13M8 12h13M8 19h13M3 5h.01M3 12h.01M3 19h.01"/>',
@@ -62,6 +64,7 @@ let kioskUI;
 let favoriteIds=load('favorites',[]); if(!Array.isArray(favoriteIds))favoriteIds=[];
 let favorites=new Set(favoriteIds.filter(id=>byId.has(id)));
 let view=resolveView(params.get('view'),load('view',null));
+let kioskActive=params.get('view')==='kiosk';
 const requestedCategory=params.get('category');
 let category=['all','featured',...categories.map(c=>c.id)].includes(requestedCategory)?requestedCategory:view==='feed'?'all':'featured', search='', detailId=null, staffMode=false;
 let service=load('service','dineIn'); if(!['dineIn','takeaway'].includes(service))service='dineIn';
@@ -79,7 +82,24 @@ const t = key => messages[lang][key]||messages.tr[key]||key;
 const name = item => item.name[lang]||item.name.tr;
 const money = value => new Intl.NumberFormat(lang==='tr'?'tr-TR':lang==='ru'?'ru-RU':'en-GB',{maximumFractionDigits:2}).format(value/100)+' ₺';
 function notify(text) {clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,2600);}
-function updateUrl() {const url=new URL(location.href);url.searchParams.set('lang',lang);url.searchParams.set('view',view);url.searchParams.set('category',category);history.replaceState(null,'',url);}
+function menuUrl(kiosk) {
+  const url=new URL(location.href);
+  url.searchParams.set('lang',lang);
+  url.searchParams.set('view',kiosk?'kiosk':view);
+  if(kiosk)url.searchParams.delete('category');else url.searchParams.set('category',category);
+  return url;
+}
+function updateUrl() {
+  history.replaceState(null,'',menuUrl(kioskActive));
+  const target=menuUrl(!kioskActive);
+  target.hash='';
+  target.searchParams.delete('item');
+  target.searchParams.delete('photo');
+  const link=$('kiosk-toggle');
+  link.href=target.href;
+  link.innerHTML=icon(kioskActive?'back':'grid')+'<span>'+esc(kioskCopy[lang][kioskActive?'exit':'entry'])+'</span>';
+  document.querySelector('.skip').hash=kioskActive?'kiosk-menu':'menu';
+}
 function renderTheme() {const dark=document.documentElement.dataset.theme==='dark';$('theme-toggle').innerHTML=icon(dark?'sun':'moon');$('theme-toggle').setAttribute('aria-label',lang==='ru'?(dark?'Светлая тема':'Тёмная тема'):lang==='en'?(dark?'Light theme':'Dark theme'):(dark?'Açık tema':'Koyu tema'));$('theme-toggle').setAttribute('aria-pressed',String(dark));}
 function renderLanguage() {
   document.documentElement.lang=lang;$('language').value=lang;
@@ -137,6 +157,13 @@ function productSocial(p,compact=false){
 }
 function renderProducts() {
   stopFeedViews();disposeSpotlight();disposeGalleries();
+  document.body.dataset.view=kioskActive?'kiosk':view;
+  $('kiosk-menu').hidden=!kioskActive;
+  if(kioskActive){
+    $('products').replaceChildren();
+    kioskMenu.render();
+    return;
+  }
   const videoSlot=$('dessert-video');
   videoSlot.hidden=!dessertStoryVisible(category,search);
   videoSlot.innerHTML=videoSlot.hidden?'':videoStory('dessert',lang,{compact:true});
@@ -144,7 +171,6 @@ function renderProducts() {
   const displayList=!search&&!['all','featured','favorites'].includes(category)?diversifyPhotoOrder(list):list;
   const label=category==='featured'?t('featured'):category==='all'?(search?t('searchResults'):t('all')):category==='favorites'?t('favorites'):categories.find(c=>c.id===category)?.name[lang]||t('all');
   $('result-title').textContent=label;$('result-count').textContent=`${list.length} ${t('count')}`;
-  document.body.dataset.view=view;
   const builderMenu=$('builder-menu');
   if(builderMenu.dataset.lastView!==view){builderMenu.open=view!=='feed';builderMenu.dataset.lastView=view;}
   $('spotlight-disclosure-label').textContent=motionCopy[lang].title;
@@ -172,6 +198,14 @@ ${view==='list'?'':productSocial(p)}</div>
 }
 const kioskFor=id=>({430236:'sandwich',430240:'sandwich',431177:'sandwich',431178:'sandwich',431179:'sandwich',431203:'breakfast',431333:'pancake'})[id]||null;
 function kioskBread(id){return ({430236:'wholewheat',430240:'olive',431177:'tomato-walnut',431178:'plain',431179:'focaccia'})[id]||null;}
+function menuPrice(item) {
+  const kind=kioskFor(item.id);
+  if(!kind)return item.price===null?t('ask'):money(item.price);
+  const recipe=recipes[kind];
+  if(kind==='pancake')return money(recipe.price);
+  const startingPrice=kind==='breakfast'?Math.min(...recipe.steps[0].items.map(option=>option.price)):recipe.price;
+  return kioskMessages[lang].from+' '+money(startingPrice);
+}
 function enhanceKioskCards(){
   for(const card of document.querySelectorAll('#products [data-product]')){
     const id=card.dataset.product,kind=kioskFor(id);if(!kind)continue;
@@ -183,9 +217,7 @@ function enhanceKioskCards(){
     b.dataset.kStart=kind;if(kioskBread(id))b.dataset.kBread=kioskBread(id);
     b.textContent=kioskMessages[lang].build;row.classList.add('kiosk-has-config');prior.replaceWith(b);
     const priceNode=row.querySelector('.product-price,strong');
-    if(kind==='pancake'&&priceNode){priceNode.textContent=money(25000);priceNode.classList.remove('ask');}
-    if(kind==='sandwich'&&priceNode)priceNode.textContent=kioskMessages[lang].from+' '+money(35000);
-    if(kind==='breakfast'&&priceNode)priceNode.textContent=kioskMessages[lang].from+' '+money(35000);
+    if(priceNode){priceNode.textContent=menuPrice(byId.get(id));priceNode.classList.remove('ask');}
   }
 }
 function enhanceKioskDetail(id){
@@ -231,7 +263,7 @@ function stopFeedViews() {
 }
 function startFeedViews() {
   stopFeedViews();
-  if(!('IntersectionObserver' in window))return;
+  if(kioskActive||!('IntersectionObserver' in window))return;
   feedObserver=new IntersectionObserver(entries=>{for(const entry of entries){const id=entry.target.dataset.viewId;clearTimeout(feedViewTimers.get(id));feedViewTimers.delete(id);
     if(entry.intersectionRatio>=.65&&!document.hidden&&!document.querySelector('dialog[open]')&&!viewedThisSession.has(id))feedViewTimers.set(id,setTimeout(()=>{feedViewTimers.delete(id);if(!document.hidden&&!document.querySelector('dialog[open]')&&entry.target.isConnected)recordView(id);},1000));
   }},{threshold:[0,.65],rootMargin:`-${document.querySelector('.header').offsetHeight+$('toolbar').offsetHeight}px 0px 0px 0px`});
@@ -339,7 +371,9 @@ function recommend() {
   const items=Object.keys(cart).map(id=>byId.get(id));if(!items.length&&!configuredOrders.length)return null;
   const hasFood=configuredOrders.length>0||items.some(p=>['46818','46885'].includes(p.cat));
   const hasDrink=items.some(p=>!['46818','46885'].includes(p.cat));
-  const id=!hasFood?'430226':!hasDrink?'428772':null;
+  const coffeeOnly=items.length>0&&items.every(p=>['46776','46810'].includes(p.cat));
+  const dessert=kioskActive?(coffeeOnly?'431293':null):'430226';
+  const id=!hasFood?dessert:!hasDrink?'428772':null;
   return id&&!cart[id]?byId.get(id):null;
 }
 function orderText() {
@@ -430,9 +464,15 @@ function renderCart() {
   }).join('');
   const kioskCaution=configuredOrders.some(o=>recipes[o.kind].estimated)?`<p class="kiosk-order-note">${esc(kioskMessages[lang].confirm)}</p>`:'';
   const extra=!staffMode&&recommend();
-  body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}${configuredLines}</ul>${kioskCaution}${extra?`<section class="order-bump"><img src="${photo(extra,160)}" width="64" height="70" alt="${esc(name(extra))}"><div><p>${t('bump')}</p><b>${esc(name(extra))}</b></div><button type="button" data-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra))}">+ ${money(extra.price)}</button></section>`:''}
+  body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}${configuredLines}</ul>${kioskCaution}${extra?`<section class="order-bump"><img src="${photo(extra,160)}" width="64" height="70" alt="${esc(name(extra))}"><div><p>${t('bump')}</p><b>${esc(name(extra))}</b></div><button type="button" data-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra)+' · '+money(extra.price))}">+ ${money(extra.price)}</button></section>`:''}
     ${staffMode?`<details class="order-qr"><summary>${t('qr')}</summary><canvas id="order-qr" role="img" aria-label="${t('qr')}"></canvas><small>${t('qrNote')}</small></details>`:`<div class="serve-select" role="group" aria-label="${t('dineIn')} / ${t('takeaway')}"><button type="button" data-service="dineIn" aria-pressed="${service==='dineIn'}">${t('dineIn')}</button><button type="button" data-service="takeaway" aria-pressed="${service==='takeaway'}">${t('takeaway')}</button></div>`}`;
   $('cart-footer').innerHTML=`<div class="total-line"><span>${estimatedBasket()?kioskMessages[lang].estimated:t('total')}</span><strong>${estimatedBasket()?kioskMessages[lang].from+' ':''}${money(sum.price)}</strong></div>${staffMode?`<button class="button primary" type="button" data-action="edit-order">${t('editOrder')}</button><button class="clear-cart" type="button" data-action="copy-order">${t('copyOrder')}</button>`:`<button class="button primary" type="button" data-action="show-staff">${t('showStaff')} <span aria-hidden="true">↗</span></button><button class="clear-cart" type="button" data-action="clear-cart">${t('clearCart')}</button>`}<p class="checkout-note">${t('orderNote')}</p>`;
+  if(staffMode&&kioskActive){
+    const next=document.createElement('button');
+    next.type='button';next.className='clear-cart';next.dataset.action='next-guest';
+    next.textContent=kioskCopy[lang].nextGuest;
+    $('cart-footer').querySelector('.checkout-note').before(next);
+  }
   if(staffMode){try{drawQR($('order-qr'),orderText());}catch{$('order-qr').parentElement.innerHTML=`<p class="qr-error">${t('qrError')}</p>`;}}
   body.scrollTop=top;
   if(focusId&&focusDelta)body.querySelector(`[data-step-id="${focusId}"][data-step="${focusDelta}"]`)?.focus({preventScroll:true});
@@ -486,13 +526,51 @@ document.addEventListener('click',async event=>{
   if(d.step){refreshCart();commitCart(updateCart(cart,d.stepId,Number(d.step),byId));return;}
   if(d.service){service=d.service;save('service',service);renderCart();return;}
   if(d.action==='reset'){search='';$('search').value='';selectCategory('all');return;}
-  if(d.action==='add-pair'){refreshCart();const next=addPair(cart,['428772','430226'],byId);if(!next){notify(t('limit'));return;}commitCart(next);notify(t('added')+' · Cappuccino + San Sebastian');return;}
+  if(d.action==='add-pair'||Object.hasOwn(kioskPairs,d.quickPair)){
+    const ids=kioskPairs[d.quickPair]||kioskPairs.cappuccino;
+    refreshCart();
+    const next=addPair(cart,ids,byId);
+    if(!next){notify(t('limit'));return;}
+    commitCart(next);notify(t('added')+' · '+ids.map(id=>name(byId.get(id))).join(' + '));return;
+  }
   if(d.action==='show-staff'){staffMode=true;renderCart();$('cart-content').scrollTop=0;$('cart-title').setAttribute('tabindex','-1');$('cart-title').focus();return;}
   if(d.action==='edit-order'){staffMode=false;renderCart();return;}
   if(d.action==='clear-cart'){commitConfigured([]);commitCart({});return;}
-  if(d.action==='back-menu'){$('cart-dialog').close();$('menu').scrollIntoView({block:'start'});return;}
+  if(d.action==='next-guest'&&kioskActive&&staffMode){
+    $('cart-dialog').close();
+    staffMode=false;service='dineIn';save('service',service);
+    commitConfigured([]);commitCart({});
+    kioskMenu.reset();kioskMenu.render();focusMenuHeading();return;
+  }
+  if(d.action==='back-menu'){$('cart-dialog').close();$(kioskActive?'kiosk-menu':'menu').scrollIntoView({block:'start'});return;}
   if(d.action==='copy-order')await copyText(orderText(),t('orderCopied'),()=>{const text=document.createElement('textarea');text.className='copy-order-fallback';text.value=orderText();text.setAttribute('aria-label',t('copyOrder'));$('cart-content').append(text);text.focus();text.select();notify(t('selectCopy'));});
 });
+function focusMenuHeading() {
+  const heading=$(kioskActive?'quick-title':'menu-title');
+  heading.tabIndex=-1;
+  heading.focus({preventScroll:true});
+  if(kioskActive)window.scrollTo({top:0,behavior:'instant'});else $('menu').scrollIntoView({block:'start',behavior:'instant'});
+}
+function readModeFromUrl() {
+  const query=new URLSearchParams(location.search);
+  const next=query.get('view')==='kiosk';
+  if(next===kioskActive)return;
+  kioskActive=next;
+  if(!next){
+    view=resolveView(query.get('view'),view);
+    const target=query.get('category');
+    if(['all','featured','favorites',...categories.map(c=>c.id)].includes(target))category=target;
+  }
+  document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());
+  renderCategories();renderProducts();renderCartCount();updateUrl();focusMenuHeading();
+}
+$('kiosk-toggle').addEventListener('click',event=>{
+  if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+  event.preventDefault();
+  history.pushState(null,'',event.currentTarget.href);
+  readModeFromUrl();
+});
+window.addEventListener('popstate',readModeFromUrl);
 $('cart-open').addEventListener('click',openCart);$('mobile-cart-open').addEventListener('click',openCart);
 $('search-icon').innerHTML=icon('search');
 $('view-feed').innerHTML=icon('feed');$('view-grid').innerHTML=icon('grid');$('view-list').innerHTML=icon('list');
@@ -527,6 +605,7 @@ const storySizeObserver=new ResizeObserver(()=>{
   if(height)document.documentElement.style.setProperty('--stories-h',height+'px');
 });
 storySizeObserver.observe($('feed-stories'));
+const kioskMenu=mountKioskMode({byId,getLanguage:()=>lang,name,money,t,esc,icon,kioskFor,kioskBread,menuPrice,quantity:id=>cart[id]||0});
 kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null});
 renderLanguage();updateUrl();
 const linked=params.get('item');if(byId.has(linked))openDetail(linked,params.get('photo'));
