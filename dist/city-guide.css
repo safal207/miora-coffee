@@ -35,3 +35,28 @@
 .city-guide-mosaic img{display:block;width:100%;height:auto;max-height:350px;object-fit:contain;background:var(--paper)}
 .city-guide-mosaic figcaption{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px 12px;font-size:10px;line-height:1.4;color:var(--muted)}
 @media(max-width:620px){.city-guide-mosaic figcaption{font-size:9px;padding:8px;gap:5px}}
+
+/* Mobile/desktop visual QA: keep the 390px original panorama close to source
+   size instead of stretching it to 1,000px across a desktop viewport. */
+.city-guide-dialogue{display:flex;align-items:flex-start;gap:10px;margin:12px 0 15px}
+.city-guide-dialogue>img{flex:0 0 36px;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:var(--paper);object-fit:cover}
+.city-guide-dialogue .city-guide-question{flex:1;min-width:0;margin:0;padding:11px 13px;border-radius:4px 14px 14px 14px;background:var(--paper);border:1px solid var(--line);font-size:14px;line-height:1.55}
+.city-guide-mosaic figcaption{font-weight:700;font-size:11px;text-align:center}
+.city-guide-mosaic figcaption span+span{border-left:1px solid var(--line);padding-left:5px}
+.city-guide-preview{max-width:390px;height:auto;min-height:0;max-height:none;aspect-ratio:3/1;object-fit:cover}
+@media(min-width:801px){
+  .city-guide-step-town{grid-template-columns:minmax(0,1fr) minmax(320px,440px);align-items:center}
+  .city-guide-step-town .city-guide-copy{grid-column:1;grid-row:1 / span 2}
+  .city-guide-step-town .city-guide-mosaic{grid-column:2;grid-row:1;width:100%;max-width:440px}
+  .city-guide-step-town .city-guide-photo-note{grid-column:2;grid-row:2;margin:4px 0 0}
+}
+@media(max-width:800px){
+  .city-guide-preview{height:auto;min-height:0;max-height:none}
+}
+@media(max-width:620px){
+  .city-guide-dialogue{gap:8px}
+  .city-guide-dialogue>img{flex-basis:32px;width:32px;height:32px}
+  .city-guide-dialogue .city-guide-question{font-size:12px;padding:9px 10px}
+  .city-guide-mosaic figcaption{font-size:10px;line-height:1.3;padding:8px 4px}
+  .city-guide-mosaic figcaption span{white-space:normal;overflow-wrap:anywhere}
+}
