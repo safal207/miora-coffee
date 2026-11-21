@@ -8,6 +8,7 @@ import {normalizeCart,totals,updateCart,addPair,filterProducts,resolveView} from
 import {selectCartOffer,recordGrowthEvent} from './growth-engine.js?v=20261121-v1';
 import {readTasteMemory,setTasteMemoryEnabled,rememberTasteChoice,tasteSuggestions,TASTE_STORAGE_KEY} from './taste-memory.js?v=20261121-v1';
 import {USUAL_STORAGE_KEY,readUsual,saveUsual,forgetUsual,usualTotals,appendUsual} from './usual-order.js?v=20261121-v1';
+import {CITY_CATEGORY,CITY_ASSETS,CITY_COPY,cityNext,cityProducts} from './city-guide.js?v=20261121-v1';
 import {mountKiosk} from './kiosk.js?v=20261112-videos1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
@@ -132,6 +133,49 @@ function repeatUsual(){
   renderUsual();
   notify(t('added'));
 }
+let cityStep='hello',cityHidden=false;
+const cityHistory=[];
+function renderCityGuide(focus=false){
+  const root=$('city-guide'),opener=$('city-open'),c=CITY_COPY[lang];
+  opener.textContent=c.reopen;
+  opener.hidden=!cityHidden;
+  root.hidden=cityHidden;
+  if(cityHidden){root.innerHTML='';return;}
+  const labels={
+    hello:[['family',c.familyChoice],['adults',c.adultChoice]],
+    family:[['tour',c.tour],['choose',c.pick]],
+    adults:[['choose',c.pick],['tour',c.tour]],
+    town:[['choose',c.pick]],
+    choose:[['coffee',c.coffeeChoice],['dessert',c.dessertChoice],['food',c.foodChoice]],
+    coffee:[['category',c.openCategory],['choose',c.pick]],
+    dessert:[['category',c.openCategory],['choose',c.pick]],
+    food:[['category',c.openCategory],['choose',c.pick]]
+  };
+  const photos=cityStep==='town'
+    ?`<div class="city-guide-photos"><figure><img src="${CITY_ASSETS.town}" alt="${esc(c.photoTown)}" width="360" height="242" loading="lazy"><figcaption>${esc(c.photoTown)}</figcaption></figure><figure><img src="${CITY_ASSETS.play}" alt="${esc(c.photoPlay)}" width="240" height="366" loading="lazy"><figcaption>${esc(c.photoPlay)}</figcaption></figure><figure><img src="${CITY_ASSETS.coffee}" alt="${esc(c.photoCoffee)}" width="360" height="168" loading="lazy"><figcaption>${esc(c.photoCoffee)}</figcaption></figure></div><p class="city-guide-photo-note">${esc(c.privacy)}</p>`
+    :cityStep==='hello'
+      ?`<img class="city-guide-preview" src="${CITY_ASSETS.town}" width="360" height="242" alt="${esc(c.photoTown)}" loading="lazy">`:'';
+  const suggestions=['coffee','dessert','food'].includes(cityStep)
+    ?cityProducts(cityStep,products).map(p=>`<button type="button" class="city-guide-product" data-detail="${p.id}" aria-label="${esc(name(p)+' · '+money(p.price))}"><img src="${photo(p,160)}" alt="" width="60" height="60" loading="lazy"><span><b>${esc(name(p))}</b><small>${money(p.price)}</small></span></button>`).join(''):'';
+  const actions=(labels[cityStep]||[]).map(([action,label])=>`<button class="city-guide-choice" type="button" data-city-action="${action}">${esc(label)}</button>`).join('');
+  root.innerHTML=`<div class="city-guide-inner"><div class="city-guide-copy"><p class="city-guide-eyebrow">${esc(c.eyebrow)}</p><h2 id="city-guide-title" tabindex="-1">${esc(c.title)}</h2><p class="city-guide-question">${esc(c[cityStep])}</p>${suggestions?`<div class="city-guide-products">${suggestions}</div>`:''}<div class="city-guide-actions">${actions}</div><div class="city-guide-secondary">${cityHistory.length?`<button type="button" data-city-action="back">${esc(c.back)}</button>`:''}<button type="button" data-city-action="skip">${esc(c.skip)}</button></div><p class="city-guide-privacy">${esc(c.notChat)}</p></div>${photos}</div>`;
+  root.setAttribute('aria-label',c.title);
+  if(focus)root.querySelector('#city-guide-title')?.focus({preventScroll:true});
+}
+function cityAction(action){
+  if(action==='skip'||action==='category'){
+    const nextCategory=action==='category'?CITY_CATEGORY[cityStep]:'all';
+    cityHidden=true;renderCityGuide();
+    selectCategory(nextCategory||'all');return;
+  }
+  if(action==='back'){
+    cityStep=cityHistory.pop()||'hello';renderCityGuide(true);return;
+  }
+  const next=cityNext(cityStep,action);
+  if(!next)return;
+  cityHistory.push(cityStep);cityStep=next;
+  renderCityGuide(true);
+}
 function renderLanguage() {
   document.documentElement.lang=lang;$('language').value=lang;
   document.querySelectorAll('[data-i18n]').forEach(e=>{const k=e.dataset.i18n;if(['heroDescription','pairingTitle'].includes(k))e.innerHTML=t(k);else e.textContent=t(k);});
@@ -140,7 +184,7 @@ function renderLanguage() {
   $('feed-stories').setAttribute('aria-label',t('menu'));document.querySelector('.view-switch').setAttribute('aria-label',[t('feed'),t('grid'),t('list')].join(' / '));
   document.querySelectorAll('[data-close]').forEach(e=>e.setAttribute('aria-label',t('close')));
   document.querySelectorAll('[data-journey-copy]').forEach(node=>node.textContent=journeyCopy[lang][node.dataset.journeyCopy]);
-  renderTheme();renderCategories();renderProducts();renderTasteMemory();renderUsual();renderCartCount();kioskUI?.refresh();
+  renderTheme();renderCategories();renderProducts();renderTasteMemory();renderUsual();renderCityGuide();renderCartCount();kioskUI?.refresh();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
 function renderCategories() {
@@ -540,6 +584,8 @@ document.addEventListener('click',async event=>{
   const d=button.dataset;
   if(d.close){$(d.close).close();return;}
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
+  if(d.cityOpen!==undefined){cityHidden=false;cityStep='hello';cityHistory.length=0;renderCityGuide(true);$('city-guide').scrollIntoView({block:'start',behavior:'instant'});return;}
+  if(d.cityAction){cityAction(d.cityAction);return;}
   if(d.tasteToggle!==undefined){
     const enabled=!readTasteMemory(localStorage,byId).enabled;
     if(!setTasteMemoryEnabled(localStorage,enabled,byId)){notify(t('storageError'));return;}
