@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
 
 const welcomeCaptions = {ru:'Возьми с собой',tr:'Miora’yı yanına al',en:'Take it with you'};
 
@@ -27,7 +28,11 @@ async function verifyWelcome(page, origin, lang, width, motion) {
     assert.equal(await page.locator('#quick-results .quick-card').count(),0,'the menu script is still pending');
     if(width===320) {
       await cup.locator('img').first().evaluate(image=>image.decode());
-      await page.screenshot({path:'artifacts/miora-welcome-ru-320.png'});
+      // The document is still loading. Capture the rendered frame without waiting for DOM readiness.
+      const session = await page.context().newCDPSession(page);
+      const {data} = await session.send('Page.captureScreenshot',{format:'png'});
+      await session.detach();
+      await writeFile('artifacts/miora-welcome-ru-320.png',Buffer.from(data,'base64'));
     }
   } finally {
     releaseApp();
