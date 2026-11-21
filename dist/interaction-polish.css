@@ -15,6 +15,49 @@
   max-height: 355px;
   object-fit: contain;
 }
+#detail-dialog .detail-photo-frame {
+  position: relative;
+  width: min(100%, calc(min(49dvh, 400px) * var(--dish-detail-ratio)));
+  aspect-ratio: var(--dish-detail-ratio);
+  margin-inline: auto;
+  overflow: hidden;
+}
+#detail-dialog .detail-photo-frame .detail-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  object-position: var(--dish-position);
+  transform: scale(var(--dish-scale));
+}
+#detail-dialog .detail-top:has(.detail-photo-switch[aria-pressed="true"]) .detail-photo-frame .detail-photo,
+#detail-dialog .detail-photo-frame .detail-photo[data-photo-fallback] {
+  object-fit: contain;
+  object-position: center;
+  transform: none;
+}
+#detail-dialog .detail-photo-frame .menu-photo-pending { height: 100%; }
+#detail-dialog .detail-photo-tools {
+  display: flex;
+  justify-content: flex-end;
+  padding-inline: 12px;
+}
+#detail-dialog .detail-top:has(.detail-photo-frame :is([data-photo-fallback], .menu-photo-pending)) .detail-photo-tools { display: none; }
+#detail-dialog .detail-photo-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding-inline: 10px;
+  border-radius: 9px;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 700;
+}
+#detail-dialog .detail-photo-switch[aria-pressed="true"] { background: var(--card); }
+#detail-dialog .detail-photo-switch svg { width: 15px; height: 15px; }
 #detail-dialog .detail-top>.close-btn {
   z-index: 12;
   top: 10px;

@@ -25,7 +25,7 @@ test('one-column feed and mobile social controls do not replace the grid, galler
   assert.match(css, /@media \(max-width: 620px\)/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(html, /robys-feed-ux\.css\?v=20261117-counts1/);
-  assert.match(html, /app\.js\?v=20261121-kiosk1/);
+  assert.match(html, /app\.js\?v=20261122-framing1/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
   assert.match(app, /if\(d\.favorite\)\{[\s\S]*?toggleFavorite\(d\.favorite\)/);
@@ -72,7 +72,7 @@ test('per-device counters are explicit, and each card mode includes likes, share
 test('conversion-first product detail uses optional specifications, sticky CTA and progressive media', () => {
   const detail = app.slice(app.indexOf('function renderDetail() {'), app.indexOf('\nfunction recommend()'));
   const polish = readFileSync(new URL('../dist/interaction-polish.css', import.meta.url), 'utf8');
-  assert.match(html, /interaction-polish\.css\?v=20261117-curated1/);
+  assert.match(html, /interaction-polish\.css\?v=20261122-framing1/);
   assert.match(detail, /<details class="detail-more">/);
   assert.match(detail, /<summary>\$\{esc\(detailCopy\[lang\]\.more\)\}<\/summary>/);
   assert.match(detail, /<p class="detail-allergen-quick"/);

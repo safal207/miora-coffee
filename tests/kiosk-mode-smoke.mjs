@@ -1,7 +1,36 @@
 import assert from 'node:assert/strict';
+
+async function verifyDishPreview(page, menu, lang, width) {
+  const sandwich = menu.locator('[data-quick-item="430356"] .quick-photo');
+  const cardBox = await sandwich.boundingBox();
+  assert(Math.abs(cardBox.width - cardBox.height * (width > 800 ? 1.25 : 1)) <= 1, 'the quick pick reserves space for the photo');
+  assert.equal(await sandwich.locator('img').evaluate(img => getComputedStyle(img).objectPosition), '50% 49%');
+  await sandwich.click();
+  const dialog = page.locator('#detail-dialog[open]');
+  const image = dialog.locator('.detail-photo-frame img');
+  const fullPhoto = dialog.locator('.detail-photo-switch');
+  await image.evaluate(img => img.decode());
+  const [source, fit] = await image.evaluate(img => [img.currentSrc, getComputedStyle(img).objectFit]);
+  assert(source.includes('/originals/430356-'), 'the croissant preview uses the café photo');
+  assert.equal(fit, 'cover');
+  const frameBefore = await image.boundingBox();
+  await page.screenshot({path:`artifacts/kiosk-dish-${lang}-${width}.png`});
+  await fullPhoto.press('Space');
+  assert.equal(await fullPhoto.getAttribute('aria-pressed'), 'true');
+  assert.equal(await image.evaluate(img => getComputedStyle(img).objectFit), 'contain');
+  assert.equal(await image.evaluate(img => img.currentSrc), source, 'both views use the same photo');
+  assert.deepEqual(await image.boundingBox(), frameBefore, 'the photo toggle does not shift the layout');
+  await fullPhoto.press('Enter');
+  assert.equal(await fullPhoto.getAttribute('aria-pressed'), 'false');
+  await page.keyboard.press('Escape');
+  assert.equal(await dialog.count(), 0);
+  assert(await sandwich.evaluate(button => document.activeElement === button), 'closing returns focus to the dish');
+}
+
 export async function verifyKioskMode(browser, origin) {
-  for (const [lang, width] of [['ru',320], ['tr',320], ['en',360], ['tr',390], ['ru',768], ['en',1280]]) {
-    const context = await browser.newContext({viewport:{width,height:800}, reducedMotion:'reduce'});
+  const layouts = [['ru',320,680], ['tr',320,800], ['en',360,640], ['tr',390,800], ['ru',620,740], ['en',621,740], ['ru',768,620], ['en',1280,800]];
+  for (const [lang, width, height] of layouts) {
+    const context = await browser.newContext({viewport:{width,height}, isMobile:width <= 620, hasTouch:width <= 620, reducedMotion:'reduce'});
     const page = await context.newPage();
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -18,6 +47,7 @@ export async function verifyKioskMode(browser, origin) {
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'header and menu fit on entry');
     assert.equal(new URL(page.url()).searchParams.get('view'), 'kiosk');
     assert.equal(await menu.locator('#quick-groups button').count(), 3);
+    await menu.locator('#quick-results img').evaluateAll(images => Promise.all(images.map(img => img.decode())));
     await page.screenshot({path:`artifacts/kiosk-${lang}-${width}.png`});
     await addLatte.click();
     await page.locator('#mobile-cart-open').click();
@@ -46,10 +76,28 @@ export async function verifyKioskMode(browser, origin) {
     assert(await menu.locator('[data-quick-item="428743"]').isVisible());
     await menu.locator('[data-quick-group="food"]').click();
     assert(await menu.locator('[data-add="430356"]').isVisible(), 'ready-to-add croissant sandwich');
+    if(width === 1280) {
+      const actions = await menu.locator('.quick-card-foot .quick-add').evaluateAll(buttons =>
+        buttons.map(button => button.getBoundingClientRect().bottom));
+      const cartBar = await page.locator('#mobile-cart-open').boundingBox();
+      assert(cartBar && Math.max(...actions) <= cartBar.y, 'food actions sit above the desktop cart bar');
+    }
+    if((lang === 'ru' && width === 320) || width === 390 || width === 1280) {
+      await menu.locator('#quick-results img').evaluateAll(images => Promise.all(images.map(img => img.decode())));
+      await page.screenshot({path:`artifacts/kiosk-food-${lang}-${width}.png`});
+      await verifyDishPreview(page, menu, lang, width);
+    }
     await menu.locator('[data-k-start="sandwich"]').click();
     assert(await page.locator('#kiosk-dialog').isVisible());
     await page.locator('#kiosk-dialog [data-k-close]').click();
     await menu.locator('[data-quick-group="pairs"]').click();
+    const pairPhotos = menu.locator('.quick-pair').first().locator('.quick-photo');
+    const [first, second] = await Promise.all([pairPhotos.nth(0).boundingBox(), pairPhotos.nth(1).boundingBox()]);
+    assert(first && second && Math.abs(first.y - second.y) < 1 && first.x + first.width <= second.x, 'pair photos remain side by side');
+    if(width === 390 || width === 1280) {
+      await pairPhotos.locator('img').evaluateAll(images => Promise.all(images.map(img => img.decode())));
+      await page.screenshot({path:`artifacts/kiosk-pairs-${lang}-${width}.png`});
+    }
     await menu.locator('[data-quick-pair="latte"]').click();
     await page.locator('#cart-open').click();
     assert.equal(await total.innerText(), '540 ₺');
@@ -71,5 +119,5 @@ export async function verifyKioskMode(browser, origin) {
     assert.deepEqual(errors, []);
     await context.close();
   }
-  console.log('Kiosk selection, full catalog, shared cart, browser history, QR and next guest passed in RU/TR/EN.');
+  console.log('Kiosk photo framing, selection, full catalog, shared cart, browser history, QR and next guest passed in RU/TR/EN.');
 }

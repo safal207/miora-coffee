@@ -1,6 +1,7 @@
 import {categories, products} from './menu-data.js';
 import {filterProducts} from './core.js';
 import {photoUrl, photoSet, photoKind} from './photos.js?v=20261117-curated1';
+import {dishFrameStyle} from './photo-framing.js';
 import {journeyCopy} from './desire-journey.js?v=20261112-generated1';
 
 export const kioskCopy = {
@@ -12,6 +13,8 @@ export const kioskCopy = {
 const drinks = ['428743', '428772', '428748'];
 const food = ['430356', '430236', '431742', '431203'];
 const groups = {coffee:'428748', food:'430356', pairs:'430226'};
+const cardSizes = '(max-width: 620px) 47vw, (max-width: 800px) 46vw, 260px';
+const pairSizes = '(max-width: 620px) 47vw, 180px';
 export const kioskPairs = {
   latte: ['428748', '431293'],
   cappuccino: ['428772', '430226'],
@@ -30,7 +33,7 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     const kind = photoKind(item);
     const labels = journeyCopy[getLanguage()];
     const note = kind === 'generated' ? labels.generated : kind === 'illustration' ? labels.illustration : '';
-    return `<img src="${photoUrl(item, 640)}" ${photoSet(item, sizes)} width="480" height="340" loading="lazy" decoding="async" alt="">
+    return `<img src="${photoUrl(item, 640)}" ${photoSet(item, sizes)} ${dishFrameStyle(item)} loading="lazy" decoding="async" alt="">
       ${note ? `<small class="quick-photo-note">${esc(note)}</small>` : ''}`;
   }
 
@@ -46,7 +49,7 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     const label = esc(action + ' · ' + name(item));
     return `<article class="quick-card" data-quick-item="${id}">
       <button type="button" class="quick-photo" data-detail="${id}" aria-label="${esc(t('detail'))} · ${title}">
-        ${picture(item, '(max-width: 620px) 48vw, 260px')}
+        ${picture(item, cardSizes)}
       </button>
       <div class="quick-card-body">
         <h3><button type="button" data-detail="${id}">${title}</button></h3>
@@ -63,7 +66,7 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
       `<button type="button" data-add="${item.id}" aria-label="${esc(t('add') + ' · ' + name(item) + ' · ' + money(item.price))}">
         <span>${esc(label)}</span><strong>${money(item.price)}</strong>${icon('plus')}</button>`).join('');
     return `<article class="quick-card quick-espresso"><button type="button" class="quick-photo" data-detail="${single.id}" aria-label="${esc(t('detail') + ' · ' + copy.portion)}">
-      ${picture(single, '(max-width: 620px) 48vw, 260px')}</button>
+      ${picture(single, cardSizes)}</button>
       <div class="quick-card-body"><h3>${esc(copy.portion)}</h3><div class="quick-shots">${options}</div></div></article>`;
   }
 
@@ -72,7 +75,7 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     if (!items.every(item => item?.price > 0)) return '';
     const title = items.map(name).join(' + ');
     const photos = items.map(item =>
-      `<button type="button" class="quick-photo" data-detail="${item.id}" aria-label="${esc(t('detail') + ' · ' + name(item))}">${picture(item, '(max-width: 620px) 45vw, 180px')}</button>`).join('');
+      `<button type="button" class="quick-photo" data-detail="${item.id}" aria-label="${esc(t('detail') + ' · ' + name(item))}">${picture(item, pairSizes)}</button>`).join('');
     return `<article class="quick-card quick-pair"><div class="quick-pair-photos">${photos}</div>
       <div class="quick-card-body"><h3>${esc(title)}</h3><div class="quick-card-foot"><strong>${money(items[0].price + items[1].price)}</strong>
       <button type="button" class="quick-add" data-quick-pair="${key}" aria-label="${esc(copy.pairAdd + ' · ' + title)}">${esc(copy.pairAdd)}</button></div></div></article>`;
@@ -87,6 +90,7 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     const count = find('quick-count');
     count.textContent = '';
     results.classList.toggle('quick-pairs', group === 'pairs');
+    results.classList.toggle('quick-catalog', all);
     if (group === 'pairs') {
       results.innerHTML = Object.entries(kioskPairs).map(([key, ids]) => pairCard(key, ids, copy)).join('');
       return;
