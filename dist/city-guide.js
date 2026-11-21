@@ -37,7 +37,7 @@ export const CITY_COPY=Object.freeze({
     familyChoice:'Çocuklarla geldik',adultChoice:'Kahve molasına geldim',
     tour:'Oyun şehrini keşfet',pick:'Yiyecek ve içecek seç',coffeeChoice:'Kahve',dessertChoice:'Tatlı',foodChoice:'Yemek',
     openCategory:'Menüde göster',skip:'Tüm menüye geç',back:'Geri',restart:'Baştan başla',
-    reopen:'Miora ile tanış',notChat:'Bu, canlı sohbet değil; kısa bir menü rehberi. Yanıtlar gönderilmez ve kaydedilmez.',
+    reopen:'Miora ile tanış',usual:'Kaydettiğim listeyi ekle',favorites:'Favorilerime bak',notChat:'Bu, canlı sohbet değil; kısa bir menü rehberi. Yanıtlar gönderilmez ve kaydedilmez.',
     photoTown:'Miora oyun alanında küçük dükkân cepheleri',photoPlay:'Miora oyun alanında kaydırak ve oyuncaklar',
     photoCoffee:'Miora kahve tezgâhı',panorama:'Oyun şehri, kaydırak ve kahve tezgâhı · Miora',privacy:'Çocukların yüzlerini göstermeyen, mekândan gerçek fotoğraflar.'
   },
@@ -54,7 +54,7 @@ export const CITY_COPY=Object.freeze({
     familyChoice:'Мы с детьми',adultChoice:'Заглянули на кофе',
     tour:'Посмотреть игровой городок',pick:'Выбрать еду и напитки',coffeeChoice:'Кофе',dessertChoice:'Десерты',foodChoice:'Перекусить',
     openCategory:'Открыть в меню',skip:'Сразу в меню',back:'Назад',restart:'Начать заново',
-    reopen:'Познакомиться с Miora',notChat:'Это не онлайн-чат, а мини-гид по кафе. Ответы никуда не отправляются и не сохраняются.',
+    reopen:'Познакомиться с Miora',usual:'Добавить мой сохранённый список',favorites:'Посмотреть избранное',notChat:'Это не онлайн-чат, а мини-гид по кафе. Ответы никуда не отправляются и не сохраняются.',
     photoTown:'Настоящие фасады домиков игрового городка Miora',photoPlay:'Горка и игрушки в детской зоне Miora',
     photoCoffee:'Кофейная стойка Miora',panorama:'Домики, горка и кофейная стойка Miora',privacy:'Настоящие фотографии пространства, без публикации детских лиц.'
   },
@@ -71,7 +71,7 @@ export const CITY_COPY=Object.freeze({
     familyChoice:'Here with kids',adultChoice:'Here for a coffee break',
     tour:'Explore the play town',pick:'Choose food and drinks',coffeeChoice:'Coffee',dessertChoice:'Desserts',foodChoice:'Something to eat',
     openCategory:'See in menu',skip:'Go straight to menu',back:'Back',restart:'Start again',
-    reopen:'Meet Miora',notChat:'This is a short interactive guide, not a live chat. Answers are not sent or stored.',
+    reopen:'Meet Miora',usual:'Add my saved list',favorites:'See my favorites',notChat:'This is a short interactive guide, not a live chat. Answers are not sent or stored.',
     photoTown:'Real storefront facades in the Miora play town',photoPlay:'Slide and toys in the Miora play area',
     photoCoffee:'Miora coffee counter',panorama:'Miora play town, slide and coffee counter',privacy:'Real venue photos cropped to exclude identifiable children.'
   }
