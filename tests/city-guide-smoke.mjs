@@ -52,6 +52,21 @@ try{
   assert.equal(await guide.isVisible(),false,'guide can be skipped without purchase');
   assert.equal(await page.locator('#cart-open .cart-count').textContent(),cartBefore);
   assert.equal(await page.evaluate(()=>localStorage.getItem('miora:city-guide')),null,'never store family status');
+  await page.evaluate(()=>{
+    localStorage.setItem('miora:usual-order:v1',JSON.stringify({version:1,cart:{'428748':2},configuredOrders:[]}));
+    localStorage.setItem('miora:favorites',JSON.stringify(['428748']));
+  });
+  await page.reload({waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('#cart-open .cart-count').textContent(),cartBefore,'saved list must not automatically enter cart');
+  await guide.locator('[data-city-action="usual"]').click();
+  assert.equal(await page.locator('#cart-open .cart-count').textContent(),'2','saved list requires an explicit action');
+  assert.equal(await page.locator('#cart-dialog').evaluate(el=>el.open),true);
+  await page.locator('#cart-dialog [data-close]').click();
+  await page.locator('#city-open').click();
+  await guide.locator('[data-city-action="family"]').click();
+  await guide.locator('[data-city-action="favorites"]').click();
+  assert.equal(new URL(page.url()).searchParams.get('category'),'favorites');
+  assert.equal(await page.locator('#result-count').textContent().then(x=>x.includes('1')),true);
   assert.deepEqual(exceptions,[]);
   console.log('PASS Miora City Guide '+lang+' '+width+'px: dialogue, authentic photo, keyboard, categories, opt-out');
   await ctx.close();
