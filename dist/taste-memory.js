@@ -52,6 +52,7 @@ export function tasteSuggestions({favorites=[],memory={enabled:false,recent:[]},
     ...(memory.enabled===true&&Array.isArray(memory.recent)?memory.recent:[])];
   const distinct=new Set(),out=[];
   const cap=Number.isInteger(limit)?Math.max(0,Math.min(6,limit)):4;
+  if(cap===0)return [];
   for(const id of desired){
     if(!validId(id)||distinct.has(id)||!available(catalog,id))continue;
     distinct.add(id);out.push(catalog.get(id));
