@@ -28,6 +28,34 @@ try{
   await panorama.scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>{const image=document.querySelector('.city-tour-image > img');return image?.complete&&image.naturalWidth>0;});
   assert.match(await panorama.getAttribute('src'),/assets\/city\/miora-city\.webp$/);
+  const gallery=guide.locator('.city-gallery');
+  await gallery.locator('[data-city-gallery-open]').waitFor();
+  assert.equal(await gallery.locator('.city-gallery-thumbs [data-city-gallery]').count(),4,
+    'exactly four approved slides, never the rejected fifth');
+  assert.match(await gallery.locator('.city-gallery-disclaimer').textContent(),/AI|yapay zekâ/i,
+    'gallery must disclose generative adjustments in every language');
+  await page.waitForFunction(()=>{
+    const image=document.querySelector('#city-gallery-photo');return image?.complete&&image.naturalWidth>0;
+  });
+  await gallery.locator('[data-city-gallery="1"]').click();
+  assert.equal(await gallery.locator('[data-city-gallery="1"]').getAttribute('aria-pressed'),'true');
+  assert.match(await gallery.locator('#city-gallery-photo').getAttribute('src'),/02-shop-and-houses\.webp$/);
+  await gallery.locator('.city-gallery-actions [data-city-gallery-next]').click();
+  assert.match(await gallery.locator('#city-gallery-photo').getAttribute('src'),/03-family-corner\.webp$/);
+  await gallery.locator('[data-city-gallery-open]').click();
+  const photoDialog=gallery.locator('#city-gallery-dialog');
+  assert.equal(await photoDialog.evaluate(el=>el.open),true,'large viewer opens only by visitor action');
+  await photoDialog.locator('[data-city-gallery-next]').click();
+  assert.match(await photoDialog.locator('#city-gallery-full-photo').getAttribute('src'),/04-slide\.webp$/);
+  await page.keyboard.press('Escape');
+  assert.equal(await photoDialog.evaluate(el=>el.open),false);
+  await page.waitForFunction(()=>{const image=document.querySelector('#city-gallery-photo');return image?.complete&&image.naturalWidth>0;});
+  await gallery.scrollIntoViewIfNeeded();
+  await page.screenshot({path:'artifacts/miora-four-gallery-'+lang+'-'+width+'.png'});
+  assert(await gallery.evaluate(el=>el.scrollWidth<=el.clientWidth+1),
+    'gallery cannot create horizontal overflow on phone or desktop');
+  assert.equal(await page.locator('#cart-open .cart-count').textContent(),cartBefore,
+    'gallery view/zoom never adds products');
   assert.equal(await guide.locator('.city-tour-pin').count(),4);
   assert.equal(await guide.locator('.city-tour-stop').count(),4);
   assert.equal(await guide.locator('.city-tour-pin[data-city-spot="houses"]').getAttribute('aria-pressed'),'true');
