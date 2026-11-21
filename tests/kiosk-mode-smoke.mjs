@@ -64,11 +64,24 @@ export async function verifyKioskMode(browser, origin) {
     assert.equal(await total.innerText(), '130 ₺');
     assert.equal(await cart.locator('[data-service="dineIn"]').getAttribute('aria-pressed'), 'true');
     await cart.locator('[data-close]').click();
-    const layout = await page.evaluate(() => ({
-      width: innerWidth, content: document.documentElement.scrollWidth,
-      offenders: [...document.querySelectorAll('body *')].filter(el => el.getBoundingClientRect().right > innerWidth + 0.5)
-        .map(el => [el.tagName, el.id || String(el.className), Math.round(el.getBoundingClientRect().right)]).slice(0,15)
-    }));
+    const layout = await page.evaluate(() => {
+      const root = document.documentElement;
+      const width = innerWidth, content = root.scrollWidth;
+      if (content <= width) return {width, content};
+      const scroll = scrollX;
+      const elements = [...document.querySelectorAll('body *')].filter(el => el.getClientRects().length);
+      const id = el => el.id || (el.tagName + '.' + String(el.className));
+      const positions = elements.filter(el => el.getBoundingClientRect().right + scroll > width + .5)
+        .map(el => [id(el), Math.round(el.getBoundingClientRect().right + scroll)]).slice(0,20);
+      const isolated = [...document.body.children].filter(el => el.getClientRects().length).map(el => {
+        const css = el.style.cssText;
+        el.style.setProperty('display', 'none', 'important');
+        const without = root.scrollWidth;
+        el.style.cssText = css;
+        return [id(el), without];
+      });
+      return {width, content, scroll, positions, isolated};
+    });
     assert(layout.content <= layout.width, JSON.stringify(layout));
     assert.deepEqual(errors, []);
     await context.close();
