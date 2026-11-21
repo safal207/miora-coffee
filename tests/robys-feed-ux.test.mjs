@@ -25,7 +25,7 @@ test('one-column feed and mobile social controls do not replace the grid, galler
   assert.match(css, /@media \(max-width: 620px\)/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(html, /robys-feed-ux\.css\?v=20261117-counts1/);
-  assert.match(html, /app\.js\?v=20261121-taste1/);
+  assert.match(html, /app\.js\?v=20261121-usual1/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
   assert.match(app, /if\(d\.favorite\)\{[\s\S]*?toggleFavorite\(d\.favorite\)/);

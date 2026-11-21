@@ -27,6 +27,7 @@ jobs:
           node --check dist/core.js
           node --check dist/growth-engine.js
           node --check dist/taste-memory.js
+          node --check dist/usual-order.js
           node --check dist/photos.js
           node --check dist/photo-data.js
           node --check dist/menu-data.js
@@ -59,6 +60,7 @@ jobs:
           node tests/layout-smoke.mjs
           node tests/growth-smoke.mjs
           node tests/taste-memory-smoke.mjs
+          node tests/usual-order-smoke.mjs
       - name: Upload feed screenshots for visual review
         if: always()
         uses: actions/upload-artifact@v4
