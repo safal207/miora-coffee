@@ -152,9 +152,9 @@ function renderCityGuide(focus=false){
     food:[['category',c.openCategory],['choose',c.pick]]
   };
   const photos=cityStep==='town'
-    ?`<div class="city-guide-photos"><figure><img src="${CITY_ASSETS.town}" alt="${esc(c.photoTown)}" width="360" height="242" loading="lazy"><figcaption>${esc(c.photoTown)}</figcaption></figure><figure><img src="${CITY_ASSETS.play}" alt="${esc(c.photoPlay)}" width="240" height="366" loading="lazy"><figcaption>${esc(c.photoPlay)}</figcaption></figure><figure><img src="${CITY_ASSETS.coffee}" alt="${esc(c.photoCoffee)}" width="360" height="168" loading="lazy"><figcaption>${esc(c.photoCoffee)}</figcaption></figure></div><p class="city-guide-photo-note">${esc(c.privacy)}</p>`
+    ?`<figure class="city-guide-mosaic"><img src="${CITY_ASSETS.panorama}" alt="${esc(c.panorama)}" width="390" height="130" loading="lazy"><figcaption><span>${esc(c.photoTown)}</span><span>${esc(c.photoPlay)}</span><span>${esc(c.photoCoffee)}</span></figcaption></figure><p class="city-guide-photo-note">${esc(c.privacy)}</p>`
     :cityStep==='hello'
-      ?`<img class="city-guide-preview" src="${CITY_ASSETS.town}" width="360" height="242" alt="${esc(c.photoTown)}" loading="lazy">`:'';
+      ?`<img class="city-guide-preview" src="${CITY_ASSETS.panorama}" width="390" height="130" alt="${esc(c.panorama)}" loading="lazy">`:'';
   const suggestions=['coffee','dessert','food'].includes(cityStep)
     ?cityProducts(cityStep,products).map(p=>`<button type="button" class="city-guide-product" data-detail="${p.id}" aria-label="${esc(name(p)+' · '+money(p.price))}"><img src="${photo(p,160)}" alt="" width="60" height="60" loading="lazy"><span><b>${esc(name(p))}</b><small>${money(p.price)}</small></span></button>`).join(''):'';
   const actions=(labels[cityStep]||[]).map(([action,label])=>`<button class="city-guide-choice" type="button" data-city-action="${action}">${esc(label)}</button>`).join('');
