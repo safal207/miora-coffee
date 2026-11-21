@@ -37,7 +37,7 @@ test('the original menu has real source prices, without invented deals',()=>{
  assert.equal(new Set(subset.map(p=>p.id)).size,subset.length);
 });
 test('all visitor scenarios have fully translated labels in tr, ru and en',()=>{
- const required=['eyebrow','title','hello','family','adults','town','choose','coffee','dessert','food','familyChoice','adultChoice','tour','pick','coffeeChoice','dessertChoice','foodChoice','openCategory','skip','back','reopen','usual','favorites','notChat','panorama','privacy'];
+ const required=['eyebrow','title','hello','family','adults','town','choose','coffee','dessert','food','familyChoice','adultChoice','tour','pick','coffeeChoice','dessertChoice','foodChoice','openCategory','skip','back','reopen','usual','favorites','notChat','panorama','privacy','shortTown','shortPlay','shortCoffee'];
  for(const lang of ['tr','ru','en'])for(const key of required){
   assert.equal(typeof CITY_COPY[lang][key],'string',lang+'.'+key);
   assert(CITY_COPY[lang][key].trim().length>0,lang+'.'+key);
