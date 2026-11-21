@@ -33,7 +33,8 @@ export async function verifyFamilyVisit(browser, origin) {
       return [width,height];
     }));
     assert(frames.every(([w,h])=>Math.abs(w-h*1.65)<2),'the photos preserve their frame when portrait images load');
-    assert.deepEqual(await combos.locator('[data-family-add]').allTextContents().then(items=>items.map(s=>s.match(/\d+ ₺/)[0])),['140 ₺','390 ₺','530 ₺']);
+    assert.deepEqual(await combos.locator('.family-photos .photo-price').allTextContents(),['140 ₺','390 ₺','530 ₺']);
+    assert.equal(await combos.locator('.photo-price').count(),3,'one price per combo');
     const room = page.locator('#family-care');
     assert(await room.locator('img').getAttribute('src'));
     const mini = page.locator('#family-mini');

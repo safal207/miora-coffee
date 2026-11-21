@@ -1,0 +1,93 @@
+.photo-surface {
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+}
+.photo-surface > .photo-actions {
+  position: absolute;
+  z-index: 4;
+  inset: 8px 8px auto auto;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(40px, auto);
+  gap: 0;
+  max-width: calc(100% - 16px);
+  margin: 0;
+  border: 1px solid #fff9eb70;
+  border-radius: 999px;
+  background: #31261bed;
+  color: #fff7ea;
+  box-shadow: 0 2px 10px #21171028;
+}
+.photo-actions > button, .photo-actions > .card-views {
+  min-width: 0;
+  min-height: 40px;
+  padding-inline: 5px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1;
+}
+.photo-actions svg { width: 15px; height: 15px; }
+.photo-actions > button[aria-pressed="true"] { color: #ffbeb6; }
+.photo-actions > button:is(:hover,:focus-visible) { background: #ffffff26; }
+.photo-actions > button:focus-visible { outline: 2px solid #ffebc5; outline-offset: -3px; }
+.photo-surface > .photo-price {
+  position: absolute;
+  z-index: 3;
+  inset: auto auto 8px 8px;
+  max-width: calc(100% - 16px);
+  padding: 4px 11px 5px;
+  border: 1px solid #ead5b1;
+  border-radius: 10px;
+  background: #fff4df;
+  color: #362619;
+  box-shadow: 0 3px 15px #20140c35;
+  font: 700 22px/1.08 Georgia, serif;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+.photo-price:has(.photo-price-qualifier) { display: flex; gap: 4px; align-items: baseline; flex-wrap: wrap; }
+.photo-price-qualifier { font: 700 10px/1.15 Arial, sans-serif; }
+.photo-price.photo-price-text { font: 700 12px/1.2 Arial, sans-serif; }
+.photo-scope, .card-photo-note { display: block; color: var(--muted); font-size: 10px; line-height: 1.35; }
+.result-heading .photo-scope, .family-section .photo-scope { margin-top: 3px; }
+.family-section h2 { margin-bottom: 3px; }
+.family-section > .photo-scope { margin-bottom: 15px; }
+.product-body > .miora-photo-identity { position: static; align-self: flex-start; }
+#products .product-bottom { justify-content: flex-end; }
+body[data-view="feed"] .feed-post .post-order > :first-child:has([hidden]) { display: none; }
+body[data-view="feed"] .feed-media::after { display: none; }
+body[data-view="feed"] .feed-media .miora-photo-identity { top: 10px; bottom: auto; }
+body[data-view="feed"] .gallery-frame .gallery-label { top: 8px; bottom: auto; max-width: calc(100% - 175px); }
+.quick-card-foot { justify-content: flex-end; }
+.quick-espresso .quick-shots { grid-template-columns: 1fr 1fr; }
+.quick-espresso .quick-shots button { justify-content: center; }
+.quick-espresso .quick-shots button[aria-pressed="true"] { outline: 1px solid var(--teal); outline-offset: -1px; background: var(--card); }
+.quick-espresso .quick-card-foot .quick-add { width: 100%; }
+#detail-dialog .detail-image > .photo-actions { inset-inline: 8px auto; }
+.spotlight-picture > img { width: 100%; }
+.spotlight-picture { min-width: 0; }
+#pairing-overlay { position: absolute; inset: 0; pointer-events: none; }
+#pairing-overlay .photo-actions > button { pointer-events: auto; }
+#pairing-overlay > .photo-price { font-size: 26px; }
+@container (max-width: 167px) {
+  .photo-surface > .photo-actions {
+    inset: 5px 5px auto;
+    max-width: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .photo-actions > button, .photo-actions > .card-views { min-height: 34px; padding-inline: 2px; font-size: 10px; }
+  .photo-actions svg { width: 13px; height: 13px; }
+  .photo-surface > .photo-price { inset: auto auto 5px 5px; max-width: calc(100% - 10px); padding: 4px 7px; font-size: 17px; }
+  .photo-surface > .photo-price-text { font-size: 10px; }
+}
+@container (max-width: 120px) {
+  .photo-actions > button, .photo-actions > .card-views { font-size: 9px; }
+  .photo-actions > button, .photo-actions > .card-views { flex-direction: column; gap: 2px; min-height: 36px; }
+  .photo-surface > .photo-price { font-size: 15px; }
+  .photo-surface > .photo-price-text { font-size: 10px; }
+}
+@media (forced-colors: active) {
+  .photo-surface > .photo-actions, .photo-surface > .photo-price { border-color: ButtonText; }
+}

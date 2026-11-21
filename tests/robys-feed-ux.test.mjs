@@ -7,25 +7,19 @@ const css = readFileSync(new URL('../dist/robys-feed-ux.css', import.meta.url), 
 const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
 const feed = app.slice(app.indexOf('function feedPost(p) {'), app.indexOf('\nfunction recordView(id)'));
 
-test('Miora feed has exactly one accessible vertical social group with saved, share and detail controls', () => {
-  assert.match(feed, /class="feed-action-rail" role="group"/);
-  assert.equal((feed.match(/class="icon-btn feed-rail-button"/g) || []).length, 2);
-  assert.match(feed, /class="icon-btn feed-save feed-rail-button"/);
-  for (const action of ['data-favorite=', 'data-share=', 'data-detail=']) {
-    assert.ok(feed.includes(action), action);
-  }
-  assert.match(feed, /aria-pressed="\$\{favorites\.has\(p\.id\)\}"/);
-  assert.match(feed, /aria-label=/);
-  assert.match(feed, /\$\{p\.price===null\?t\('ask'\):money\(p\.price\)\}/);
+test('Miora feed includes a single photo overlay and opens details from the photo', () => {
+  assert.match(feed, /class="feed-media/);
+  assert.match(feed, /photoOverlay\(p\.id,menuPrice\(p\)\)/);
+  assert.match(feed, /class="feed-photo-button" type="button" data-detail=/);
+  assert.ok(!feed.slice(feed.indexOf('class="post-order"')).includes('<strong>'));
 });
 
 test('one-column feed and mobile social controls do not replace the grid, gallery, or menu', () => {
   assert.match(css, /body\[data-view="feed"\] \.journey-cards\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\)/);
-  assert.match(css, /\.feed-action-rail\s*\{[\s\S]*?flex-direction: column/);
   assert.match(css, /@media \(max-width: 620px\)/);
   assert.match(css, /prefers-reduced-motion/);
-  assert.match(html, /robys-feed-ux\.css\?v=20261117-counts1/);
-  assert.match(html, /app\.js\?v=20261122-family1/);
+  assert.match(html, /robys-feed-ux\.css\?v=20261122-photo1/);
+  assert.match(html, /app\.js\?v=20261122-photo1/);
   assert.ok(app.includes('disposeGalleries=mountGalleries'));
   assert.ok(app.includes('if(d.share){await shareItem(d.share);return;}'));
   assert.match(app, /if\(d\.favorite\)\{[\s\S]*?toggleFavorite\(d\.favorite\)/);
@@ -43,32 +37,30 @@ test('optional discovery modules are accessible and do not conceal the ordering 
   assert.ok(html.includes('data-k-start="breakfast"'));
 });
 
-test('Instagram-style paper airplane and right-side actions are used on every card layout', () => {
+test('Photo controls show the eye, heart and paper plane', () => {
   assert.match(app, /share:'<path d="m22 2-7 20-4-9-9-4L22 2Z"/);
-  assert.match(app, /<div class="product-social" role="group"/);
-  assert.match(app, /data-share="\$\{p\.id\}" aria-label="\$\{esc\(t\('share'\)/);
-  assert.match(css, /body:not\(\[data-view="feed"\]\) \.product-media \.product-social \{/);
-  assert.match(css, /body\[data-view="list"\] \.product-media \.product-social button:first-child \{\s*display: flex;/);
-  const extra = app.slice(app.indexOf('function cardEngagement(id)'), app.indexOf('function socialStats(id)'));
-  assert.match(extra, /data-share-count=/);
-  assert.match(extra, /data-view-count=/);
-  assert.match(extra, /data-like-count=/);
+  const controls = app.slice(app.indexOf('function cardEngagement('), app.indexOf('function photoOverlay('));
+  assert.match(controls, /role="group"/);
+  assert.match(controls, /data-share-count=/);
+  assert.match(controls, /data-view-count=/);
+  assert.match(controls, /data-like-count=/);
+  assert.match(controls, /aria-pressed=/);
 });
 
 test('per-device counters are explicit, and each card mode includes likes, shares and impressions', () => {
   assert.match(app, /scope:'На этом устройстве'/);
-  assert.match(app, /function socialStats\(id\)/);
+  assert.match(app, /function photoOverlay\(id,price\)/);
   for (const field of ['data-like-count', 'data-share-count', 'data-view-count']) {
     assert.ok(app.includes(field), field);
   }
-  assert.match(app, /<div class="product-media" data-view-id="\$\{p\.id\}"/);
-  assert.match(app, /<div class="feed-media" data-view-id="\$\{p\.id\}"/);
+  assert.match(app, /<div class="product-media photo-surface" data-view-id="\$\{p\.id\}"/);
+  assert.match(feed, /data-view-id="\$\{p\.id\}"/);
   assert.match(app, /document\.querySelectorAll\('\[data-view-id\]'\)/);
   assert.match(app, /save\('shares',shareCounts\)/);
   assert.match(app, /if\(ok&&pendingShareId\)recordShare\(pendingShareId\)/);
   assert.match(app, /navigator\.share\(\{title:[\s\S]*?\}\);recordShare\(id\)/);
   assert.match(app, /syncSocialStats\(\)/);
-  assert.match(css, /\.social-stats-scope/);
+  assert.match(html, /id="catalog-social-scope"/);
 });
 
 
@@ -112,18 +104,11 @@ test('the customer-facing menu has no AI 360 controls and only curated static cu
 });
 
 
-test('responsive layout keeps social actions outside the list photograph and preserves all view modes',()=>{
+test('responsive layout preserves the established list column and search toolbar',()=>{
   const fixed=readFileSync(new URL('../dist/responsive-layout-fix.css',import.meta.url),'utf8');
-  assert.match(html,/responsive-layout-fix\.css\?v=20261117-fix1/);
-  assert.match(app,/function productSocial\(p,compact=false\)/);
-  assert.match(app,/view==='list'\?productSocial\(p,true\):socialStats\(p\.id\)/);
-  assert.match(app,/view==='list'\?'':productSocial\(p\)/);
-  assert.match(app,/class="list-view-stat"/);
+  assert.match(html,/responsive-layout-fix\.css\?v=20261122-photo1/);
   assert.match(fixed,/body\[data-view="list"\] #products\.list-view \.product-card/);
   assert.match(fixed,/grid-template-columns:clamp\(96px,29%,138px\) minmax\(0,1fr\)/);
-  assert.match(fixed,/body\[data-view="list"\] #products \.product-body>\.product-social/);
-  assert.match(fixed,/position:static/);
-  assert.match(fixed,/body\[data-view="grid"\] #products \.product-price/);
   assert.match(fixed,/body:not\(\[data-view="feed"\]\) \.toolbar \.search-row/);
   assert.match(fixed,/grid-row:2/);
 });

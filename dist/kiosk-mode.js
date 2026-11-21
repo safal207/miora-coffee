@@ -21,20 +21,23 @@ export const kioskPairs = {
   americano: ['428743', '431745']
 };
 
-export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, kioskFor, kioskBread, menuPrice, quantity, social, onCardsRendered}) {
+export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, kioskFor, kioskBread, menuPrice, quantity, overlay, onCardsRendered}) {
   const root = document.getElementById('kiosk-menu');
   const find = id => root.querySelector('#' + id);
   const search = find('quick-search');
   const category = find('quick-category');
   const results = find('quick-results');
   let group = 'coffee';
+  let espresso = '428974';
 
   function picture(item, sizes) {
-    const kind = photoKind(item);
-    const labels = journeyCopy[getLanguage()];
-    const note = kind === 'generated' ? labels.generated : kind === 'illustration' ? labels.illustration : '';
-    return `<img src="${photoUrl(item, 640)}" ${photoSet(item, sizes)} ${dishFrameStyle(item)} loading="lazy" decoding="async" alt="">
-      ${note ? `<small class="quick-photo-note">${esc(note)}</small>` : ''}`;
+    return `<img src="${photoUrl(item, 640)}" ${photoSet(item, sizes)} ${dishFrameStyle(item)} loading="lazy" decoding="async" alt="">`;
+  }
+  function photoNote(items) {
+    const kinds=items.map(item=>photoKind(item));
+    const labels=journeyCopy[getLanguage()];
+    const note=kinds.includes('generated')?labels.generated:kinds.includes('illustration')?labels.illustration:'';
+    return note?`<small class="card-photo-note">${esc(note)}</small>`:'';
   }
 
   function itemCard(item) {
@@ -48,27 +51,27 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     const action = kind ? journeyCopy[getLanguage()].build : t(item.price === null ? 'detail' : 'add');
     const label = esc(action + ' · ' + name(item));
     return `<article class="quick-card" data-quick-item="${id}">
-      <button type="button" class="quick-photo" data-view-id="${id}" data-detail="${id}" aria-label="${esc(t('detail'))} · ${title}">
-        ${picture(item, cardSizes)}
-      </button>
+      <div class="photo-surface" data-view-id="${id}"><button type="button" class="quick-photo" data-detail="${id}" aria-label="${esc(t('detail'))} · ${title}">
+        ${picture(item, cardSizes)}</button>${overlay(id,menuPrice(item))}</div>
       <div class="quick-card-body">
         <h3><button type="button" data-detail="${id}">${title}</button></h3>
         <small data-post-qty="${id}" ${count ? '' : 'hidden'}>${esc(t('inOrder'))}: ${count}</small>
-        ${social(id)}
-        <div class="quick-card-foot"><strong>${esc(menuPrice(item))}</strong>
+        ${photoNote([item])}
+        <div class="quick-card-foot">
           <button class="quick-add" type="button" ${attrs} aria-label="${label}" title="${label}">${kind || item.price === null ? esc(action) : icon('plus')}</button>
         </div>
       </div></article>`;
   }
 
   function espressoCard(copy) {
-    const single = byId.get('428974'), double = byId.get('428976');
-    const options = [[single, copy.single], [double, copy.double]].map(([item, label]) =>
-      `<button type="button" data-add="${item.id}" aria-label="${esc(t('add') + ' · ' + name(item) + ' · ' + money(item.price))}">
-        <span>${esc(label)}</span><strong>${money(item.price)}</strong>${icon('plus')}</button>`).join('');
-    return `<article class="quick-card quick-espresso"><button type="button" class="quick-photo" data-view-id="${single.id}" data-detail="${single.id}" aria-label="${esc(t('detail') + ' · ' + copy.portion)}">
-      ${picture(single, cardSizes)}</button>
-      <div class="quick-card-body"><h3>${esc(copy.portion)}</h3>${social(single.id)}<div class="quick-shots">${options}</div></div></article>`;
+    const item = byId.get(espresso);
+    const options = [['428974',copy.single],['428976',copy.double]].map(([id,label]) =>
+      `<button type="button" data-quick-shot="${id}" aria-pressed="${espresso===id}">${esc(label)}</button>`).join('');
+    return `<article class="quick-card quick-espresso"><div class="photo-surface" data-view-id="${espresso}">
+      <button type="button" class="quick-photo" data-detail="${espresso}" aria-label="${esc(t('detail')+' · '+name(item))}">${picture(item,cardSizes)}</button>
+      ${overlay(espresso,money(item.price))}</div>
+      <div class="quick-card-body"><h3>${esc(copy.portion)}</h3>${photoNote([item])}<div class="quick-shots" role="group" aria-label="${esc(copy.portion)}">${options}</div>
+      <div class="quick-card-foot"><button type="button" class="quick-add" data-add="${espresso}" aria-label="${esc(t('add')+' · '+name(item))}">${esc(t('add'))}</button></div></div></article>`;
   }
 
   function pairCard(key, ids, copy) {
@@ -78,8 +81,8 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     const title = items.map(name).join(' + ');
     const photos = items.map(item =>
       `<button type="button" class="quick-photo" data-detail="${item.id}" aria-label="${esc(t('detail') + ' · ' + name(item))}">${picture(item, pairSizes)}</button>`).join('');
-    return `<article class="quick-card quick-pair share-target" id="${id}"><div class="quick-pair-photos" data-view-id="${id}">${photos}</div>
-      <div class="quick-card-body"><h3>${esc(title)}</h3>${social(id)}<div class="quick-card-foot"><strong>${money(items[0].price + items[1].price)}</strong>
+    return `<article class="quick-card quick-pair share-target" id="${id}"><div class="quick-pair-photos photo-surface" data-view-id="${id}">${photos}${overlay(id,money(items[0].price + items[1].price))}</div>
+      <div class="quick-card-body"><h3>${esc(title)}</h3>${photoNote(items)}<div class="quick-card-foot">
       <button type="button" class="quick-add" data-quick-pair="${key}" aria-label="${esc(copy.pairAdd + ' · ' + title)}">${esc(copy.pairAdd)}</button></div></div></article>`;
   }
 
@@ -128,11 +131,20 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
 
   function reset() {
     group = 'coffee';
+    espresso = '428974';
     search.value = '';
     category.value = 'all';
   }
 
   root.addEventListener('click', event => {
+    const shot=event.target.closest('[data-quick-shot]');
+    if(shot&&shot.dataset.quickShot!==espresso){
+      espresso=shot.dataset.quickShot;
+      shot.closest('.quick-espresso').outerHTML=espressoCard(kioskCopy[getLanguage()]);
+      results.querySelector('[data-quick-shot][aria-pressed="true"]').focus({preventScroll:true});
+      onCardsRendered();
+      return;
+    }
     const choice = event.target.closest('[data-quick-group]');
     if (choice) {
       group = choice.dataset.quickGroup;
