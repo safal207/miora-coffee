@@ -25,6 +25,7 @@ jobs:
           git diff --exit-code -- dist/menu-data.js dist/photo-data.js dist/original-photo-data.js dist/generated-photo-data.js dist/focus-photo-data.js dist/cake-photo-data.js dist/dessert-photo-data.js dist/turntable-data.js
           node --check dist/app.js
           node --check dist/core.js
+          node --check dist/growth-engine.js
           node --check dist/photos.js
           node --check dist/photo-data.js
           node --check dist/menu-data.js
@@ -55,6 +56,7 @@ jobs:
           sleep 2
           node tests/feed-smoke.mjs
           node tests/layout-smoke.mjs
+          node tests/growth-smoke.mjs
       - name: Upload feed screenshots for visual review
         if: always()
         uses: actions/upload-artifact@v4
