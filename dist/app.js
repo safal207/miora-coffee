@@ -124,7 +124,7 @@ function repeatUsual(){
   refreshCart();
   const saved=readUsual(localStorage,byId);
   const combined=appendUsual({cart,configuredOrders},saved,byId);
-  if(!combined){notify(usualCopy[lang].full);return;}
+  if(!combined){notify(usualCopy[lang].full);return false;}
   // Validate all quantities before either existing commit; nothing is silently dropped.
   commitCart(combined.cart);
   commitConfigured(combined.configuredOrders);
@@ -132,6 +132,7 @@ function repeatUsual(){
   renderTasteMemory();
   renderUsual();
   notify(t('added'));
+  return true;
 }
 let cityStep='hello',cityHidden=false;
 const cityHistory=[];
@@ -151,6 +152,8 @@ function renderCityGuide(focus=false){
     dessert:[['category',c.openCategory],['choose',c.pick]],
     food:[['category',c.openCategory],['choose',c.pick]]
   };
+  if(cityStep==='hello'&&readUsual(localStorage,byId))labels.hello.push(['usual',c.usual]);
+  if(favorites.size&&['family','adults','choose'].includes(cityStep))labels[cityStep].push(['favorites',c.favorites]);
   const photos=cityStep==='town'
     ?`<figure class="city-guide-mosaic"><img src="${CITY_ASSETS.panorama}" alt="${esc(c.panorama)}" width="390" height="130" loading="lazy"><figcaption><span>${esc(c.photoTown)}</span><span>${esc(c.photoPlay)}</span><span>${esc(c.photoCoffee)}</span></figcaption></figure><p class="city-guide-photo-note">${esc(c.privacy)}</p>`
     :cityStep==='hello'
@@ -163,6 +166,14 @@ function renderCityGuide(focus=false){
   if(focus)root.querySelector('#city-guide-title')?.focus({preventScroll:true});
 }
 function cityAction(action){
+  if(action==='usual'){
+    if(!readUsual(localStorage,byId)||!repeatUsual())return;
+    cityHidden=true;renderCityGuide();openCart();return;
+  }
+  if(action==='favorites'){
+    if(!favorites.size)return;
+    cityHidden=true;renderCityGuide();selectCategory('favorites');return;
+  }
   if(action==='skip'||action==='category'){
     const nextCategory=action==='category'?CITY_CATEGORY[cityStep]:'all';
     cityHidden=true;renderCityGuide();
