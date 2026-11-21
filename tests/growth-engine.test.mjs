@@ -20,7 +20,7 @@ test('drink-only order proposes actual menu dessert at unchanged price',()=>{
   const offer=selectCartOffer({cart:{'428748':1},catalog});
   assert.equal(offer.id,'430226');
   assert.equal(offer.price,catalog.get('430226').price);
-  assert.equal(offer.price,23000);
+  assert.equal(offer.price,25000);
 });
 test('food-only and personalized kiosk orders propose an available drink',()=>{
   assert.equal(selectCartOffer({cart:{'430350':1},catalog}).id,'428772');
