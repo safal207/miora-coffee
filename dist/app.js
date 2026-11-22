@@ -1,25 +1,24 @@
 import {hasCuratedCutaway} from './media-merchandising.js?v=20261117-curated1';
-import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261122-photo1';
+import {mountSpotlight,mountGalleries,galleryMarkup,motionCopy} from './menu-motion.js?v=20261122-merch1';
 import {desireSections,journeyCopy,localizedJourney} from './desire-journey.js?v=20261112-generated1';
 import {videoStory,dessertStoryVisible,stories} from './video-stories.js?v=20261122-family1';
 import {products,categories,featured,source} from './menu-data.js';
-import {photoUrl as photo,photoSet,hasPhoto,photoKind,hasAlternatePhoto,photoVariants,hasRestagedPhoto} from './photos.js?v=20261117-curated1';
+import {photoUrl as photo,photoSet,hasPhoto,photoKind,hasAlternatePhoto,photoVariants,hasRestagedPhoto} from './photos.js?v=20261122-merch1';
 import {normalizeCart,totals,updateCart,addPair,addBundle,filterProducts,resolveView} from './core.js?v=20261122-family1';
-import {mountKiosk} from './kiosk.js?v=20261122-family1';
+import {mountKiosk} from './kiosk.js?v=20261122-merch1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection,sandwichIdeas,localizedIdea} from './sandwich-preview.js';
 import {breakfastVisualForSelection,breakfastCopy,breakfastIdeas,localizedBreakfastIdea} from './breakfast-preview.js';
 import {identityFor,diversifyPhotoOrder,storyCoverIds} from './visual-merchandising.js?v=20261112-covers1';
-import {mountKioskMode,kioskCopy,kioskPairs} from './kiosk-mode.js?v=20261122-photo1';
-import {dishFrameStyle} from './photo-framing.js';
-import {familyCombos,familyCopy,renderFamilyVisit} from './family-visit.js?v=20261122-vertical1';
+import {mountKioskMode,kioskCopy,kioskPairs,breakfastAction} from './kiosk-mode.js?v=20261122-merch1';
+import {dishFrameStyle} from './photo-framing.js?v=20261122-merch1';
+import {familyCombos,familyCopy,renderFamilyVisit} from './family-visit.js?v=20261122-merch1';
 
 const $ = id => document.getElementById(id);
 const byId = new Map(products.map(p=>[p.id,p]));
 const socialCards = new Map([
   ...Object.entries(familyCombos).map(([id,combo]) => [id,{title:lang=>combo.title[lang]}]),
-  ['family-care',{title:lang=>familyCopy[lang].room}],
   ...Object.entries(kioskPairs).map(([key,ids]) => ['pair-'+key,{pairs:true,title:lang=>ids.map(id=>byId.get(id).name[lang]).join(' + ')}]),
   ...Object.entries(recipes).map(([kind,recipe]) => ['build-'+kind,{kind,title:lang=>localized(recipe.name,lang)}]),
   ...sandwichIdeas.map(idea => ['idea-sandwich-'+idea.id,{kind:'sandwich',idea:idea.id,title:lang=>localizedIdea(idea,lang).name}]),
@@ -248,7 +247,7 @@ function enhanceKioskCards(){
     const b=document.createElement('button');
     b.type='button';b.className=view==='feed'?'button primary feed-add kiosk-card-cta':'kiosk-card-cta';
     b.dataset.kStart=kind;if(kioskBread(id))b.dataset.kBread=kioskBread(id);
-    b.textContent=kioskMessages[lang].build;row.classList.add('kiosk-has-config');prior.replaceWith(b);
+    b.textContent=kind==='breakfast'?breakfastAction[lang]:kioskMessages[lang].build;row.classList.add('kiosk-has-config');prior.replaceWith(b);
   }
 }
 function enhanceKioskDetail(id){
@@ -257,7 +256,7 @@ function enhanceKioskDetail(id){
   const button=row?.querySelector('button');if(!button)return;
   const b=document.createElement('button');b.type='button';b.className='button primary kiosk-card-cta';
   b.dataset.kStart=kind;if(kioskBread(id))b.dataset.kBread=kioskBread(id);
-  b.textContent=kioskMessages[lang].build;button.replaceWith(b);
+  b.textContent=kind==='breakfast'?breakfastAction[lang]:kioskMessages[lang].build;button.replaceWith(b);
   if(kind==='pancake'){
     const section=$('detail-content').querySelector('.detail-copy > .detail-section');
     if(section?.querySelector('h3')?.textContent===t('ask'))section.remove();
@@ -461,7 +460,7 @@ function renderCart() {
     const visual=sandwich?previewForSelection(item.selection):
       breakfast?breakfastVisualForSelection(item.selection):null;
     const bc=breakfastCopy[language]||breakfastCopy.tr;
-    const previewPhoto=breakfast?(visual.src||(imageItem&&hasPhoto(imageItem)?photo(imageItem,640):null)):
+    const previewPhoto=breakfast?(visual.src||(imageItem&&hasPhoto(imageItem)?photo(imageItem,640,'original'):null)):
       visual?.src||null;
     const compactPhoto=previewPhoto
       ?`<img src="${esc(previewPhoto)}" width="62" height="62" alt="" loading="lazy" decoding="async">`
@@ -678,15 +677,15 @@ const storySizeObserver=new ResizeObserver(()=>{
 });
 storySizeObserver.observe($('feed-stories'));
 const kioskMenu=mountKioskMode({byId,getLanguage:()=>lang,name,money,t,esc,icon,kioskFor,kioskBread,menuPrice,quantity:id=>cart[id]||0,overlay:photoOverlay,onCardsRendered:startFeedViews});
-kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null,social:cardEngagement,
+kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:(id,variant)=>hasPhoto(byId.get(id))?photo(byId.get(id),640,variant):null,social:cardEngagement,
   onOpen:(kind,idea)=>{stopFeedViews();recordView(idea?'idea-'+kind+'-'+idea:'build-'+kind);}});
 renderLanguage();updateUrl();
 const linked=params.get('item');if(byId.has(linked))openDetail(linked,params.get('photo'));
 const sharedId=params.get('card'),sharedCard=socialCards.get(sharedId);
 if(sharedCard?.kind)kioskUI.open(sharedCard.kind,null,null,null,sharedCard.idea);
-else if(sharedCard){
-  if(sharedCard.pairs&&kioskActive)kioskMenu.showPairs();
-  const target=$(sharedId);
+else if(sharedCard||sharedId==='family-care'){
+  if(sharedCard?.pairs&&kioskActive)kioskMenu.showPairs();
+  const target=$(sharedId==='family-care'?'family-changing-table':sharedId);
   if(target)requestAnimationFrame(()=>{target.tabIndex=-1;target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'instant'});});
 }
 

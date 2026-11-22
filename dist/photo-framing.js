@@ -1,4 +1,4 @@
-import {photoUrl} from './photos.js?v=20261117-curated1';
+import {photoUrl} from './photos.js?v=20261122-merch1';
 
 // Frame the specific menu image so a replacement image starts with the default crop.
 // Entries specify object position, optional zoom, and optional detail aspect ratio.
@@ -11,6 +11,7 @@ const frames = new Map([
   ['assets/enhanced/430236-640.webp', ['50% 69%', 1.05]], // Sandwich over table setting
   ['assets/originals/431742-640.webp', ['45% 50%', 1.10]], // Muffin texture
   ['assets/originals/431203-640.webp', ['50% 29%', 1, .86]], // Breakfast tray and sides
+  ['assets/focused-menu/431203-640.webp', ['50% 51%', 1, 1.18]], // Breakfast plate, lower angle
   ['assets/enhanced/431293-640.webp', ['50% 65%', 1.04]], // Both date bites
   ['assets/enhanced/430226-640.webp', ['51% 57%']], // Cheesecake slice
   ['assets/originals/431745-640.webp', ['48% 50%', 1.08]] // Cookie and topping
