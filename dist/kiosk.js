@@ -83,7 +83,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto,s
       }).join('')+'</div>';
     const bc=breakfastCopy[lang()]||breakfastCopy.tr;
     const breakfastHero='<section class="kiosk-breakfast-feature" data-view-id="build-breakfast">'+
-      '<img src="assets/breakfast-large-omelette-ai.webp" alt="" width="1200" height="800" loading="lazy" decoding="async">'+
+      '<img src="'+esc(getPhoto('431203'))+'" alt="" width="640" height="640" loading="lazy" decoding="async">'+
       '<div class="kiosk-breakfast-feature-content"><span class="kiosk-feature-tag">'+esc(bc.tag)+'</span>'+
       '<h3>'+esc(bc.title)+'</h3><p>'+esc(bc.body)+'</p>'+
       '<button type="button" class="kiosk-feature-button" data-k-start="breakfast">'+esc(bc.cta)+' →</button><div class="builder-card-social">'+social('build-breakfast')+'</div></div></section>'+
@@ -91,7 +91,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto,s
     const breakfastIdeasHtml='<div class="kiosk-breakfast-idea-heading"><h4>'+esc(bc.ideas)+'</h4></div>'+
       '<div class="kiosk-breakfast-ideas" role="list">'+breakfastIdeas.map(idea=>{
         const img=breakfastVisualForSelection(breakfastIdeaSelection(idea.id));
-        const src=img.src||getPhoto('431203')||'favicon.svg';
+        const src=img.src||getPhoto('431203','original')||'favicon.svg';
         const txt=localizedBreakfastIdea(idea,lang());
         return '<div role="listitem" class="kiosk-breakfast-idea" data-view-id="idea-breakfast-'+esc(idea.id)+'"><button type="button" data-k-breakfast-idea="'+esc(idea.id)+'">'+
           '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async" width="210" height="135">'+
@@ -129,7 +129,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto,s
     const bc=breakfastCopy[lang()]||breakfastCopy.tr;
     const breakfastVisual=isBreakfast?breakfastVisualForSelection(selection):null;
     const preview=current==='sandwich'?previewForSelection(selection):
-      isBreakfast?{src:breakfastVisual.src||getPhoto('431203'),baseOnly:false}:null;
+      isBreakfast?{src:breakfastVisual.src||getPhoto('431203','original'),baseOnly:false}:null;
     const previewMedia=preview
       ?(preview.src?'<img src="'+esc(preview.src)+'" alt="" loading="lazy" decoding="async" width="900" height="600">'
         :'<span class="kiosk-empty-photo" aria-hidden="true">miora</span>'):'';
@@ -137,7 +137,7 @@ export function mountKiosk({getLanguage,onAdd,onUpdate,onEdited,money,getPhoto,s
     const ingredientChips=selected.map(item=>'<span class="kiosk-selected-chip">'+esc(item)+'</span>').join('');
     const livePreview=(current==='sandwich'||isBreakfast)&&!review?(()=>{
       const isStart=index===0;
-      const src=isStart?(isBreakfast?'assets/breakfast-large-omelette-ai.webp':'assets/sandwich-salmon.webp'):preview.src;
+      const src=isStart?(isBreakfast?getPhoto('431203'):'assets/sandwich-salmon.webp'):preview.src;
       const labelText=isBreakfast?(isStart?bc.intro:bc.live):
         isStart?v('starterInspiration'):preview.baseOnly?v('basePreview'):v('livePreview');
       const bodyText=isBreakfast?(isStart?bc.ai:breakfastVisual.isAI?bc.ai:bc.real):

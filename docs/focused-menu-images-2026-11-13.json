@@ -321,6 +321,59 @@
           "sha256": "ae26059809c5d3930e005b1f7d0cc1dd017c8d0c6f170080342126c125d7e166"
         }
       }
+    },
+    "431203": {
+      "referenceAsset": "assets/products/431203.jpg",
+      "referenceSha256": "92e75b7537d46c519cbafac4cd6b948a5b5f65d4fc255cc31c56ccc5f0238bad",
+      "name": "Breakfast Plate",
+      "sourceIngredients": "Omelette option with avocado, cucumber, tomato, leafy greens, olives, walnuts and breakfast sauce.",
+      "prompt": "Edit this one actual reference photo into a premium but very faithful MIORA café app menu photograph. The edit target is the single round pale ceramic breakfast plate in the center-right of the reference. Re-shoot that same real plate as seen from a lower 3/4 camera angle about 40 degrees above the tabletop, so the food has natural volume and the plate is elliptical, filling about 76–82% of the width in a centered square crop with generous clean edges. The existing thin folded golden omelette with its single dark leaf should be prominent toward the near right. Keep the small original fan of avocado slices, sliced cucumber, tomato slices, leafy greens with a lemon wedge, the few walnuts, small ramekin of black olives and small ramekin of red breakfast spread. Match the photographed quantities and plate identity exactly. Do not increase portions or add ingredients. Leave the background mainly a light warm neutral café table, softly lit by side window light. Frame the breakfast plate alone, omitting the separate tea, separate croissant dish, utensils and anything outside the plate so configurable extras are not implied. Omit the little brown dessert-spread ramekin as it is an optional sweet. Emphasize appetizing natural texture and truthful food colours, soft realistic shadows, a subtle editorial food-photography look without oversaturation or fancy garnishes. Keep the entire plate and food in view with quiet room in the top corners and at lower left for site controls and price. Square 1:1 composition. Actual photographic realism, no text, no overlaid UI, no watermark, no hands, no logos, no unrelated food or decoration.",
+      "tool": "built-in image_gen",
+      "sourceFile": "exec-166d89d3-f86f-45a7-9c8b-0f7bb840860a.png",
+      "sourceSha256": "c3ea36c236eac3be1f39060b0efd5cb274af598a43a7670da1cf452b6e7aef6b",
+      "sourceDimensions": [
+        1254,
+        1254
+      ],
+      "visualReview": "accepted",
+      "assets": {
+        "160": {
+          "path": "assets/focused-menu/431203-160.webp",
+          "dimensions": [
+            160,
+            160
+          ],
+          "bytes": 4972,
+          "sha256": "b760800f2b5724e989743908eb694bdd7629180b03ac5eeb1397f4e20d9605ff"
+        },
+        "360": {
+          "path": "assets/focused-menu/431203-360.webp",
+          "dimensions": [
+            360,
+            360
+          ],
+          "bytes": 17224,
+          "sha256": "9f73fbf16f323c07f1b540a5b9ccd409cf617c7fccba92580a5e977e30c6299c"
+        },
+        "640": {
+          "path": "assets/focused-menu/431203-640.webp",
+          "dimensions": [
+            640,
+            640
+          ],
+          "bytes": 43300,
+          "sha256": "a4e6dc95658185adc4b4d23a0dfae9c99855b39bcf4a6a39b113b5c02379d749"
+        },
+        "1200": {
+          "path": "assets/focused-menu/431203-1200.webp",
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "bytes": 124910,
+          "sha256": "9b23035ec07209b7adb61e19a0ed685b5c0903a79a0e10b388d0a67d5a9858de"
+        }
+      }
     }
   }
 }

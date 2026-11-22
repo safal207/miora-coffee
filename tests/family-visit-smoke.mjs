@@ -59,14 +59,30 @@ export async function verifyFamilyVisit(browser, origin) {
     const combos = page.locator('#family .family-grid article');
     assert.equal(await combos.count(),3);
     const frames = await combos.locator('.family-photos').evaluateAll(photos => photos.map(photo => {
-      const {width,height}=photo.getBoundingClientRect();
-      return [width,height];
+      const {width,height,top,bottom}=photo.getBoundingClientRect();
+      const rail=photo.querySelector('.photo-actions').getBoundingClientRect();
+      const tiles=[...photo.querySelectorAll('.family-photo')].map(tile=>tile.getBoundingClientRect());
+      return {
+        ratio: Math.abs(width-height*1.65)<2,
+        railBesideTiles: tiles.every(tile=>tile.right<=rail.left+1),
+        fullSide: Math.abs(tiles[1].top-top)<1&&Math.abs(tiles.at(-1).bottom-bottom)<1,
+        tileCount: tiles.length
+      };
     }));
-    assert(frames.every(([w,h])=>Math.abs(w-h*1.65)<2),'the photos preserve their frame when portrait images load');
+    assert.deepEqual(frames.map(frame=>frame.tileCount),[2,2,3]);
+    assert(frames.every(frame=>frame.ratio&&frame.railBesideTiles&&frame.fullSide),
+      'photos fill the side column and reactions sit beside the products');
     assert.deepEqual(await combos.locator('.family-photos .photo-price').allTextContents(),['140 ₺','390 ₺','530 ₺']);
     assert.equal(await combos.locator('.photo-price').count(),3,'one price per combo');
-    const room = page.locator('#family-care');
-    assert(await room.locator('img').getAttribute('src'));
+    assert.equal(await page.locator('#family-care, #family img[src*="baby-care"]').count(),0);
+    assert(await page.locator('#family-changing-table').isVisible());
+    if(width===320){
+      await page.waitForFunction(()=>{
+        const heading=document.getElementById('family-title').getBoundingClientRect();
+        const header=document.querySelector('.header').getBoundingClientRect();
+        return heading.top>=header.bottom&&heading.top-header.bottom<60;
+      });
+    }
     const mini = page.locator('#family-mini');
     await mini.locator('.family-photos').scrollIntoViewIfNeeded();
     await page.waitForFunction(() => document.querySelector('#family-mini [data-view-count]').textContent === '1');
@@ -83,6 +99,11 @@ export async function verifyFamilyVisit(browser, origin) {
       await page.locator('#family-title').evaluate(el=>el.scrollIntoView({block:'start',behavior:'instant'}));
       await mini.locator('img').first().evaluate(img=>img.decode());
       await page.screenshot({path:`artifacts/miora-family-${lang}-${width}.png`});
+      if(width===320) {
+        await page.locator('#theme-toggle').click();
+        await page.locator('#family').evaluate(el=>el.scrollIntoView({block:'start',behavior:'instant'}));
+        await page.screenshot({path:'artifacts/miora-family-dark-ru-320.png'});
+      }
     }
     await page.locator('[data-family-add="family-share"]').click();
     await page.locator('#cart-open').click();
@@ -106,6 +127,8 @@ export async function verifyFamilyVisit(browser, origin) {
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'page remains inside the viewport');
     assert.deepEqual(errors,[]);
     if(width===320){
+      await page.goto(origin+'/?view=kiosk&lang=ru&card=family-care');
+      await page.waitForFunction(()=>document.activeElement.id==='family-changing-table');
       await page.route(/\/app\.js(?:\?|$)/, route=>route.abort());
       await page.goto(origin+'/?view=kiosk&lang=ru',{waitUntil:'domcontentloaded'});
       assert.equal(await page.locator('#miora-welcome').isVisible(),false,'a failed script does not leave the splash on screen');

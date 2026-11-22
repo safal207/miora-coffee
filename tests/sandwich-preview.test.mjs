@@ -89,7 +89,7 @@ test('food desire flow retains honest preview while giving sandwich a prominent 
   assert.match(kiosk,new RegExp(k+':'));
  }
  assert.match(kiosk,/const livePreview=\(current==='sandwich'\|\|isBreakfast\)&&!review/);
- assert.match(kiosk,/isStart\?\(isBreakfast\?'assets\/breakfast-large-omelette-ai\.webp':'assets\/sandwich-salmon\.webp'\):preview\.src/);
+ assert.match(kiosk,/isStart\?\(isBreakfast\?getPhoto\('431203'\):'assets\/sandwich-salmon\.webp'\):preview\.src/);
  assert.match(kiosk,/preview\.baseOnly\?v\('basePreview'\)/);
  assert.match(kiosk,/selectedIngredients\(selection,lang\(\)\)/);
  assert.ok(kiosk.indexOf('livePreview+')<kiosk.indexOf('+choices+'));
