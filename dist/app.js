@@ -6,6 +6,12 @@ import {products,categories,featured,source} from './menu-data.js';
 import {photoUrl as photo,photoSet,hasPhoto,photoKind,hasAlternatePhoto,photoVariants,hasRestagedPhoto} from './photos.js?v=20261117-curated1';
 import {normalizeCart,totals,updateCart,addPair,addBundle,filterProducts,resolveView} from './core.js?v=20261122-family1';
 import {mountKiosk} from './kiosk.js?v=20261122-family1';
+import {selectCartOffer,recordGrowthEvent} from './growth-engine.js?v=20261121-v1';
+import {readTasteMemory,setTasteMemoryEnabled,rememberTasteChoice,tasteSuggestions,TASTE_STORAGE_KEY} from './taste-memory.js?v=20261121-v1';
+import {USUAL_STORAGE_KEY,readUsual,saveUsual,forgetUsual,usualTotals,appendUsual} from './usual-order.js?v=20261121-v1';
+import {CITY_CATEGORY,CITY_ASSETS,CITY_COPY,cityNext,cityProducts} from './city-guide.js?v=20261121-v1';
+import {TOUR_SPOTS,TOUR_COPY,validTourSpot,nextTourSpot,getTourCopy} from './city-tour.js?v=20261121-v1';
+import {CITY_GALLERY,GALLERY_COPY,gallerySlide,galleryStep,galleryTitle} from './city-gallery.js?v=20261122-v1';
 import {appendOrder,changeOrderQty,replaceOrder,normalizeOrders,configuredTotals,describeOrder,orderPrice} from './kiosk-core.js';
 import {recipes,ui as kioskMessages,localized} from './kiosk-data.js';
 import {previewForSelection,sandwichIdeas,localizedIdea} from './sandwich-preview.js';
@@ -72,6 +78,10 @@ const params=new URLSearchParams(location.search);
 const savedLanguage=load('language','tr');
 let lang=['tr','en','ru'].includes(params.get('lang'))?params.get('lang'):['tr','en','ru'].includes(savedLanguage)?savedLanguage:'tr';
 let cart=normalizeCart(load('cart',{}),byId);
+let growthOfferSuppressed=false;
+let growthOfferObserver=null;
+const growthOffersSeen=new Set();
+function trackGrowth(type,productId=null){try{return recordGrowthEvent(localStorage,type,productId);}catch{return false;}}
 let configuredOrders=normalizeOrders(load('configured-orders',[]));
 let kioskUI;
 let favoriteIds=load('favorites',[]); if(!Array.isArray(favoriteIds))favoriteIds=[];
@@ -118,6 +128,169 @@ function updateUrl() {
   document.querySelector('.skip').hash=kioskActive?'kiosk-menu':'menu';
 }
 function renderTheme() {const dark=document.documentElement.dataset.theme==='dark';$('theme-toggle').innerHTML=icon(dark?'sun':'moon');$('theme-toggle').setAttribute('aria-label',lang==='ru'?(dark?'Светлая тема':'Тёмная тема'):lang==='en'?(dark?'Light theme':'Dark theme'):(dark?'Açık tema':'Koyu tema'));$('theme-toggle').setAttribute('aria-pressed',String(dark));}
+const tasteCopy={
+  tr:{title:'Sevdiğin tatlar',note:'Kalple kaydettiklerin burada. Önceki seçimleri yalnızca izin verirsen hatırlarız.',on:'Hatırlama açık',off:'Seçimlerimi hatırla',disable:'Hatırlamayı kapat ve geçmişi sil',add:'Yeniden ekle',empty:'Favori eklemek için kalbe dokun. Seçim geçmişi isteğe bağlıdır.'},
+  ru:{title:'Твои любимые вкусы',note:'Избранное с этого устройства. Последние добавления запоминаются только с разрешения.',on:'Запоминание включено',off:'Запоминать мой выбор',disable:'Выключить и удалить историю',add:'Добавить снова',empty:'Нажми сердечко на блюде. История выбора — только по желанию.'},
+  en:{title:'Your favorite flavors',note:'Favorites saved on this device. Recent selections are remembered only if you opt in.',on:'Remembering on',off:'Remember my picks',disable:'Turn off and erase recent history',add:'Add again',empty:'Tap the heart to save a favorite. Remembering recent picks is optional.'}
+};
+function renderTasteMemory(){
+  const container=$('taste-memory'),memory=readTasteMemory(localStorage,byId);
+  const picks=tasteSuggestions({favorites,memory,catalog:byId});
+  const c=tasteCopy[lang],focusKey=document.activeElement?.dataset?.tasteToggle!==undefined?'tasteToggle':document.activeElement?.dataset?.tasteAdd!==undefined?'tasteAdd':null;
+  const focusId=focusKey==='tasteAdd'?document.activeElement.dataset.tasteAdd:null;
+  container.setAttribute('aria-label',c.title);
+  const items=picks.map(p=>`<article class="taste-card"><img src="${photo(p,160)}" width="60" height="60" alt="" loading="lazy" decoding="async"><div class="taste-card-info"><b>${esc(name(p))}</b><small>${money(p.price)}</small></div><button type="button" data-taste-add="${p.id}" aria-label="${esc(c.add+' · '+name(p))}">${esc(c.add)} +</button></article>`).join('');
+  container.innerHTML=`<div class="taste-head"><div><h3>${esc(c.title)}</h3><p>${esc(c.note)}</p></div><button type="button" class="taste-toggle" data-taste-toggle aria-pressed="${memory.enabled}" aria-label="${esc(memory.enabled?c.disable:c.off)}">${esc(memory.enabled?c.on:c.off)}</button></div>${items?`<div class="taste-list">${items}</div>`:`<p class="taste-empty">${esc(c.empty)}</p>`}`;
+  if(focusKey)container.querySelector(focusKey==='tasteToggle'?'[data-taste-toggle]':`[data-taste-add="${focusId}"]`)?.focus({preventScroll:true});
+}
+const usualCopy={
+  tr:{title:'Her zamanki listem',note:'Bu cihazda senin kaydettiğin liste. Fiyatlar güncel menüden hesaplanır.',repeat:'Listeye tekrar ekle',forget:'Kayıtlı listeyi sil',save:'Bu listeyi her zamanki listem olarak kaydet',saved:'Listen bu cihaza kaydedildi',deleted:'Kayıtlı liste silindi',full:'Ürün sınırına ulaşıldı. Önce mevcut listeyi düzenle.',failure:'Bu cihazda liste kaydedilemedi',count:'ürün',estimated:'Başlangıç ',notSent:'Sipariş gönderilmedi; ödeme alınmadı.'},
+  ru:{title:'Мой обычный заказ',note:'Ты сам сохранил этот список на устройстве. Цены пересчитываются по актуальному меню.',repeat:'Добавить этот заказ',forget:'Удалить сохранённый',save:'Сохранить как мой обычный заказ',saved:'Список сохранён на этом устройстве',deleted:'Сохранённый список удалён',full:'Превышен лимит количества. Сначала измени текущий список.',failure:'Не удалось сохранить на этом устройстве',count:'позиций',estimated:'От ',notSent:'Заказ не отправлен, оплата не списана.'},
+  en:{title:'My usual order',note:'You explicitly saved this list on this device. Prices are recalculated from the current menu.',repeat:'Add this order',forget:'Delete saved order',save:'Save as my usual order',saved:'Your list was saved on this device',deleted:'Saved order removed',full:'Quantity limit reached. Adjust your current list first.',failure:'Could not save on this device',count:'items',estimated:'From ',notSent:'No order was placed or payment taken.'}
+};
+function renderUsual(){
+  const root=$('usual-order'),saved=readUsual(localStorage,byId);
+  if(!saved){root.hidden=true;root.innerHTML='';return;}
+  const copy=usualCopy[lang],sum=usualTotals(saved,byId);
+  const images=[...Object.keys(saved.cart),...saved.configuredOrders.map(row=>recipes[row.kind].image)]
+    .map(id=>byId.get(id)).filter(item=>item&&hasPhoto(item)).slice(0,3)
+    .map(item=>`<img src="${photo(item,160)}" alt="" width="46" height="46" loading="lazy" decoding="async">`).join('');
+  const estimated=saved.configuredOrders.some(row=>recipes[row.kind].estimated);
+  root.hidden=false;
+  root.innerHTML=`<div class="usual-order-heading"><div><h3>${esc(copy.title)}</h3><p>${esc(copy.note)}</p></div><div class="usual-order-photos" aria-hidden="true">${images}</div></div><div class="usual-order-meta"><b>${sum.count} ${esc(copy.count)}</b><strong>${estimated?esc(copy.estimated):''}${money(sum.price)}</strong></div><div class="usual-order-actions"><button type="button" data-usual-repeat>${esc(copy.repeat)}</button><button type="button" data-usual-forget>${esc(copy.forget)}</button></div><p class="usual-order-disclaimer">${esc(copy.notSent)}</p>`;
+}
+function repeatUsual(){
+  refreshCart();
+  const saved=readUsual(localStorage,byId);
+  const combined=appendUsual({cart,configuredOrders},saved,byId);
+  if(!combined){notify(usualCopy[lang].full);return false;}
+  // Validate all quantities before either existing commit; nothing is silently dropped.
+  commitCart(combined.cart);
+  commitConfigured(combined.configuredOrders);
+  for(const id of Object.keys(saved.cart))rememberTasteChoice(localStorage,id,byId);
+  renderTasteMemory();
+  renderUsual();
+  notify(t('added'));
+  return true;
+}
+const CITY_DISMISS_KEY='miora:city-guide-dismissed:v1';
+function cityDismissed(){try{return sessionStorage.getItem(CITY_DISMISS_KEY)==='1';}catch{return false;}}
+let cityStep='hello',cityHidden=cityDismissed(),cityTourSpot='houses',cityGalleryIndex=0;
+const cityHistory=[];
+function cityGalleryMarkup(){
+  const words=GALLERY_COPY[lang],slide=gallerySlide(cityGalleryIndex),title=galleryTitle(lang,cityGalleryIndex);
+  const thumbs=CITY_GALLERY.map((item,i)=>`<button type="button" data-city-gallery="${i}" aria-pressed="${i===cityGalleryIndex}" aria-label="${esc(galleryTitle(lang,i))}"><img src="${item.src}" alt="" width="112" height="70" loading="lazy" decoding="async"></button>`).join('');
+  return `<section class="city-gallery" aria-labelledby="city-gallery-title">
+    <div class="city-gallery-header"><div><h3 id="city-gallery-title">${esc(words.heading)}</h3><p>${esc(words.lead)}</p></div><span id="city-gallery-count" class="city-gallery-count">${cityGalleryIndex+1}${words.of}${CITY_GALLERY.length}</span></div>
+    <div class="city-gallery-frame"><button type="button" class="city-gallery-main" data-city-gallery-open aria-label="${esc(words.enlarge+' · '+title)}"><img id="city-gallery-photo" src="${slide.src}" alt="${esc(title)}" width="${slide.width}" height="${slide.height}" loading="lazy" decoding="async"><span>${esc(words.enlarge)} ↗</span></button></div>
+    <div class="city-gallery-thumbs" role="group" aria-label="${esc(words.heading)}">${thumbs}</div>
+    <p id="city-gallery-caption" class="city-gallery-caption">${esc(title)}</p>
+    <div class="city-gallery-actions"><button type="button" data-city-gallery-prev aria-label="${esc(words.previous)}">←</button><button type="button" data-city-gallery-next aria-label="${esc(words.next)}">→</button></div>
+    <p class="city-gallery-disclaimer">${esc(words.disclaimer)}</p>
+    <dialog id="city-gallery-dialog" class="city-gallery-dialog" aria-labelledby="city-gallery-full-title">
+      <div class="city-gallery-dialog-head"><strong id="city-gallery-full-title">${esc(title)}</strong><button type="button" data-city-gallery-close aria-label="${esc(words.close)}">×</button></div>
+      <img id="city-gallery-full-photo" src="${slide.src}" alt="${esc(title)}" width="${slide.width}" height="${slide.height}" decoding="async">
+      <div class="city-gallery-dialog-footer"><button type="button" data-city-gallery-prev>${esc(words.previous)}</button><span class="city-gallery-count" id="city-gallery-full-count">${cityGalleryIndex+1}${words.of}${CITY_GALLERY.length}</span><button type="button" data-city-gallery-next>${esc(words.next)}</button></div>
+      <p>${esc(words.disclaimer)}</p>
+    </dialog>
+  </section>`;
+}
+function updateCityGallery(nextIndex){
+  if(cityStep!=='town'||!Number.isInteger(nextIndex)||nextIndex<0||nextIndex>=CITY_GALLERY.length)return;
+  cityGalleryIndex=nextIndex;
+  const root=$('city-guide'),slide=gallerySlide(nextIndex),title=galleryTitle(lang,nextIndex),words=GALLERY_COPY[lang];
+  const feature=root.querySelector('#city-gallery-photo'),full=root.querySelector('#city-gallery-full-photo');
+  for(const img of [feature,full])if(img){img.src=slide.src;img.alt=title;img.width=slide.width;img.height=slide.height;}
+  for(const [id,text] of [['city-gallery-caption',title],['city-gallery-full-title',title],['city-gallery-count',nextIndex+1+words.of+CITY_GALLERY.length],['city-gallery-full-count',nextIndex+1+words.of+CITY_GALLERY.length]]){
+    const el=root.querySelector('#'+id);if(el)el.textContent=text;
+  }
+  const openButton=root.querySelector('[data-city-gallery-open]');
+  if(openButton)openButton.setAttribute('aria-label',words.enlarge+' · '+title);
+  root.querySelectorAll('[data-city-gallery]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.cityGallery)===nextIndex)));
+}
+function tourMarkup(c){
+  const words=TOUR_COPY[lang],selected=getTourCopy(lang,cityTourSpot);
+  const spots=TOUR_SPOTS.map((spot,i)=>{
+    const title=words[spot].label,pressed=spot===cityTourSpot;
+    return `<button type="button" class="city-tour-pin city-tour-pin-${spot}" data-city-spot="${spot}" aria-pressed="${pressed}" aria-label="${esc(title)}" title="${esc(title)}"><b aria-hidden="true">${i+1}</b></button>`;
+  }).join('');
+  const choices=TOUR_SPOTS.map((spot,i)=>{
+    const title=words[spot].label,pressed=spot===cityTourSpot;
+    return `<button type="button" class="city-tour-stop" data-city-spot="${spot}" aria-pressed="${pressed}"><span aria-hidden="true">${i+1}</span>${esc(title)}</button>`;
+  }).join('');
+  return `<section class="city-tour" aria-label="${esc(words.prompt)}"><div class="city-tour-left"><figure class="city-tour-figure"><div class="city-tour-image"><img src="${CITY_ASSETS.panorama}" alt="${esc(words.photo)}" width="390" height="130" decoding="async" loading="lazy">${spots}</div><figcaption>${esc(words.hint)}</figcaption></figure><div class="city-tour-bottom"><div class="city-tour-stops" role="group" aria-label="${esc(words.prompt)}">${choices}</div><div class="city-tour-story" role="status" aria-live="polite" aria-atomic="true"><b id="city-tour-name">${esc(selected.label)}</b><p id="city-tour-description">${esc(selected.story)}</p></div><button class="city-tour-next" type="button" data-city-tour-next>${esc(words.next)} →</button><p class="city-guide-photo-note">${esc(c.privacy)}</p></div></div>${cityGalleryMarkup()}</section>`;
+}
+function selectTourSpot(spot){
+  if(cityStep!=='town'||!validTourSpot(spot))return;
+  cityTourSpot=spot;
+  const root=$('city-guide'),c=getTourCopy(lang,spot);
+  root.querySelectorAll('[data-city-spot]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.citySpot===spot)));
+  const title=root.querySelector('#city-tour-name'),detail=root.querySelector('#city-tour-description');
+  if(title)title.textContent=c.label;
+  if(detail)detail.textContent=c.story;
+}
+function setCityVisibility(visible){
+  cityHidden=!visible;
+  try{if(visible)sessionStorage.removeItem(CITY_DISMISS_KEY);
+      else sessionStorage.setItem(CITY_DISMISS_KEY,'1');}catch{}
+  renderCityGuide();
+}
+function focusCityDestination(){
+  $('result-title').setAttribute('tabindex','-1');
+  $('result-title').focus({preventScroll:true});
+}
+function renderCityGuide(focus=false){
+  const root=$('city-guide'),opener=$('city-open'),c=CITY_COPY[lang];
+  opener.textContent=c.reopen;
+  opener.hidden=!cityHidden;
+  root.hidden=cityHidden;
+  if(cityHidden){root.innerHTML='';return;}
+  const labels={
+    hello:[['family',c.familyChoice],['adults',c.adultChoice]],
+    family:[['tour',c.tour],['choose',c.pick]],
+    adults:[['choose',c.pick],['tour',c.tour]],
+    town:[['choose',c.pick]],
+    choose:[['coffee',c.coffeeChoice],['dessert',c.dessertChoice],['food',c.foodChoice]],
+    coffee:[['category',c.openCategory],['choose',c.pick]],
+    dessert:[['category',c.openCategory],['choose',c.pick]],
+    food:[['category',c.openCategory],['choose',c.pick]]
+  };
+  if(cityStep==='hello'&&readUsual(localStorage,byId))labels.hello.push(['usual',c.usual]);
+  if(favorites.size&&['family','adults','choose'].includes(cityStep))labels[cityStep].push(['favorites',c.favorites]);
+  const photos=cityStep==='town'
+    ?tourMarkup(c)
+    :cityStep==='hello'
+      ?`<img class="city-guide-preview" src="${CITY_ASSETS.panorama}" width="390" height="130" alt="${esc(c.panorama)}" loading="lazy">`:'';
+  const suggestions=['coffee','dessert','food'].includes(cityStep)
+    ?cityProducts(cityStep,products).map(p=>`<button type="button" class="city-guide-product" data-detail="${p.id}" aria-label="${esc(name(p)+' · '+money(p.price))}"><img src="${photo(p,160)}" alt="" width="60" height="60" loading="lazy"><span><b>${esc(name(p))}</b><small>${money(p.price)}</small></span></button>`).join(''):'';
+  const actions=(labels[cityStep]||[]).map(([action,label])=>`<button class="city-guide-choice" type="button" data-city-action="${action}">${esc(label)}</button>`).join('');
+  root.innerHTML=`<div class="city-guide-inner city-guide-step-${cityStep}"><div class="city-guide-copy"><p class="city-guide-eyebrow">${esc(c.eyebrow)}</p><h2 id="city-guide-title" tabindex="-1">${esc(c.title)}</h2><div class="city-guide-dialogue"><img src="assets/logo-source.jpg" alt="" width="38" height="38" decoding="async"><p class="city-guide-question">${esc(c[cityStep])}</p></div>${suggestions?`<div class="city-guide-products">${suggestions}</div>`:''}<div class="city-guide-actions">${actions}</div><div class="city-guide-secondary">${cityHistory.length?`<button type="button" data-city-action="back">${esc(c.back)}</button>`:''}<button type="button" data-city-action="skip">${esc(c.skip)}</button></div><p class="city-guide-privacy">${esc(c.notChat)}</p></div>${photos}</div>`;
+  root.setAttribute('aria-label',c.title);
+  if(focus)root.querySelector('#city-guide-title')?.focus({preventScroll:true});
+}
+function cityAction(action){
+  if(action==='usual'){
+    if(!readUsual(localStorage,byId)||!repeatUsual())return;
+    setCityVisibility(false);openCart();return;
+  }
+  if(action==='favorites'){
+    if(!favorites.size)return;
+    setCityVisibility(false);selectCategory('favorites');focusCityDestination();return;
+  }
+  if(action==='skip'||action==='category'){
+    const nextCategory=action==='category'?CITY_CATEGORY[cityStep]:'all';
+    setCityVisibility(false);
+    selectCategory(nextCategory||'all');focusCityDestination();return;
+  }
+  if(action==='back'){
+    cityStep=cityHistory.pop()||'hello';renderCityGuide(true);return;
+  }
+  const next=cityNext(cityStep,action);
+  if(!next)return;
+  if(next==='town'){cityTourSpot='houses';cityGalleryIndex=0;}
+  cityHistory.push(cityStep);cityStep=next;
+  renderCityGuide(true);
+}
 function renderLanguage() {
   document.documentElement.lang=lang;$('language').value=lang;
   document.querySelectorAll('[data-i18n]').forEach(e=>{const k=e.dataset.i18n;if(['heroDescription','pairingTitle'].includes(k))e.innerHTML=t(k);else e.textContent=t(k);});
@@ -132,7 +305,7 @@ function renderLanguage() {
   document.querySelectorAll('[data-builder-card]').forEach(card=>card.lastElementChild.innerHTML=cardEngagement(card.dataset.builderCard));
   $('pairing-overlay').innerHTML=photoOverlay('pair-cappuccino',money(kioskPairs.cappuccino.reduce((total,id)=>total+byId.get(id).price,0)));
   renderFamilyVisit($('family'),{byId,lang,money,esc,name,overlay:photoOverlay,scope:socialCopy[lang].scope});
-  kioskUI?.refresh();renderTheme();renderCategories();renderProducts();renderCartCount();
+  kioskUI?.refresh();renderTheme();renderCategories();renderProducts();renderTasteMemory();renderUsual();renderCityGuide();renderCartCount();
   if($('cart-dialog').open)renderCart();if($('detail-dialog').open&&detailId)renderDetail();
 }
 function renderCategories() {
@@ -314,7 +487,7 @@ function addConfigured(order,drink){
   if(drink&&(cart['428772']||0)>=99){notify(t('limit'));return false;}
   commitConfigured(next);
   if(drink)commitCart(updateCart(cart,'428772',1,byId));
-  notify(t('added'));return true;
+  trackGrowth('cart_add');notify(t('added'));return true;
 }
 function estimatedBasket(){return configuredOrders.some(item=>recipes[item.kind].estimated);}
 function updatedConfigured(order,index){
@@ -346,6 +519,8 @@ function add(id) {
     cartButton.classList.add('miora-cart-pulse');
     cartButton.addEventListener('animationend',()=>cartButton.classList.remove('miora-cart-pulse'),{once:true});
   }
+  trackGrowth('cart_add',id);
+  rememberTasteChoice(localStorage,id,byId);renderTasteMemory();
   notify(`${t('added')} · ${name(byId.get(id))}`);
   return true;
 }
@@ -358,6 +533,7 @@ function toggleFavorite(id) {
   save('favorites',[...favorites]);syncSocialStats();
   document.querySelectorAll(`[data-saved="${id}"]`).forEach(el=>el.hidden=!favorites.has(id));
   if(category==='favorites')renderProducts();
+  renderTasteMemory();renderCityGuide();
 }
 function openDetail(id,variant='focus') {
   if(!byId.has(id))return;
@@ -366,7 +542,7 @@ function openDetail(id,variant='focus') {
   // Curated front image first: no unsolicited reconstructed 360 or synthetic cutaway.
   detailVariant=variant==='original'?'original':'focus';
   detailFullPhoto=false;
-  stopFeedViews();recordView(id);
+  stopFeedViews();recordView(id);if(!switching)trackGrowth('product_open',id);
   renderDetail();
   if(!$('detail-dialog').open)$('detail-dialog').showModal();
   $('detail-dialog').scrollTop=0;
@@ -417,13 +593,39 @@ function renderDetail() {
   enhanceKioskDetail(detailId);
 }
 function recommend() {
-  const items=Object.keys(cart).map(id=>byId.get(id));if(!items.length&&!configuredOrders.length)return null;
-  const hasFood=configuredOrders.length>0||items.some(p=>['46818','46885'].includes(p.cat));
-  const hasDrink=items.some(p=>!['46818','46885'].includes(p.cat));
-  const coffeeOnly=items.length>0&&items.every(p=>['46776','46810'].includes(p.cat));
-  const dessert=kioskActive?(coffeeOnly?'431293':null):'430226';
-  const id=!hasFood?dessert:!hasDrink?'428772':null;
-  return id&&!cart[id]?byId.get(id):null;
+  if(kioskActive){
+    if(growthOfferSuppressed)return null;
+    const items=Object.keys(cart).map(id=>byId.get(id));
+    if(!items.length&&!configuredOrders.length)return null;
+    const hasFood=configuredOrders.length>0||items.some(p=>['46818','46885'].includes(p.cat));
+    const hasDrink=items.some(p=>!['46818','46885'].includes(p.cat));
+    const coffeeOnly=items.length>0&&items.every(p=>['46776','46810'].includes(p.cat));
+    const id=!hasFood?(coffeeOnly?'431293':null):!hasDrink?'428772':null;
+    return id&&!cart[id]?byId.get(id):null;
+  }
+  return selectCartOffer({cart,configuredOrders,catalog:byId,suppressed:growthOfferSuppressed});
+}
+const growthLabels={
+  tr:{regular:'Normal menü fiyatı · indirim yok',dismiss:'Hayır, teşekkürler'},
+  ru:{regular:'Обычная цена меню · без скидки',dismiss:'Нет, спасибо'},
+  en:{regular:'Regular menu price · no discount',dismiss:'No, thanks'}
+};
+function observeGrowthOffer(id){
+  growthOfferObserver?.disconnect();
+  growthOfferObserver=null;
+  if(!id||growthOffersSeen.has(id))return;
+  const body=$('cart-content'),offer=body.querySelector('[data-growth-offer]');
+  if(!offer)return;
+  const mark=()=>{if(growthOffersSeen.has(id))return;growthOffersSeen.add(id);trackGrowth('offer_visible',id);growthOfferObserver?.disconnect();growthOfferObserver=null;};
+  if(typeof IntersectionObserver==='function'){
+    growthOfferObserver=new IntersectionObserver(entries=>{
+      if(entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>=.5))mark();
+    },{root:body,threshold:.5});
+    growthOfferObserver.observe(offer);
+  }else{
+    const r=offer.getBoundingClientRect(),v=body.getBoundingClientRect();
+    if(r.top<v.bottom&&r.bottom>v.top)mark();
+  }
 }
 function orderText() {
   const lines=Object.entries(cart).map(([id,qty])=>`${qty} x ${byId.get(id).name.tr} — ${money(byId.get(id).price*qty)}`);
@@ -438,9 +640,10 @@ function drawQR(canvas,text) {
   for(let y=0;y<modules;y++)for(let x=0;x<modules;x++)if(code.isDark(y,x))ctx.fillRect((x+4)*unit,(y+4)*unit,unit,unit);
 }
 function renderCart() {
+  growthOfferObserver?.disconnect();growthOfferObserver=null;
   const body=$('cart-content'),top=body.scrollTop,active=document.activeElement,focusId=active?.dataset?.stepId,focusDelta=active?.dataset?.step;
   const sum=orderTotals();$('cart-title').textContent=t(staffMode?'staffTitle':'cart');$('cart-kicker').textContent=t(staffMode?'staffKicker':'cartKicker');
-  if(!sum.count){body.innerHTML=`<div class="cart-empty">${icon('bag')}<p>${t('emptyCart')}</p></div>`;$('cart-footer').innerHTML=`<button class="button primary" type="button" data-action="back-menu">${t('backToMenu')}</button>`;return;}
+  if(!sum.count){body.innerHTML=`<div class="cart-empty">${icon('bag')}<p>${t('emptyCart')}</p></div>`;$('cart-footer').innerHTML=`${readUsual(localStorage,byId)?`<button class="button primary" type="button" data-usual-repeat>${esc(usualCopy[lang].repeat)}</button>`:''}<button class="button secondary" type="button" data-action="back-menu">${t('backToMenu')}</button>`;return;}
   const lines=Object.entries(cart).map(([id,qty])=>{const p=byId.get(id);return `<li class="cart-line"><div class="cart-item"><img src="${photo(p,160)}" alt="" width="58" height="62"><div><b ${staffMode?'lang="tr"':''}>${staffMode?qty+' × ':''}${esc(staffMode?p.name.tr:name(p))}</b><small>${money(p.price)} × ${qty}${staffMode?'':' · '+money(p.price*qty)}</small>${photoKind(p)==='generated'?`<small class="cart-photo-note">${esc(journeyCopy[lang].generated)}</small>`:''}</div></div>${staffMode?`<strong class="order-line-total">${money(p.price*qty)}</strong>`:`<div class="qty"><button type="button" data-step="-1" data-step-id="${id}" aria-label="${esc(t('decrease')+' · '+name(p))}">${icon('minus')}</button><output>${qty}</output><button type="button" data-step="1" data-step-id="${id}" aria-label="${esc(t('increase')+' · '+name(p))}" ${qty>=99?'disabled':''}>${icon('plus')}</button></div>`}</li>`;}).join('');
   const configuredLines=configuredOrders.map((item,i)=>{
     const r=recipes[item.kind];
@@ -513,9 +716,9 @@ function renderCart() {
   }).join('');
   const kioskCaution=configuredOrders.some(o=>recipes[o.kind].estimated)?`<p class="kiosk-order-note">${esc(kioskMessages[lang].confirm)}</p>`:'';
   const extra=!staffMode&&recommend();
-  body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}${configuredLines}</ul>${kioskCaution}${extra?`<section class="order-bump"><img src="${photo(extra,160)}" width="64" height="70" alt="${esc(name(extra))}"><div><p>${t('bump')}</p><b>${esc(name(extra))}</b></div><button type="button" data-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra)+' · '+money(extra.price))}">+ ${money(extra.price)}</button></section>`:''}
+  body.innerHTML=`${staffMode?`<p class="order-intro">${t('staffNote')}</p><p class="order-intro" lang="tr"><b>${service==='takeaway'?'Paket':'Burada'}</b></p>`:''}<ul class="cart-lines">${lines}${configuredLines}</ul>${kioskCaution}${extra?`<section class="order-bump growth-offer" data-growth-offer="${extra.id}"><img src="${photo(extra,160)}" width="64" height="70" alt=""><div class="growth-offer-copy"><p>${t('bump')}</p><b>${esc(name(extra))}</b><small>${growthLabels[lang].regular}</small></div><div class="growth-offer-actions"><button type="button" data-growth-add="${extra.id}" aria-label="${esc(t('add')+' · '+name(extra))}">+ ${money(extra.price)}</button><button type="button" class="growth-dismiss" data-growth-dismiss="${extra.id}">${growthLabels[lang].dismiss}</button></div></section>`:''}
     ${staffMode?`<details class="order-qr"><summary>${t('qr')}</summary><canvas id="order-qr" role="img" aria-label="${t('qr')}"></canvas><small>${t('qrNote')}</small></details>`:`<div class="serve-select" role="group" aria-label="${t('dineIn')} / ${t('takeaway')}"><button type="button" data-service="dineIn" aria-pressed="${service==='dineIn'}">${t('dineIn')}</button><button type="button" data-service="takeaway" aria-pressed="${service==='takeaway'}">${t('takeaway')}</button></div>`}`;
-  $('cart-footer').innerHTML=`<div class="total-line"><span>${estimatedBasket()?kioskMessages[lang].estimated:t('total')}</span><strong>${estimatedBasket()?kioskMessages[lang].from+' ':''}${money(sum.price)}</strong></div>${staffMode?`<button class="button primary" type="button" data-action="edit-order">${t('editOrder')}</button><button class="clear-cart" type="button" data-action="copy-order">${t('copyOrder')}</button>`:`<button class="button primary" type="button" data-action="show-staff">${t('showStaff')} <span aria-hidden="true">↗</span></button><button class="clear-cart" type="button" data-action="clear-cart">${t('clearCart')}</button>`}<p class="checkout-note">${t('orderNote')}</p>`;
+  $('cart-footer').innerHTML=`<div class="total-line"><span>${estimatedBasket()?kioskMessages[lang].estimated:t('total')}</span><strong>${estimatedBasket()?kioskMessages[lang].from+' ':''}${money(sum.price)}</strong></div>${staffMode?`<button class="button primary" type="button" data-action="edit-order">${t('editOrder')}</button><button class="clear-cart" type="button" data-action="copy-order">${t('copyOrder')}</button>`:`<button class="button primary" type="button" data-action="show-staff">${t('showStaff')} <span aria-hidden="true">↗</span></button><button class="usual-order-save" type="button" data-usual-save>${esc(usualCopy[lang].save)}</button><button class="clear-cart" type="button" data-action="clear-cart">${t('clearCart')}</button>`}<p class="checkout-note">${t('orderNote')}</p>`;
   if(staffMode&&kioskActive){
     const next=document.createElement('button');
     next.type='button';next.className='clear-cart';next.dataset.action='next-guest';
@@ -524,9 +727,10 @@ function renderCart() {
   }
   if(staffMode){try{drawQR($('order-qr'),orderText());}catch{$('order-qr').parentElement.innerHTML=`<p class="qr-error">${t('qrError')}</p>`;}}
   body.scrollTop=top;
+  observeGrowthOffer(extra?.id);
   if(focusId&&focusDelta)body.querySelector(`[data-step-id="${focusId}"][data-step="${focusDelta}"]`)?.focus({preventScroll:true});
 }
-function openCart() {refreshCart();staffMode=false;renderCart();$('cart-dialog').showModal();}
+function openCart() {refreshCart();staffMode=false;renderCart();$('cart-dialog').showModal();trackGrowth('cart_open');}
 async function copyText(text,success,fallback) {try {if(!navigator.clipboard?.writeText)throw new Error('clipboard');await navigator.clipboard.writeText(text);notify(success);return true;}catch{fallback?.();return false;}}
 async function shareItem(id) {
   const label=socialName(id);if(!label)return;
@@ -569,6 +773,39 @@ document.addEventListener('click',async event=>{
     return;
   }
   if(d.detail){openDetail(d.detail,d.sourceView);return;}
+  if(d.cityOpen!==undefined){cityStep='hello';cityHistory.length=0;setCityVisibility(true);renderCityGuide(true);$('city-guide').scrollIntoView({block:'start',behavior:'instant'});return;}
+  if(d.cityGallery!==undefined){updateCityGallery(Number(d.cityGallery));return;}
+  if(d.cityGalleryNext!==undefined){updateCityGallery(galleryStep(cityGalleryIndex,1));return;}
+  if(d.cityGalleryPrev!==undefined){updateCityGallery(galleryStep(cityGalleryIndex,-1));return;}
+  if(d.cityGalleryOpen!==undefined){$('city-gallery-dialog')?.showModal();return;}
+  if(d.cityGalleryClose!==undefined){$('city-gallery-dialog')?.close();$('city-guide').querySelector('[data-city-gallery-open]')?.focus({preventScroll:true});return;}
+  if(d.citySpot){selectTourSpot(d.citySpot);return;}
+  if(d.cityTourNext!==undefined){
+    selectTourSpot(nextTourSpot(cityTourSpot));
+    $('city-guide').querySelector('.city-tour-stops [data-city-spot="'+cityTourSpot+'"]')?.focus({preventScroll:true});
+    return;
+  }
+  if(d.cityAction){cityAction(d.cityAction);return;}
+  if(d.tasteToggle!==undefined){
+    const enabled=!readTasteMemory(localStorage,byId).enabled;
+    if(!setTasteMemoryEnabled(localStorage,enabled,byId)){notify(t('storageError'));return;}
+    renderTasteMemory();return;
+  }
+  if(d.tasteAdd){add(d.tasteAdd);return;}
+  if(d.usualSave!==undefined){
+    refreshCart();
+    if(saveUsual(localStorage,{cart,configuredOrders},byId)){renderUsual();renderCityGuide();notify(usualCopy[lang].saved);}
+    else notify(usualCopy[lang].failure);
+    return;
+  }
+  if(d.usualRepeat!==undefined){repeatUsual();return;}
+  if(d.usualForget!==undefined){
+    if(forgetUsual(localStorage)){renderUsual();if($('cart-dialog').open)renderCart();notify(usualCopy[lang].deleted);}
+    else notify(usualCopy[lang].failure);
+    return;
+  }
+  if(d.growthDismiss){growthOfferSuppressed=true;trackGrowth('offer_dismissed',d.growthDismiss);renderCart();return;}
+  if(d.growthAdd){const accepted=add(d.growthAdd);if(accepted){growthOfferSuppressed=true;trackGrowth('offer_accepted',d.growthAdd);renderCart();}return;}
   if(d.add){const added=add(d.add);if(added&&button.closest('#detail-dialog')&&$('detail-dialog').open)$('detail-dialog').close();return;}
   if(d.favorite){
     const wasLiked=favorites.has(d.favorite);
@@ -603,11 +840,11 @@ document.addEventListener('click',async event=>{
     refreshCart();
     const next=addPair(cart,ids,byId);
     if(!next){notify(t('limit'));return;}
-    commitCart(next);notify(t('added')+' · '+ids.map(id=>name(byId.get(id))).join(' + '));return;
+    commitCart(next);trackGrowth('cart_add');ids.forEach(id=>rememberTasteChoice(localStorage,id,byId));renderTasteMemory();notify(t('added')+' · '+ids.map(id=>name(byId.get(id))).join(' + '));return;
   }
-  if(d.action==='show-staff'){staffMode=true;renderCart();$('cart-content').scrollTop=0;$('cart-title').setAttribute('tabindex','-1');$('cart-title').focus();return;}
+  if(d.action==='show-staff'){staffMode=true;trackGrowth('staff_preview');renderCart();$('cart-content').scrollTop=0;$('cart-title').setAttribute('tabindex','-1');$('cart-title').focus();return;}
   if(d.action==='edit-order'){staffMode=false;renderCart();return;}
-  if(d.action==='clear-cart'){commitConfigured([]);commitCart({});return;}
+  if(d.action==='clear-cart'){commitConfigured([]);commitCart({});growthOfferSuppressed=false;growthOffersSeen.clear();trackGrowth('cart_cleared');return;}
   if(d.action==='next-guest'&&kioskActive&&staffMode){
     $('cart-dialog').close();
     staffMode=false;service='dineIn';save('service',service);
@@ -615,7 +852,7 @@ document.addEventListener('click',async event=>{
     kioskMenu.reset();kioskMenu.render();focusMenuHeading();return;
   }
   if(d.action==='back-menu'){$('cart-dialog').close();$(kioskActive?'kiosk-menu':'menu').scrollIntoView({block:'start'});return;}
-  if(d.action==='copy-order')await copyText(orderText(),t('orderCopied'),()=>{const text=document.createElement('textarea');text.className='copy-order-fallback';text.value=orderText();text.setAttribute('aria-label',t('copyOrder'));$('cart-content').append(text);text.focus();text.select();notify(t('selectCopy'));});
+  if(d.action==='copy-order'){const copied=await copyText(orderText(),t('orderCopied'),()=>{const text=document.createElement('textarea');text.className='copy-order-fallback';text.value=orderText();text.setAttribute('aria-label',t('copyOrder'));$('cart-content').append(text);text.focus();text.select();notify(t('selectCopy'));});if(copied)trackGrowth('order_copied');}
 });
 function focusMenuHeading() {
   const heading=$(kioskActive?'quick-title':'menu-title');
@@ -668,8 +905,10 @@ document.addEventListener('error',event=>{
 window.addEventListener('storage',event=>{
   if(event.key==='miora:cart'||event.key===null){refreshCart();renderCartCount();if($('cart-dialog').open)renderCart();}
   if(event.key==='miora:configured-orders'||event.key===null){configuredOrders=normalizeOrders(load('configured-orders',[]));renderCartCount();if($('cart-dialog').open)renderCart();}
-  if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(hasSocialCard):[]);if(category==='favorites')renderProducts();syncSocialStats();}
+  if(event.key==='miora:favorites'||event.key===null){const saved=load('favorites',[]);favorites=new Set(Array.isArray(saved)?saved.filter(hasSocialCard):[]);if(category==='favorites')renderProducts();syncSocialStats();renderTasteMemory();renderCityGuide();}
   if(event.key==='miora:views'||event.key==='miora:shares'||event.key===null){views=loadCounts('views');shareCounts=loadCounts('shares');syncSocialStats();}
+  if(event.key===TASTE_STORAGE_KEY||event.key===null)renderTasteMemory();
+  if(event.key===USUAL_STORAGE_KEY||event.key===null){renderUsual();renderCityGuide();if($('cart-dialog').open)renderCart();}
 });
 // Translated category labels can change the sticky row height.
 const storySizeObserver=new ResizeObserver(()=>{
@@ -680,7 +919,7 @@ storySizeObserver.observe($('feed-stories'));
 const kioskMenu=mountKioskMode({byId,getLanguage:()=>lang,name,money,t,esc,icon,kioskFor,kioskBread,menuPrice,quantity:id=>cart[id]||0,overlay:photoOverlay,onCardsRendered:startFeedViews});
 kioskUI=mountKiosk({getLanguage:()=>lang,onAdd:addConfigured,onUpdate:updatedConfigured,onEdited:openCart,money,getPhoto:id=>hasPhoto(byId.get(id))?photo(byId.get(id),640):null,social:cardEngagement,
   onOpen:(kind,idea)=>{stopFeedViews();recordView(idea?'idea-'+kind+'-'+idea:'build-'+kind);}});
-renderLanguage();updateUrl();
+renderLanguage();updateUrl();trackGrowth('menu_visit');
 const linked=params.get('item');if(byId.has(linked))openDetail(linked,params.get('photo'));
 const sharedId=params.get('card'),sharedCard=socialCards.get(sharedId);
 if(sharedCard?.kind)kioskUI.open(sharedCard.kind,null,null,null,sharedCard.idea);
