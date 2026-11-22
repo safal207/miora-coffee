@@ -40,5 +40,5 @@ test('tour never sends answers, stores child data or invents play supervision',(
   assert.match(app,/city-tour-pin-/);
   assert.match(app,/data-city-tour-next/);
   assert.match(html,/city-tour\.css\?v=20261121-v1/);
-  assert.match(html,/app\.js\?v=20261122-gallery1/);
+  assert.match(html,/app\.js\?v=20261122-integration1/);
 });
