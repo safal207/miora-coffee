@@ -31,6 +31,7 @@
   scroll-margin-top: 18px;
 }
 body[data-view="kiosk"] .family-section { padding-bottom: 105px; }
+html:has(body[data-view="kiosk"]) { scroll-padding-top: var(--header-h); }
 .family-section h2 {
   font: 400 clamp(30px, 4.4vw, 51px)/1.1 Georgia, serif;
   letter-spacing: -.035em;
@@ -49,10 +50,15 @@ body[data-view="kiosk"] .family-section { padding-bottom: 105px; }
 .family-photos {
   aspect-ratio: 1.65;
   display: grid;
-  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
-  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr) 58px;
+  grid-template-rows: minmax(0, 1fr);
   gap: 2px;
-  background: var(--card);
+  background: var(--soft);
+}
+.family-photos[data-photo-count="3"] { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+.family-photos.photo-surface > .photo-actions {
+  inset: 50% 5px auto auto;
+  translate: 0 -50%;
 }
 .family-photo {
   position: relative;
@@ -63,7 +69,8 @@ body[data-view="kiosk"] .family-section { padding-bottom: 105px; }
   overflow: hidden;
   background: var(--soft);
 }
-.family-photo-main, .family-photo:nth-child(2):last-child { grid-row: 1 / -1; }
+.family-photo-main { grid-column: 1; grid-row: 1 / -1; }
+.family-photo:not(.family-photo-main) { grid-column: 2; }
 .family-photo img {
   position: absolute;
   inset: 0;
@@ -72,7 +79,7 @@ body[data-view="kiosk"] .family-section { padding-bottom: 105px; }
   transform: scale(var(--dish-scale, 1));
 }
 .family-photo:is([data-detail="431458"], [data-detail="431459"]) { background: #fff; }
-.family-photo:is([data-detail="431458"], [data-detail="431459"]) img { object-fit: contain; }
+.family-photo:is([data-detail="431458"], [data-detail="431459"]) img { object-fit: contain; transform: scale(1.12); }
 .family-photo-note, .family-photo-quantity {
   position: absolute;
   bottom: 4px;
@@ -88,15 +95,11 @@ body[data-view="kiosk"] .family-section { padding-bottom: 105px; }
 .family-card-copy { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: clamp(13px, 2vw, 21px); }
 .family-card h3 { font: 600 clamp(19px, 2vw, 25px)/1.18 Georgia, serif; letter-spacing: -.02em; }
 .family-size { font-size: 11px; color: var(--teal); font-weight: 700; }
-.family-combo-items { list-style: none; margin: 0 0 auto; padding: 0; }
-.family-combo-items button { min-height: 34px; padding: 4px 0; text-align: left; text-decoration: underline; text-underline-offset: 2px; font-size: 13px; }
+.family-combo-items { display: flex; flex-wrap: wrap; gap: 0 10px; list-style: none; margin: 0 0 auto; padding: 0; }
+.family-combo-items button { min-height: 34px; padding: 4px 0; text-align: left; text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 3px; font-size: 13px; }
 .family-add { justify-content: center; min-height: 46px; padding-inline: 10px; font-size: 13px; }
 .family-note { margin-top: 14px; color: var(--muted); font-size: 12px; }
-.family-care { margin-top: 26px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); }
-.family-care-photo { min-height: 135px; background: var(--soft); }
-.family-care-photo img { width: 100%; height: 100%; max-height: 250px; }
-.family-care .family-card-copy { justify-content: center; }
-.family-care .family-card-copy p { color: var(--muted); font-size: 14px; }
+.family-changing-table { margin-top: 5px; }
 .share-target { scroll-margin-top: 14px; }
 
 .card-engagement {
@@ -145,13 +148,12 @@ body[data-view="kiosk"] .family-section { padding-bottom: 105px; }
   .quick-groups { margin-block: 14px 14px; }
   .quick-card-body { gap: 5px; }
 }
-@media (max-width: 720px) {
+@media (max-width: 850px) {
   .family-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 620px) {
   .quick-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 10px; }
   .quick-heading .quick-all { grid-area: 1 / 2; }
   .quick-heading > .family-link { grid-column: 1 / -1; justify-self: start; margin-inline-start: 0; }
-  .family-grid, .family-care { grid-template-columns: minmax(0, 1fr); }
-  .family-care-photo { min-height: 0; }
+  .family-grid { grid-template-columns: minmax(0, 1fr); }
 }

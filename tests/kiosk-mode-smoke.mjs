@@ -15,6 +15,32 @@ async function verifyQuickOverlays(menu, width) {
   assert.deepEqual(invalid, [], `kiosk prices and vertical reactions fit each photo at ${width}px`);
 }
 
+async function verifyBreakfastAngle(page, menu) {
+  const card = menu.locator('[data-quick-item="431203"]');
+  assert.match(await card.locator('img').getAttribute('src'), /focused-menu\/431203-640\.webp$/);
+  assert.equal(await card.locator('[data-k-start="breakfast"]').innerText(), 'Собрать завтрак');
+  await card.locator('.quick-photo').click();
+  const detail = page.locator('#detail-dialog[open]');
+  const photo = detail.locator('.detail-photo');
+  assert.match(await photo.getAttribute('src'), /focused-menu\/431203-640\.webp$/);
+  assert.match(await detail.locator('.photo-provenance').innerText(), /ИИ/);
+  assert.match(await detail.locator('.photo-price').innerText(), /^От\s*350 ₺$/);
+  await photo.evaluate(image=>image.decode());
+  await page.screenshot({path:'artifacts/breakfast-angle-ru-320.png'});
+
+  await detail.locator('.detail-more > summary').click();
+  await detail.locator('[data-source-view="original"]').click();
+  assert.match(await photo.getAttribute('src'), /originals\/431203-640\.webp$/);
+  await detail.locator('[data-k-start="breakfast"]').click();
+  const builder = page.locator('#kiosk-dialog[open]');
+  assert.match(await builder.locator('.kiosk-live-intro img').getAttribute('src'), /focused-menu\/431203-640\.webp$/);
+  await builder.locator('[data-k-choice="mini"]').click();
+  await builder.locator('[data-k-next]').click();
+  assert.match(await builder.locator('.kiosk-live img').getAttribute('src'), /originals\/431203-640\.webp$/);
+  await builder.locator('[data-k-close]').click();
+  await detail.locator('[data-close="detail-dialog"]').click();
+}
+
 async function verifyDishPreview(page, menu, lang, width) {
   const sandwich = menu.locator('[data-quick-item="430356"] .quick-photo');
   const cardBox = await sandwich.boundingBox();
@@ -104,6 +130,7 @@ export async function verifyKioskMode(browser, origin) {
       await page.screenshot({path:`artifacts/kiosk-food-${lang}-${width}.png`});
       await verifyDishPreview(page, menu, lang, width);
     }
+    if(lang === 'ru' && width === 320) await verifyBreakfastAngle(page, menu);
     await menu.locator('[data-k-start="sandwich"]').click();
     assert(await page.locator('#kiosk-dialog').isVisible());
     await page.locator('#kiosk-dialog [data-k-close]').click();

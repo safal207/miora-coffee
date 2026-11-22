@@ -1,7 +1,7 @@
 import {categories, products} from './menu-data.js';
 import {filterProducts} from './core.js';
-import {photoUrl, photoSet, photoKind} from './photos.js?v=20261117-curated1';
-import {dishFrameStyle} from './photo-framing.js';
+import {photoUrl, photoSet, photoKind} from './photos.js?v=20261122-merch1';
+import {dishFrameStyle} from './photo-framing.js?v=20261122-merch1';
 import {journeyCopy} from './desire-journey.js?v=20261112-generated1';
 
 export const kioskCopy = {
@@ -9,6 +9,7 @@ export const kioskCopy = {
   ru: {entry:'Киоск', exit:'В меню', title:'Быстрый выбор', coffee:'Хочу кофе', food:'Перекусить', pairs:'Кофе с десертом', coffeeTitle:'Кофейная классика', foodTitle:'Еда и выпечка', pairsTitle:'Кофе с десертом', pairAdd:'Добавить обе', categories:'Категории', portion:'Эспрессо', single:'Один шот', double:'Двойной', nextGuest:'Завершить и начать новый заказ'},
   en: {entry:'Kiosk', exit:'Back to menu', title:'Quick picks', coffee:'Coffee', food:'A bite to eat', pairs:'Coffee & dessert', coffeeTitle:'Coffee classics', foodTitle:'Food & bakery', pairsTitle:'Coffee & dessert pairings', pairAdd:'Add both', categories:'Categories', portion:'Espresso', single:'Single', double:'Double', nextGuest:'Finish and start a new order'}
 };
+export const breakfastAction = {tr:'Kahvaltını oluştur',ru:'Собрать завтрак',en:'Build breakfast'};
 
 const drinks = ['428743', '428772', '428748'];
 const food = ['430356', '430236', '431742', '431203'];
@@ -48,7 +49,9 @@ export function mountKioskMode({byId, getLanguage, name, money, t, esc, icon, ki
     const count = quantity(id);
     const attrs = kind ? `data-k-start="${kind}" ${bread ? `data-k-bread="${bread}"` : ''}`
       : item.price === null ? `data-detail="${id}"` : `data-add="${id}"`;
-    const action = kind ? journeyCopy[getLanguage()].build : t(item.price === null ? 'detail' : 'add');
+    const language = getLanguage();
+    const action = kind === 'breakfast' ? breakfastAction[language]
+      : kind ? journeyCopy[language].build : t(item.price === null ? 'detail' : 'add');
     const label = esc(action + ' · ' + name(item));
     return `<article class="quick-card" data-quick-item="${id}">
       <div class="photo-surface" data-view-id="${id}"><button type="button" class="quick-photo" data-detail="${id}" aria-label="${esc(t('detail'))} · ${title}">

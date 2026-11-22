@@ -8,7 +8,8 @@ import {photoUrl,photoKind,photoSet,hasAlternatePhoto} from '../dist/photos.js';
 import {spotlightItems,motionCopy,imageLabel,DWELL_MS,TRANSITION_MS} from '../dist/menu-motion.js';
 test('focused images keep independently addressable originals and verified reference hashes',()=>{
  const manifest=JSON.parse(readFileSync(new URL('../docs/focused-menu-images-2026-11-13.json',import.meta.url)));
- assert.equal(Object.keys(focusedPhotos).length,6);
+ assert.deepEqual(Object.keys(focusedPhotos),Object.keys(manifest.photos));
+ assert.ok(focusedPhotos['431203'],'breakfast has a new angle in the menu');
  const hash=b=>createHash('sha256').update(b).digest('hex');
  for(const [id,p] of Object.entries(manifest.photos)){
   const item=products.find(p=>p.id===id);assert.ok(hasAlternatePhoto(item));assert.equal(photoKind(item),'generated');

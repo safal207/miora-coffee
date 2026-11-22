@@ -1,7 +1,7 @@
 import {photoSources,photoPlaceholders} from './photo-data.js?v=20261106-photos2';
 import {originalPhotos} from './original-photo-data.js';
 import {generatedPhotos} from './generated-photo-data.js';
-import {focusedPhotos as previousFocusedPhotos} from './focus-photo-data.js';
+import {focusedPhotos as previousFocusedPhotos} from './focus-photo-data.js?v=20261122-merch1';
 import {dessertPhotos} from './dessert-photo-data.js';
 import {cakePhotos} from './cake-photo-data.js';
 const focusedPhotos=Object.freeze({...previousFocusedPhotos,...dessertPhotos});
