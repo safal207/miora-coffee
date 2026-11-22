@@ -1,0 +1,28 @@
+/* Saved-by-choice reorder, not a claimed past purchase. */
+.usual-order[hidden]{display:none!important}
+.usual-order{margin:8px 0 15px;padding:14px 16px;border-radius:15px;border:1px solid var(--line);background:var(--card);min-width:0}
+.usual-order-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;min-width:0}
+.usual-order-heading>div:first-child{flex:1;min-width:0}
+.usual-order h3{font:700 14px/1.35 Arial,Helvetica,sans-serif;margin:0;color:var(--ink)}
+.usual-order-heading p{font-size:11px;line-height:1.45;color:var(--muted);margin:4px 0 0;max-width:530px}
+.usual-order-photos{display:flex;flex:0 0 auto;align-items:center;padding-right:7px}
+.usual-order-photos img{width:46px;height:46px;border-radius:11px;object-fit:cover;border:2px solid var(--card);background:var(--paper);margin-right:-8px}
+.usual-order-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:12px;margin-top:10px}
+.usual-order-meta strong{font-size:17px;color:var(--ink);white-space:nowrap}
+.usual-order-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+.usual-order-actions button{min-height:44px;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.usual-order-actions button:first-child{background:var(--accent);color:white;border-color:transparent}
+.usual-order-actions button:last-child{font-weight:500}
+.usual-order-disclaimer{color:var(--muted);font-size:10px;line-height:1.5;margin:9px 0 0}
+.usual-order-save{display:block;width:100%;min-height:42px;background:transparent;border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--ink);font-weight:600;font-size:12px}
+.usual-order button:focus-visible,.usual-order-save:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+@media(max-width:620px){
+ .usual-order{padding:11px 12px}
+ .usual-order h3{font-size:12px}
+ .usual-order-heading p{font-size:10px}
+ .usual-order-photos img{width:40px;height:40px}
+ .usual-order-actions button{flex:1;min-width:116px;font-size:11px}
+ .usual-order-meta strong{font-size:15px}
+}
+@media(max-width:359px){.usual-order-heading{gap:6px}.usual-order-photos img{width:34px;height:34px}.usual-order-actions button{min-width:100%}}
+@media(prefers-reduced-motion:reduce){.usual-order *{animation:none!important;transition:none!important}}

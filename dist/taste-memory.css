@@ -1,0 +1,29 @@
+/* Personal, low-friction saved flavors. No banners, badges or artificial urgency. */
+.taste-memory{margin:11px 0 6px;padding:12px 14px;border:1px solid var(--line);border-radius:15px;background:var(--card);min-width:0}
+.taste-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.taste-head>div{flex:1;min-width:0}
+.taste-head h3{font:700 14px/1.3 Arial,Helvetica,sans-serif;margin:0;letter-spacing:0}
+.taste-head p{font-size:11px;line-height:1.5;color:var(--muted);margin:4px 0 0;max-width:520px}
+.taste-toggle{flex-shrink:0;min-height:40px;padding:7px 12px;border-radius:22px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:11px;font-weight:600;white-space:normal;text-align:center;max-width:145px}
+.taste-toggle[aria-pressed="true"]{border-color:var(--teal);color:var(--teal)}
+.taste-empty{font-size:11px;line-height:1.45;color:var(--muted);margin:7px 0 0}
+.taste-list{display:flex;gap:9px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:12px 0 2px;scroll-snap-type:x proximity}
+.taste-card{display:flex;flex:0 0 248px;align-items:center;gap:8px;min-width:0;scroll-snap-align:start;border:1px solid var(--line);border-radius:12px;padding:6px;background:var(--paper)}
+.taste-card>img{width:52px;height:52px;flex-shrink:0;object-fit:cover;border-radius:8px}
+.taste-card-info{flex:1;min-width:0}
+.taste-card-info b{font-size:11px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.taste-card-info small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.taste-card button{font-size:10px;font-weight:700;min-height:40px;border:1px solid var(--line);background:var(--card);border-radius:9px;padding:5px 8px;max-width:84px}
+.taste-memory button:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+@media(max-width:620px){
+  .taste-memory{padding:10px 12px;margin-top:6px}
+  .taste-head h3{font-size:12px}
+  .taste-head p{font-size:10px}
+  .taste-toggle{font-size:10px;max-width:114px;padding:6px 8px}
+  .taste-card{flex-basis:235px}
+}
+@media(max-width:380px){
+  .taste-head p{display:none}
+  .taste-empty{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.taste-memory *{animation:none!important;transition:none!important}}
